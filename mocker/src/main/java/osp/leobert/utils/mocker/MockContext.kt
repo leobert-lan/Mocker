@@ -7,7 +7,11 @@ import osp.leobert.utils.mocker.adapter.android.IntRangeAdapter
 import osp.leobert.utils.mocker.adapter.android.LongDefAdapter
 import osp.leobert.utils.mocker.adapter.android.LongRangeAdapter
 import osp.leobert.utils.mocker.handler.BeanMockHandler
+import osp.leobert.utils.mocker.handler.MockHandler
 import java.lang.reflect.Field
+import java.lang.reflect.Type
+import java.util.*
+
 
 /**
  * <p><b>Package:</b> osp.leobert.utils.mocker </p>
@@ -71,9 +75,32 @@ class MockContext {
     val enumMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
+    ///////////////////////////////////////////////////////////////////////////
+    // cache
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Bean缓存
+     */
+    private val beanCache: Map<String, Any> = HashMap()
+
+    /**
+     * TypeVariable缓存
+     */
+    private val typeVariableCache: MutableMap<String, Type> = HashMap<String, Type>()
+
     fun beanMocker(field: Field): BeanMockHandler {
         //todo consider lru cache
         return BeanMockHandler(field.type)
+    }
+
+    fun mockHandler(clazz: Class<*>): MockHandler<Any>? {
+        //todo
+        return null
+    }
+
+    fun getVariableType(name: String): Type {
+       return typeVariableCache[name]?:throw MockException("$name not init")
     }
 
     //todo 其他基本类型的adapter
