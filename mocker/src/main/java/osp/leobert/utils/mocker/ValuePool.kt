@@ -67,7 +67,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         override fun randomGet(context: MockContext): Byte {
             return when (type) {
                 TYPE_ENUM -> {
-                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size - 1))
+                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size))
                         ?: throw MockException("无法获取目标值")
                 }
                 else -> {
@@ -85,7 +85,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         override fun randomGet(context: MockContext): Int {
             return when (type) {
                 TYPE_ENUM -> {
-                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size - 1))
+                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size))
                         ?: throw MockException("无法获取目标值")
                 }
                 else -> {
@@ -103,7 +103,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         override fun randomGet(context: MockContext): Long {
             return when (type) {
                 TYPE_ENUM -> {
-                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size - 1))
+                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size))
                         ?: throw MockException("无法获取目标值")
                 }
                 else -> {
@@ -121,7 +121,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         override fun randomGet(context: MockContext): Short {
             return when (type) {
                 TYPE_ENUM -> {
-                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size - 1))
+                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size))
                         ?: throw MockException("无法获取目标值")
                 }
                 else -> {
@@ -142,7 +142,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         override fun randomGet(context: MockContext): Float {
             return when (type) {
                 TYPE_ENUM -> {
-                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size - 1))
+                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size))
                         ?: throw MockException("无法获取目标值")
                 }
                 else -> {
@@ -163,7 +163,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         override fun randomGet(context: MockContext): Double {
             return when (type) {
                 TYPE_ENUM -> {
-                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size - 1))
+                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size))
                         ?: throw MockException("无法获取目标值")
                 }
                 else -> {

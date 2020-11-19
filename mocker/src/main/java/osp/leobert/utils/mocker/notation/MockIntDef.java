@@ -19,7 +19,7 @@ public @interface MockIntDef {
     /**
      * Defines the allowed constants for this element
      */
-    int[] value() default {};
+    long[] value() default {};
 
     /**
      * Defines whether the constants can be used as a flag, or just as an enum (the default)

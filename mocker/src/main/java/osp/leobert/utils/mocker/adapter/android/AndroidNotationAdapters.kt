@@ -1,6 +1,5 @@
 package osp.leobert.utils.mocker.adapter.android
 
-import androidx.annotation.IntDef
 import androidx.annotation.IntRange
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.adapter.FieldMockAdapter
@@ -28,24 +27,38 @@ object IntRangeAdapter : FieldMockAdapter {
 
 object IntDefAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
-        field.annotations?.lastOrNull { it.javaClass.isAnnotationPresent(MockIntDef::class.java) }
+        field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockIntDef::class.java) }
             ?.let {
-                it.javaClass.getAnnotation(MockIntDef::class.java).value.toMutableList().let { values ->
-                    context.intValuePool.setEnumValues(values)
-                }
+                it.annotationClass.java.getAnnotation(MockIntDef::class.java).value
+                    .map { l -> l.toInt() }
+                    .toMutableList()
+                    .let { values ->
+                        context.intValuePool.setEnumValues(values)
+                    }
 
             }
     }
 }
 
-class LongRangeAdapter : FieldMockAdapter {
+object LongRangeAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
         if (field.isAnnotationPresent(IntRange::class.java)) {
             field.getAnnotation(IntRange::class.java).let {
-
-                //todo
-                context.intValuePool.setRange(it.from.toInt(), it.to.toInt())
+                context.longValuePool.setRange(it.from, it.to)
             }
         }
+    }
+}
+
+object LongDefAdapter : FieldMockAdapter {
+    override fun adapt(context: MockContext, field: Field) {
+        field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockIntDef::class.java) }
+            ?.let {
+                it.annotationClass.java.getAnnotation(MockIntDef::class.java).value.toMutableList()
+                    .let { values ->
+                        context.longValuePool.setEnumValues(values)
+                    }
+
+            }
     }
 }

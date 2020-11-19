@@ -4,6 +4,8 @@ import osp.leobert.utils.mocker.adapter.ComposeFieldMockAdapter
 import osp.leobert.utils.mocker.adapter.FieldMockAdapter
 import osp.leobert.utils.mocker.adapter.android.IntDefAdapter
 import osp.leobert.utils.mocker.adapter.android.IntRangeAdapter
+import osp.leobert.utils.mocker.adapter.android.LongDefAdapter
+import osp.leobert.utils.mocker.adapter.android.LongRangeAdapter
 import osp.leobert.utils.mocker.handler.BeanMockHandler
 import java.lang.reflect.Field
 
@@ -41,10 +43,13 @@ class MockContext {
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
     //long,float double boolean char byte string enum todo
+    val longMockAdapter: FieldMockAdapter =
+        ComposeFieldMockAdapter(arrayListOf(LongRangeAdapter, LongDefAdapter))
+
     val shortMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
-    val longMockAdapter: FieldMockAdapter =
+    val byteMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
     val floatMockAdapter: FieldMockAdapter =
@@ -59,8 +64,6 @@ class MockContext {
     val charMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
-    val byteMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
     val stringMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
