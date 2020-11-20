@@ -88,8 +88,10 @@ class MockContext {
         hashMapOf<Class<*>, MockHandler<*>>().apply {
             //Integer.class, int.class);
             this[Int::class.java] = FieldMockHandler.IntFieldMockHandler()
+            this[Integer::class.java] = FieldMockHandler.IntFieldMockHandler()
             // registerMocker(BYTE_MOCKER, byte.class, Byte.class);
             this[Byte::class.java] = FieldMockHandler.ByteFieldMockHandler()
+            this[java.lang.Byte::class.java] = FieldMockHandler.ByteFieldMockHandler()
 
             // TODO: 2020/11/20 next
 
@@ -105,7 +107,6 @@ class MockContext {
             //        registerMocker(DATE_MOCKER, Date.class);
         }
 
-    val beanFieldMockHandler: FieldMockHandler<Any?> = FieldMockHandler.BeanFieldMockHandler()
     ///////////////////////////////////////////////////////////////////////////
     // cache
     ///////////////////////////////////////////////////////////////////////////
@@ -142,6 +143,7 @@ class MockContext {
 
     fun applyField(value: Any?, field: Field?, owner: Any?) {
         owner?.let {
+            field?.isAccessible = true
             field?.set(it, value)
         }
     }

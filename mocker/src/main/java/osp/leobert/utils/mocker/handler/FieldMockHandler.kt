@@ -114,14 +114,18 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
 
 
     // todo 还需要处理
-    class BeanFieldMockHandler : FieldMockHandler<Any?>() {
+    class BeanFieldMockHandler(private val clazz: Class<*>) : FieldMockHandler<Any?>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
             field?.let {
                 return context.beanMocker(field).mock(context, field, owner).apply {
                     context.applyField(this, field, owner)
                 }
             }
-            return null
+            return context.createInstance(clazz).apply {
+                this.javaClass.declaredFields.forEach {
+                    BaseMockHandler<Any>(type = it.genericType).mock(context, it, this)
+                }
+            }
         }
     }
 

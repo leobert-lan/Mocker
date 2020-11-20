@@ -19,8 +19,6 @@ class BaseMockHandler<T>(
     private val genericTypes: Array<Type> = arrayOf(),
 ) : MockHandler<T> {
 
-    private val clazz: Class<*> = type as Class<*>
-
     //if it is a field, we should use FieldMockHandler, thus we can apply the mock result
     //to it's owner; otherwise , we should use MockHandler to supply a target mock result
 
