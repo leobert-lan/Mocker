@@ -84,8 +84,8 @@ class MockContext {
     ///////////////////////////////////////////////////////////////////////////
 // strategy
 ///////////////////////////////////////////////////////////////////////////
-    val fieldMockStrategy: MutableMap<Class<*>, FieldMockHandler<*>> =
-        hashMapOf<Class<*>, FieldMockHandler<*>>().apply {
+    val fieldMockStrategy: MutableMap<Class<*>, MockHandler<*>> =
+        hashMapOf<Class<*>, MockHandler<*>>().apply {
             //Integer.class, int.class);
             this[Int::class.java] = FieldMockHandler.IntFieldMockHandler()
             // registerMocker(BYTE_MOCKER, byte.class, Byte.class);
@@ -124,7 +124,7 @@ class MockContext {
         return BeanMockHandler(field.type)
     }
 
-    fun mockHandler(clazz: Class<*>): FieldMockHandler<*>? {
+    fun mockHandler(clazz: Class<*>): MockHandler<*>? {
         return fieldMockStrategy[clazz]
     }
 
@@ -132,11 +132,17 @@ class MockContext {
         return typeVariableCache[name] ?: throw MockException("$name not init")
     }
 
-    fun createInstance(clazz: Class<*>):Any {
+    fun createInstance(clazz: Class<*>): Any {
 //缓存？
         //adapter
 
         return UnsafeUtils.newInstance(clazz)
+    }
+
+    fun applyField(value: Any, field: Field?, owner: Any?) {
+        owner?.let {
+            field?.set(it, value)
+        }
     }
 
     //todo 其他基本类型的adapter

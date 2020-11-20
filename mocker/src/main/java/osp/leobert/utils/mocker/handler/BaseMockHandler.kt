@@ -19,13 +19,15 @@ class BaseMockHandler<T>(
     private val genericTypes: Array<Type> = arrayOf(),
 ) : MockHandler<T> {
 
+    private val clazz: Class<*> = type as Class<*>
+
     //if it is a field, we should use FieldMockHandler, thus we can apply the mock result
     //to it's owner; otherwise , we should use MockHandler to supply a target mock result
 
     override fun mock(context: MockContext, field: Field?, owner: Any?): T {
-        when (type) {
+        return when (type) {
             is ParameterizedType -> {
-                return GenericMockHandler(type).mock(context) as T
+                GenericMockHandler(type)
             }
             //todo 完成这个复杂的玩意
 
@@ -38,26 +40,8 @@ class BaseMockHandler<T>(
 //            }
 
             else -> ClassMockHandler(type as Class<*>, genericTypes)
-
-        }
+        }.mock(context, field, owner) as T
     }
 
-    //class的参考
-    //return when {
-    ////            clazz.isArray -> {
-    ////                mocker = ArrayMocker(clazz)
-    ////            }
-    ////            MutableMap::class.java.isAssignableFrom(clazz) -> {
-    ////                mocker = MapMocker(genericTypes)
-    ////            }
-    ////            MutableCollection::class.java.isAssignableFrom(clazz) -> {
-    ////                mocker = CollectionMocker(clazz, genericTypes[0])
-    ////            }
-    //            clazz.isEnum -> {
-    ////                mocker = EnumMocker(clazz)
-    //                BeanMockHandler(clazz)
-    //            }
-    //            else -> context.mockHandler(clazz) ?: BeanMockHandler(clazz)
-    //
-    //        }.mock(context)
+
 }
