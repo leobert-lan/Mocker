@@ -40,7 +40,7 @@ internal class IntFieldMockHandlerTest {
             FieldMockHandler.IntFieldMockHandler.mock(
                 context, field
             ).let {
-                System.out.println(it)
+                println(it)
                 assert((it >= -5) && (it <= -1))
             }
         }
@@ -55,7 +55,7 @@ internal class IntFieldMockHandlerTest {
             FieldMockHandler.IntFieldMockHandler.mock(
                 context, field
             ).let {
-                System.out.println(it)
+                println(it)
                 assert((it == 3) || (it == 4) || it == 6)
             }
         }

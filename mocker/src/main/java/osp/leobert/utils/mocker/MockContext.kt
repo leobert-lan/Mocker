@@ -40,6 +40,8 @@ class MockContext {
     val doubleValuePool: ValuePool<Double> = ValuePool.DoubleValuePool()
     val longValuePool: ValuePool<Long> = ValuePool.LongValuePool()
 
+    val boolValuePool: ValuePool<Boolean> = ValuePool.BoolValuePool()
+
 
 ///////////////////////////////////////////////////////////////////////////
 // field mock adapter
@@ -68,7 +70,7 @@ class MockContext {
 
     //
     val booleanMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+        ComposeFieldMockAdapter(arrayListOf(BooleanAdapter))
 
     val charMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))

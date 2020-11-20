@@ -2,9 +2,7 @@ package osp.leobert.utils.mocker.adapter.android
 
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.adapter.FieldMockAdapter
-import osp.leobert.utils.mocker.notation.MockFloatRange
-import osp.leobert.utils.mocker.notation.MockIntDef
-import osp.leobert.utils.mocker.notation.MockIntRange
+import osp.leobert.utils.mocker.notation.*
 import java.lang.reflect.Field
 
 /**
@@ -129,6 +127,17 @@ object DoubleRangeAdapter : FieldMockAdapter {
             field.getAnnotation(MockFloatRange::class.java).let {
                 context.doubleValuePool.setRange(it.from.toDouble(), it.to.toDouble())
             }
+        }
+    }
+}
+
+object BooleanAdapter : FieldMockAdapter {
+    override fun adapt(context: MockContext, field: Field) {
+        if (field.isAnnotationPresent(MockTrue::class.java)) {
+                context.boolValuePool.setEnumValues(arrayListOf(true))
+        }
+        if (field.isAnnotationPresent(MockFalse::class.java)) {
+            context.boolValuePool.setEnumValues(arrayListOf(false))
         }
     }
 }

@@ -26,7 +26,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
 
     protected val enumValues: MutableList<T> by lazy { ArrayList() }
 
-    fun setRange(from: T?, to: T?) {
+    open fun setRange(from: T?, to: T?) {
         when (type) {
             TYPE_ENUM -> {
                 enumValues.removeAll { !comparator.inRange(it, from, to) }
@@ -177,4 +177,28 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
     }
 
     //todo 其他基本类型
+
+    abstract class LimitValuePool<T> : ValuePool<T>(comparator = object : Filter<T> {
+        override fun inRange(target: T, from: T?, to: T?): Boolean {
+            return true
+        }
+    }) {
+
+        init {
+            type = TYPE_ENUM
+        }
+
+        override fun setRange(from: T?, to: T?) {
+            throw MockException("should not use setRange for this:${javaClass.name}")
+        }
+    }
+
+    class BoolValuePool : LimitValuePool<Boolean>() {
+        override fun randomGet(context: MockContext): Boolean {
+            return if (enumValues.size == 1)
+                enumValues.first()
+            else
+                RandomUtils.nextBoolean()
+        }
+    }
 }
