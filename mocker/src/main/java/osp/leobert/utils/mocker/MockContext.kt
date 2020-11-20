@@ -2,10 +2,7 @@ package osp.leobert.utils.mocker
 
 import osp.leobert.utils.mocker.adapter.ComposeFieldMockAdapter
 import osp.leobert.utils.mocker.adapter.FieldMockAdapter
-import osp.leobert.utils.mocker.adapter.android.IntDefAdapter
-import osp.leobert.utils.mocker.adapter.android.IntRangeAdapter
-import osp.leobert.utils.mocker.adapter.android.LongDefAdapter
-import osp.leobert.utils.mocker.adapter.android.LongRangeAdapter
+import osp.leobert.utils.mocker.adapter.android.*
 import osp.leobert.utils.mocker.handler.BeanMockHandler
 import osp.leobert.utils.mocker.handler.FieldMockHandler
 import osp.leobert.utils.mocker.handler.MockHandler
@@ -38,36 +35,38 @@ class MockContext {
 
     val intValuePool: ValuePool<Int> = ValuePool.IntValuePool()
     val shortValuePool: ValuePool<Short> = ValuePool.ShortValuePool()
+    val byteValuePool: ValuePool<Byte> = ValuePool.ByteValuePool()
     val floatValuePool: ValuePool<Float> = ValuePool.FloatValuePool()
     val doubleValuePool: ValuePool<Double> = ValuePool.DoubleValuePool()
     val longValuePool: ValuePool<Long> = ValuePool.LongValuePool()
 
 
-    internal var currentObj: Any? = null
-
 ///////////////////////////////////////////////////////////////////////////
 // field mock adapter
 ///////////////////////////////////////////////////////////////////////////
 
+    //long,float double boolean char byte string enum todo
+
+    //int long short byte
     val intMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
-    //long,float double boolean char byte string enum todo
     val longMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(LongRangeAdapter, LongDefAdapter))
 
     val shortMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+        ComposeFieldMockAdapter(arrayListOf(ShortRangeAdapter, ShortDefAdapter))
 
     val byteMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+        ComposeFieldMockAdapter(arrayListOf(ByteRangeAdapter, ByteDefAdapter))
 
     val floatMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+        ComposeFieldMockAdapter(arrayListOf(FloatRangeAdapter))
 
     val doubleMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+        ComposeFieldMockAdapter(arrayListOf(DoubleRangeAdapter))
 
+    //
     val booleanMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
@@ -86,21 +85,28 @@ class MockContext {
 ///////////////////////////////////////////////////////////////////////////
     val fieldMockStrategy: MutableMap<Class<*>, MockHandler<*>> =
         hashMapOf<Class<*>, MockHandler<*>>().apply {
-            //Integer.class, int.class);
-            this[Int::class.java] = FieldMockHandler.IntFieldMockHandler()
-            this[Integer::class.java] = FieldMockHandler.IntFieldMockHandler()
-            // registerMocker(BYTE_MOCKER, byte.class, Byte.class);
-            this[Byte::class.java] = FieldMockHandler.ByteFieldMockHandler()
-            this[java.lang.Byte::class.java] = FieldMockHandler.ByteFieldMockHandler()
+            this[Int::class.java] = FieldMockHandler.IntFieldMockHandler
+            this[Integer::class.java] = FieldMockHandler.IntFieldMockHandler
+
+            this[Byte::class.java] = FieldMockHandler.ByteFieldMockHandler
+            this[java.lang.Byte::class.java] = FieldMockHandler.ByteFieldMockHandler
+
+            this[Short::class.java] = FieldMockHandler.ShortFieldMockHandler
+            this[java.lang.Short::class.java] = FieldMockHandler.ShortFieldMockHandler
+
+            this[Long::class.java] = FieldMockHandler.LongFieldMockHandler
+            this[java.lang.Long::class.java] = FieldMockHandler.LongFieldMockHandler
+
+            this[Float::class.java] = FieldMockHandler.FloatFieldMockHandler
+            this[java.lang.Float::class.java] = FieldMockHandler.FloatFieldMockHandler
+
+            this[Double::class.java] = FieldMockHandler.DoubleFieldMockHandler
+            this[java.lang.Double::class.java] = FieldMockHandler.DoubleFieldMockHandler
 
             // TODO: 2020/11/20 next
 
             //        registerMocker(BOOLEAN_MOCKER, boolean.class, Boolean.class);
             //        registerMocker(CHARACTER_MOCKER, char.class, Character.class);
-            //        registerMocker(SHORT_MOCKER, short.class, Short.class);
-            //        registerMocker(LONG_MOCKER, long.class, Long.class);
-            //        registerMocker(FLOAT_MOCKER, float.class, Float.class);
-            //        registerMocker(DOUBLE_MOCKER, double.class, Double.class);
             //        registerMocker(BIG_INTEGER_MOCKER, BigInteger.class);
             //        registerMocker(BIG_DECIMAL_MOCKER, BigDecimal.class);
             //        registerMocker(STRING_MOCKER, String.class);

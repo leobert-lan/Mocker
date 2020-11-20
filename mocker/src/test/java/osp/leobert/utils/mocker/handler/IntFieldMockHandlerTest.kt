@@ -37,7 +37,7 @@ internal class IntFieldMockHandlerTest {
         //JavaCase::class.java.getDeclaredField("range")
         val context = MockContext()
         for (i in 0..100) {
-            FieldMockHandler.IntFieldMockHandler().mock(
+            FieldMockHandler.IntFieldMockHandler.mock(
                 context, field
             ).let {
                 System.out.println(it)
@@ -52,7 +52,7 @@ internal class IntFieldMockHandlerTest {
         //JavaCase::class.java.getDeclaredField("range")
         val context = MockContext()
         for (i in 0..100) {
-            FieldMockHandler.IntFieldMockHandler().mock(
+            FieldMockHandler.IntFieldMockHandler.mock(
                 context, field
             ).let {
                 System.out.println(it)

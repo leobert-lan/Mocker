@@ -18,11 +18,16 @@ import osp.leobert.utils.mocker.notation.MockIntRange
  */
 internal class BaseMockHandlerTest {
 
-    class Bean {
+    open class Foo {
         @MockIntRange(from = 3, to = 4)
-        var i: Int? = null
+        open var i2: Int? = null
+    }
+
+    class Bean : Foo() {
+        @MockIntRange(from = 3, to = 4)
+        private var i: Int? = null
         override fun toString(): String {
-            return "Bean(i=$i)"
+            return "Bean(i=$i,i2=$i2)"
         }
 
 

@@ -12,13 +12,10 @@ import java.lang.reflect.Field
  */
 sealed class FieldMockHandler<T> : MockHandler<T> {
 
-    //todo add mockhandler as reference
-    //todo remove return add owner
     //todo add pending jobs / supply result to owner immediately
 
-//    abstract fun mock(context: MockContext, field: Field): T
 
-    class IntFieldMockHandler : FieldMockHandler<Int>() {
+    object IntFieldMockHandler : FieldMockHandler<Int>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Int {
             field?.let {
                 context.intMockAdapter.adapt(context, field)
@@ -29,7 +26,7 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    class ShortFieldMockHandler : FieldMockHandler<Short>() {
+    object ShortFieldMockHandler : FieldMockHandler<Short>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Short {
             field?.let {
                 context.shortMockAdapter.adapt(context, field)
@@ -38,7 +35,7 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    class LongFieldMockHandler : FieldMockHandler<Long>() {
+    object LongFieldMockHandler : FieldMockHandler<Long>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Long {
             field?.let {
                 context.longMockAdapter.adapt(context, field)
@@ -47,7 +44,7 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    class FloatFieldMockHandler : FieldMockHandler<Float>() {
+    object FloatFieldMockHandler : FieldMockHandler<Float>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Float {
             field?.let {
                 context.floatMockAdapter.adapt(context, field)
@@ -56,7 +53,7 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    class DoubleFieldMockHandler : FieldMockHandler<Double>() {
+    object DoubleFieldMockHandler : FieldMockHandler<Double>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Double {
             field?.let {
                 context.doubleMockAdapter.adapt(context, field)
@@ -65,9 +62,18 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
+    object ByteFieldMockHandler : FieldMockHandler<Byte>() {
+        override fun mock(context: MockContext, field: Field?, owner: Any?): Byte {
+            field?.let {
+                context.byteMockAdapter.adapt(context, field)
+            }
+            return context.byteValuePool.randomGet(context)
+        }
+    }
+
     //todo next
 
-    class BooleanFieldMockHandler : FieldMockHandler<Int>() {
+    object BooleanFieldMockHandler : FieldMockHandler<Int>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Int {
             field?.let {
                 context.booleanMockAdapter.adapt(context, field)
@@ -76,7 +82,7 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    class CharFieldMockHandler : FieldMockHandler<Int>() {
+    object CharFieldMockHandler : FieldMockHandler<Int>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Int {
             field?.let {
                 context.charMockAdapter.adapt(context, field)
@@ -85,14 +91,7 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    class ByteFieldMockHandler : FieldMockHandler<Int>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Int {
-            field?.let {
-                context.byteMockAdapter.adapt(context, field)
-            }
-            return context.intValuePool.randomGet(context)
-        }
-    }
+
 
     class StringFieldMockHandler : FieldMockHandler<Int>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Int {
@@ -113,7 +112,6 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
 
-    // todo 还需要处理
     class BeanFieldMockHandler(private val clazz: Class<*>) : FieldMockHandler<Any?>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
             field?.let {
@@ -122,8 +120,12 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
                 }
             }
             return context.createInstance(clazz).apply {
-                this.javaClass.declaredFields.forEach {
-                    BaseMockHandler<Any>(type = it.genericType).mock(context, it, this)
+                var currentClass = clazz
+                while (currentClass != Any::class.java) {
+                    currentClass.declaredFields.forEach {
+                        BaseMockHandler<Any>(type = it.genericType).mock(context, it, this)
+                    }
+                    currentClass = currentClass.superclass
                 }
             }
         }
