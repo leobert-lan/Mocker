@@ -1,6 +1,7 @@
 package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
+import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -10,7 +11,7 @@ import java.lang.reflect.ParameterizedType
  * Created by leobert on 2020/11/19.
  */
 internal class GenericMockHandler(private val type: ParameterizedType) : MockHandler<Any> {
-    override fun mock(context: MockContext): Any {
-        return BaseMockHandler<Any>(type.rawType, type.actualTypeArguments).mock(context)
+    override fun mock(context: MockContext, field: Field?, owner: Any?): Any {
+        return BaseMockHandler<Any>(type.rawType, type.actualTypeArguments).mock(context,field, owner)
     }
 }

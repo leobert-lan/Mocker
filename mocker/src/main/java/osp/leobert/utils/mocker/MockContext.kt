@@ -7,7 +7,9 @@ import osp.leobert.utils.mocker.adapter.android.IntRangeAdapter
 import osp.leobert.utils.mocker.adapter.android.LongDefAdapter
 import osp.leobert.utils.mocker.adapter.android.LongRangeAdapter
 import osp.leobert.utils.mocker.handler.BeanMockHandler
+import osp.leobert.utils.mocker.handler.FieldMockHandler
 import osp.leobert.utils.mocker.handler.MockHandler
+import osp.leobert.utils.mocker.utils.UnsafeUtils
 import java.lang.reflect.Field
 import java.lang.reflect.Type
 import java.util.*
@@ -43,6 +45,10 @@ class MockContext {
 
     internal var currentObj: Any? = null
 
+///////////////////////////////////////////////////////////////////////////
+// field mock adapter
+///////////////////////////////////////////////////////////////////////////
+
     val intMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
@@ -76,6 +82,30 @@ class MockContext {
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
     ///////////////////////////////////////////////////////////////////////////
+// strategy
+///////////////////////////////////////////////////////////////////////////
+    val fieldMockStrategy: MutableMap<Class<*>, FieldMockHandler<*>> =
+        hashMapOf<Class<*>, FieldMockHandler<*>>().apply {
+            //Integer.class, int.class);
+            this[Int::class.java] = FieldMockHandler.IntFieldMockHandler()
+            // registerMocker(BYTE_MOCKER, byte.class, Byte.class);
+            this[Byte::class.java] = FieldMockHandler.ByteFieldMockHandler()
+
+            // TODO: 2020/11/20 next
+
+            //        registerMocker(BOOLEAN_MOCKER, boolean.class, Boolean.class);
+            //        registerMocker(CHARACTER_MOCKER, char.class, Character.class);
+            //        registerMocker(SHORT_MOCKER, short.class, Short.class);
+            //        registerMocker(LONG_MOCKER, long.class, Long.class);
+            //        registerMocker(FLOAT_MOCKER, float.class, Float.class);
+            //        registerMocker(DOUBLE_MOCKER, double.class, Double.class);
+            //        registerMocker(BIG_INTEGER_MOCKER, BigInteger.class);
+            //        registerMocker(BIG_DECIMAL_MOCKER, BigDecimal.class);
+            //        registerMocker(STRING_MOCKER, String.class);
+            //        registerMocker(DATE_MOCKER, Date.class);
+        }
+
+    ///////////////////////////////////////////////////////////////////////////
     // cache
     ///////////////////////////////////////////////////////////////////////////
 
@@ -94,13 +124,19 @@ class MockContext {
         return BeanMockHandler(field.type)
     }
 
-    fun mockHandler(clazz: Class<*>): MockHandler<Any>? {
-        //todo
-        return null
+    fun mockHandler(clazz: Class<*>): FieldMockHandler<*>? {
+        return fieldMockStrategy[clazz]
     }
 
     fun getVariableType(name: String): Type {
-       return typeVariableCache[name]?:throw MockException("$name not init")
+        return typeVariableCache[name] ?: throw MockException("$name not init")
+    }
+
+    fun createInstance(clazz: Class<*>):Any {
+//缓存？
+        //adapter
+
+        return UnsafeUtils.newInstance(clazz)
     }
 
     //todo 其他基本类型的adapter

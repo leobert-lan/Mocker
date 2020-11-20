@@ -1,7 +1,7 @@
 package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
-import osp.leobert.utils.mocker.utils.UnsafeUtils
+import java.lang.reflect.Field
 
 /**
  * <p><b>Package:</b> osp.leobert.utils.mocker.handler </p>
@@ -10,10 +10,11 @@ import osp.leobert.utils.mocker.utils.UnsafeUtils
  * <p><b>Description:</b> mocker for bean </p>
  * Created by leobert on 2020/11/19.
  */
-class BeanMockHandler(private val clazz: Class<*>):MockHandler<Any?> {
+class BeanMockHandler(private val clazz: Class<*>) : MockHandler<Any?> {
 
-    override fun mock(context: MockContext): Any? {
+    override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
         //consider circle todo
-        return UnsafeUtils.newInstance(clazz)
+        return context.createInstance(clazz)
+//        return UnsafeUtils.newInstance(clazz)
     }
 }

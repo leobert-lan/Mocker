@@ -11,6 +11,8 @@ import java.lang.reflect.Type
  * Created by leobert on 2020/11/19.
  */
 internal class ClassMockHandler(private val clazz: Class<*>, val genericTypes: Array<Type>) : MockHandler<Any?> {
+
+   //逻辑全部迁移到BaseMockHandler完成 todo！！
     override fun mock(context: MockContext): Any? {
         return when {
 //            clazz.isArray -> {

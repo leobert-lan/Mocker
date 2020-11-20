@@ -11,6 +11,10 @@ import java.lang.reflect.Field
  */
 sealed class FieldMockHandler<T> {
 
+    //todo add mockhandler as reference
+    //todo remove return add owner
+    //todo add pending jobs / supply result to owner immediately
+
     abstract fun mock(context: MockContext, field: Field): T
 
     class IntFieldMockHandler : FieldMockHandler<Int>() {

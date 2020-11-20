@@ -1,6 +1,7 @@
 package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
+import java.lang.reflect.Field
 
 /**
  * <p><b>Package:</b> osp.leobert.utils.mocker.handler </p>
@@ -9,7 +10,11 @@ import osp.leobert.utils.mocker.MockContext
  * Created by leobert on 2020/11/18.
  */
 interface MockHandler<T> {
-    fun mock(context: MockContext): T
+    fun mock(
+        context: MockContext,
+        field: Field? = null,
+        owner: Any? = null
+    ): T
 }
 
 /**
