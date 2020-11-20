@@ -105,6 +105,7 @@ class MockContext {
             //        registerMocker(DATE_MOCKER, Date.class);
         }
 
+    val beanFieldMockHandler: FieldMockHandler<Any?> = FieldMockHandler.BeanFieldMockHandler()
     ///////////////////////////////////////////////////////////////////////////
     // cache
     ///////////////////////////////////////////////////////////////////////////
@@ -139,7 +140,7 @@ class MockContext {
         return UnsafeUtils.newInstance(clazz)
     }
 
-    fun applyField(value: Any, field: Field?, owner: Any?) {
+    fun applyField(value: Any?, field: Field?, owner: Any?) {
         owner?.let {
             field?.set(it, value)
         }

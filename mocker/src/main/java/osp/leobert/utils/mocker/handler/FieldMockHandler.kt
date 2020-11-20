@@ -112,13 +112,17 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    //todo 基本类型、enum、object等
 
-    //这个没有必要
-//    class BeanFieldMockHandler : FieldMockHandler<Any?>() {
-//        override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
-//            return context.beanMocker(field).mock(context)
-//        }
-//    }
+    // todo 还需要处理
+    class BeanFieldMockHandler : FieldMockHandler<Any?>() {
+        override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
+            field?.let {
+                return context.beanMocker(field).mock(context, field, owner).apply {
+                    context.applyField(this, field, owner)
+                }
+            }
+            return null
+        }
+    }
 
 }

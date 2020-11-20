@@ -30,7 +30,7 @@ internal class ClassMockHandler(
 //                mocker = EnumMocker(clazz)
                 BeanMockHandler(clazz)
             }
-            else -> context.mockHandler(clazz) ?: BeanMockHandler(clazz)
+            else -> context.mockHandler(clazz) ?: context.beanFieldMockHandler
 
         }.mock(context, field, owner)
     }
