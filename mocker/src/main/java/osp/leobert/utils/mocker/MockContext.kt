@@ -41,6 +41,7 @@ class MockContext {
     val longValuePool: ValuePool<Long> = ValuePool.LongValuePool()
 
     val boolValuePool: ValuePool<Boolean> = ValuePool.BoolValuePool()
+    val charValuePool: ValuePool<Char> = ValuePool.CharValuePool()
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -68,13 +69,13 @@ class MockContext {
     val doubleMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(DoubleRangeAdapter))
 
-    //
     val booleanMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(BooleanAdapter))
 
     val charMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+        ComposeFieldMockAdapter(arrayListOf(CharRangeAdapter, CharDefAdapter))
 
+    //
 
     val stringMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
@@ -108,10 +109,11 @@ class MockContext {
             this[Boolean::class.java] = FieldMockHandler.BooleanFieldMockHandler
             this[java.lang.Boolean::class.java] = FieldMockHandler.BooleanFieldMockHandler
 
+            this[Char::class.java] = FieldMockHandler.CharFieldMockHandler
+            this[java.lang.Character::class.java] = FieldMockHandler.CharFieldMockHandler
+
             // TODO: 2020/11/20 next
 
-            //        registerMocker(BOOLEAN_MOCKER, boolean.class, Boolean.class);
-            //        registerMocker(CHARACTER_MOCKER, char.class, Character.class);
             //        registerMocker(BIG_INTEGER_MOCKER, BigInteger.class);
             //        registerMocker(BIG_DECIMAL_MOCKER, BigDecimal.class);
             //        registerMocker(STRING_MOCKER, String.class);

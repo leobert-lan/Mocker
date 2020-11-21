@@ -21,6 +21,11 @@ internal class FieldMockHandlerTest {
     @MockIntDef(value = [3, 4, 6])
     annotation class Type
 
+    @Retention(AnnotationRetention.RUNTIME)
+    @Target(AnnotationTarget.FIELD)
+    @MockCharDef(value = ['M'])
+    annotation class CharTest
+
     class Case {
         @field:MockIntRange(from = -5, to = -1)
         var intRange: Int? = null
@@ -58,6 +63,12 @@ internal class FieldMockHandlerTest {
 
         @field:MockFalse
         var falseTest: Boolean? = null
+
+        @field:MockCharRange(from = 'a', to = 'z')
+        var charRange: Char? = null
+
+        @field:CharTest
+        var charDef: Char? = null
 
 
         //todo char,String
@@ -233,6 +244,36 @@ internal class FieldMockHandlerTest {
                 context, field
             ).let {
                 assert(it == false)
+            }
+        }
+    }
+
+    @Test
+    fun mockCharRange() {
+        val field = Case::class.java.getDeclaredField("charRange")
+        //JavaCase::class.java.getDeclaredField("range")
+        val context = MockContext()
+        for (i in 0..100) {
+            FieldMockHandler.CharFieldMockHandler.mock(
+                context, field
+            ).let {
+                println(it)
+                assert((it >= 'a') && (it <= 'z'))
+            }
+        }
+    }
+
+    @Test
+    fun mockCharDef() {
+        val field = Case::class.java.getDeclaredField("charDef")
+        //JavaCase::class.java.getDeclaredField("range")
+        val context = MockContext()
+        for (i in 0..100) {
+            FieldMockHandler.CharFieldMockHandler.mock(
+                context, field
+            ).let {
+                println(it)
+                assert(it == 'M')
             }
         }
     }

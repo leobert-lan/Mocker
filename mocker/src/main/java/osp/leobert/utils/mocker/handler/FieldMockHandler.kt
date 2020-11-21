@@ -79,17 +79,20 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
             return context.boolValuePool.randomGet(context)
         }
     }
-    //todo next
 
-
-    object CharFieldMockHandler : FieldMockHandler<Int>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Int {
+    object CharFieldMockHandler : FieldMockHandler<Char>() {
+        override fun mock(context: MockContext, field: Field?, owner: Any?): Char {
             field?.let {
                 context.charMockAdapter.adapt(context, field)
             }
-            return context.intValuePool.randomGet(context)
+            return context.charValuePool.randomGet(context)
         }
     }
+
+
+    //todo next
+
+
 
 
 

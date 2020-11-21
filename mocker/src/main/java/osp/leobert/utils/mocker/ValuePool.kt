@@ -30,6 +30,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         when (type) {
             TYPE_ENUM -> {
                 enumValues.removeAll { !comparator.inRange(it, from, to) }
+                //todo 这个方式不适合复用
                 if (enumValues.isEmpty()) throw MockException("pool is empty")
             }
             else -> { //only the latest invocation make effect
@@ -173,6 +174,25 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
                     )
                 }
             }
+        }
+    }
+
+    class CharValuePool : ValuePool<Char>(comparator = object : Filter<Char> {
+        override fun inRange(target: Char, from: Char?, to: Char?): Boolean {
+            return (from?.run { target >= this } ?: true) && (to?.run { target <= to } ?: true)
+        }
+    }) {
+        init {
+            ('0'..'Z').toMutableList().let {
+                setEnumValues(it)
+            }
+        }
+
+        override fun randomGet(context: MockContext): Char {
+            return if (enumValues.size < 1)
+                throw MockException("it's empty in CharValuePool")
+            else
+                enumValues[RandomUtils.nextInt(0, enumValues.size)]
         }
     }
 

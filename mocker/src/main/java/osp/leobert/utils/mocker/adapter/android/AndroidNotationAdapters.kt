@@ -141,3 +141,27 @@ object BooleanAdapter : FieldMockAdapter {
         }
     }
 }
+
+object CharRangeAdapter : FieldMockAdapter {
+    override fun adapt(context: MockContext, field: Field) {
+        if (field.isAnnotationPresent(MockCharRange::class.java)) {
+            field.getAnnotation(MockCharRange::class.java).let {
+                context.charValuePool.setRange(it.from, it.to)
+            }
+        }
+    }
+}
+
+object CharDefAdapter : FieldMockAdapter {
+    override fun adapt(context: MockContext, field: Field) {
+        field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockCharDef::class.java) }
+            ?.let {
+                it.annotationClass.java.getAnnotation(MockCharDef::class.java).value
+                    .toMutableList()
+                    .let { values ->
+                        context.charValuePool.setEnumValues(values)
+                    }
+
+            }
+    }
+}
