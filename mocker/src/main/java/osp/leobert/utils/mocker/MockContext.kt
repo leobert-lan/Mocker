@@ -105,6 +105,9 @@ class MockContext {
             this[Double::class.java] = FieldMockHandler.DoubleFieldMockHandler
             this[java.lang.Double::class.java] = FieldMockHandler.DoubleFieldMockHandler
 
+            this[Boolean::class.java] = FieldMockHandler.BooleanFieldMockHandler
+            this[java.lang.Boolean::class.java] = FieldMockHandler.BooleanFieldMockHandler
+
             // TODO: 2020/11/20 next
 
             //        registerMocker(BOOLEAN_MOCKER, boolean.class, Boolean.class);

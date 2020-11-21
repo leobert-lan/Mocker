@@ -2,9 +2,7 @@ package osp.leobert.utils.mocker.handler
 
 import org.junit.jupiter.api.Test
 import osp.leobert.utils.mocker.MockContext
-import osp.leobert.utils.mocker.notation.MockFloatRange
-import osp.leobert.utils.mocker.notation.MockIntDef
-import osp.leobert.utils.mocker.notation.MockIntRange
+import osp.leobert.utils.mocker.notation.*
 
 /**
  *
@@ -20,7 +18,7 @@ import osp.leobert.utils.mocker.notation.MockIntRange
 internal class FieldMockHandlerTest {
     @Retention(AnnotationRetention.RUNTIME)
     @Target(AnnotationTarget.FIELD)
-    @MockIntDef(value = [3, 4,6])
+    @MockIntDef(value = [3, 4, 6])
     annotation class Type
 
     class Case {
@@ -54,6 +52,15 @@ internal class FieldMockHandlerTest {
 
         @field:MockFloatRange(from = -1000f, to = 1000f)
         var doubleRange: Byte? = null
+
+        @field:MockTrue
+        var trueTest: Boolean? = null
+
+        @field:MockFalse
+        var falseTest: Boolean? = null
+
+
+        //todo char,String
     }
 
     @Test
@@ -202,6 +209,30 @@ internal class FieldMockHandlerTest {
             ).let {
                 println(it)
                 assert((it >= -1000) && (it <= 1000))
+            }
+        }
+    }
+
+    @Test
+    fun mockBool() {
+        var field = Case::class.java.getDeclaredField("trueTest")
+        //JavaCase::class.java.getDeclaredField("range")
+        val context = MockContext()
+        for (i in 0..100) {
+            FieldMockHandler.BooleanFieldMockHandler.mock(
+                context, field
+            ).let {
+                assert(it)
+            }
+        }
+
+        field = Case::class.java.getDeclaredField("falseTest")
+        //JavaCase::class.java.getDeclaredField("range")
+        for (i in 0..100) {
+            FieldMockHandler.BooleanFieldMockHandler.mock(
+                context, field
+            ).let {
+                assert(it == false)
             }
         }
     }
