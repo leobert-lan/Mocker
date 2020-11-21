@@ -2,6 +2,7 @@ package osp.leobert.utils.mocker.handler
 
 import org.junit.jupiter.api.Test
 import osp.leobert.utils.mocker.MockContext
+import osp.leobert.utils.mocker.notation.MockFloatRange
 import osp.leobert.utils.mocker.notation.MockIntDef
 import osp.leobert.utils.mocker.notation.MockIntRange
 
@@ -47,6 +48,12 @@ internal class FieldMockHandlerTest {
 
         @field:Type
         var byteDef: Byte? = null
+
+        @field:MockFloatRange(from = -1000f, to = 1000f)
+        var floatRange: Float? = null
+
+        @field:MockFloatRange(from = -1000f, to = 1000f)
+        var doubleRange: Byte? = null
     }
 
     @Test
@@ -165,6 +172,36 @@ internal class FieldMockHandlerTest {
             ).let {
                 println(it)
                 assert((it == 3.toByte()) || (it == 4.toByte()) || it == 6.toByte())
+            }
+        }
+    }
+
+    @Test
+    fun mockFloatRange() {
+        val field = Case::class.java.getDeclaredField("floatRange")
+        //JavaCase::class.java.getDeclaredField("range")
+        val context = MockContext()
+        for (i in 0..100) {
+            FieldMockHandler.FloatFieldMockHandler.mock(
+                context, field
+            ).let {
+                println(it)
+                assert((it >= -1000f) && (it <= 1000))
+            }
+        }
+    }
+
+    @Test
+    fun mockDoubleRange() {
+        val field = Case::class.java.getDeclaredField("doubleRange")
+        //JavaCase::class.java.getDeclaredField("range")
+        val context = MockContext()
+        for (i in 0..100) {
+            FieldMockHandler.DoubleFieldMockHandler.mock(
+                context, field
+            ).let {
+                println(it)
+                assert((it >= -1000) && (it <= 1000))
             }
         }
     }
