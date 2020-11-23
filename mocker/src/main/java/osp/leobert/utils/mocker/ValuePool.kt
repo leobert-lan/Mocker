@@ -1,6 +1,10 @@
 package osp.leobert.utils.mocker
 
 import osp.leobert.utils.mocker.utils.RandomUtils
+import java.lang.reflect.Field
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 /**
  * <p><b>Package:</b> osp.leobert.utils.mocker </p>
@@ -30,7 +34,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         when (type) {
             TYPE_ENUM -> {
                 enumValues.removeAll { !comparator.inRange(it, from, to) }
-                //todo 这个方式不适合复用
+                //todo 这个方式不适合复用，要求使用reset恢复初始状态
                 if (enumValues.isEmpty()) throw MockException("pool is empty")
             }
             else -> { //only the latest invocation make effect
@@ -54,6 +58,13 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
                 setRange(from, to)
             }
         }
+    }
+
+    open fun reset() {
+        type = TYPE_RANGE
+        from = null
+        to = null
+        enumValues.clear()
     }
 
 
@@ -183,9 +194,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         }
     }) {
         init {
-            ('0'..'Z').toMutableList().let {
-                setEnumValues(it)
-            }
+            reset()
         }
 
         override fun randomGet(context: MockContext): Char {
@@ -194,9 +203,14 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
             else
                 enumValues[RandomUtils.nextInt(0, enumValues.size)]
         }
-    }
 
-    //todo 其他基本类型
+        override fun reset() {
+            super.reset()
+            ('0'..'Z').toMutableList().let {
+                setEnumValues(it)
+            }
+        }
+    }
 
     abstract class LimitValuePool<T> : ValuePool<T>(comparator = object : Filter<T> {
         override fun inRange(target: T, from: T?, to: T?): Boolean {
@@ -211,6 +225,11 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         override fun setRange(from: T?, to: T?) {
             throw MockException("should not use setRange for this:${javaClass.name}")
         }
+
+        override fun reset() {
+            super.reset()
+            type = TYPE_ENUM
+        }
     }
 
     class BoolValuePool : LimitValuePool<Boolean>() {
@@ -219,6 +238,50 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
                 enumValues.first()
             else
                 RandomUtils.nextBoolean()
+        }
+    }
+
+    class EnumValuePool<T : Enum<T>>() : LimitValuePool<T>() {
+        companion object {
+            private val enumCache: MutableMap<String, Array<Enum<*>>> = HashMap()
+        }
+
+        var clazz: Class<T>? = null
+            set(value) {
+                field = value
+                reset()
+            }
+
+        override fun reset() {
+            super.reset()
+            val fClazz = clazz ?: return
+            var enums: Array<Enum<*>>? = enumCache[fClazz.name]
+            if (enums == null) {
+                try {
+                    val field: Field = fClazz.getDeclaredField("\$VALUES")
+                    field.isAccessible = true
+
+                    enums = field.get(fClazz) as Array<Enum<*>>?
+                    if (enums.isNullOrEmpty())
+                        throw MockException("空的enum不能模拟")
+
+                    enumCache[fClazz.name] = enums
+
+                } catch (e: Exception) {
+                    throw MockException("无法反射枚举：${fClazz.name}", e)
+                }
+            }
+
+            enumCache[fClazz.name]?.map { it as T }?.toMutableList()?.let {
+                setEnumValues(it)
+            }
+        }
+
+        override fun randomGet(context: MockContext): T {
+            return if (enumValues.size < 1)
+                throw MockException("it's empty in EnumValuePool")
+            else
+                enumValues[RandomUtils.nextInt(0, enumValues.size)]
         }
     }
 }

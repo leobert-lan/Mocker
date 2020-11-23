@@ -19,6 +19,7 @@ import java.util.*
  * Created by leobert on 2020/11/18.
  */
 class MockContext {
+
     ///////////////////////////////////////////////////////////////////////////
     // default configs
     ///////////////////////////////////////////////////////////////////////////
@@ -43,6 +44,7 @@ class MockContext {
     val boolValuePool: ValuePool<Boolean> = ValuePool.BoolValuePool()
     val charValuePool: ValuePool<Char> = ValuePool.CharValuePool()
 
+    val enumValuePool: ValuePool<Enum<*>> = ValuePool.EnumValuePool()
 
 ///////////////////////////////////////////////////////////////////////////
 // field mock adapter

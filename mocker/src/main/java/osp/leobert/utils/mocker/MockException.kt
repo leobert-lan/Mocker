@@ -6,4 +6,4 @@ package osp.leobert.utils.mocker
  * <p><b>Classname:</b> MockException </p>
  * Created by leobert on 2020/11/18.
  */
-class MockException(msg: String) : Exception(msg)
+class MockException(msg: String, thr: Throwable? = null) : Exception(msg, thr)

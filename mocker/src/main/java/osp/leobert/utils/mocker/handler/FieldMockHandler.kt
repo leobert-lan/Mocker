@@ -105,12 +105,12 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    class EnumFieldMockHandler : FieldMockHandler<Int>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Int {
+    class EnumFieldMockHandler<T:Enum<T>> : FieldMockHandler<T>() {
+        override fun mock(context: MockContext, field: Field?, owner: Any?): T {
             field?.let {
                 context.enumMockAdapter.adapt(context, field)
             }
-            return context.intValuePool.randomGet(context)
+            return context.enumValuePool.randomGet(context) as T
         }
     }
 
