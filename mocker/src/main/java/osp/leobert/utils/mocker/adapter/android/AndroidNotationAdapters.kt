@@ -146,7 +146,6 @@ object CharRangeAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
         if (field.isAnnotationPresent(MockCharRange::class.java)) {
             field.getAnnotation(MockCharRange::class.java).let {
-//todo got exception
                 context.charValuePool.setRange(it.from, it.to)
             }
         }

@@ -1,5 +1,6 @@
 package osp.leobert.utils.mocker.handler
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.notation.*
@@ -30,6 +31,11 @@ internal class FieldMockHandlerTest {
     @Target(AnnotationTarget.FIELD)
     @MockStringDef(value = ["Leobert", "Tony"])
     annotation class Name
+
+    class Sub(
+        @field:MockIntRange(from = -5, to = -1)
+        var intRange: Int? = null
+    )
 
     class Case {
         @field:MockIntRange(from = -5, to = -1)
@@ -77,6 +83,8 @@ internal class FieldMockHandlerTest {
 
         @field:Name
         var stringDef: String? = null
+
+        var sub: Sub? = null
     }
 
     @Test
@@ -295,6 +303,20 @@ internal class FieldMockHandlerTest {
                 println(it)
                 assert(it == "Leobert" || it == "Tony")
             }
+        }
+    }
+
+    @Test
+    fun mockBean() {
+        val field = Case::class.java.getDeclaredField("sub")
+        val context = MockContext()
+
+        FieldMockHandler.BeanFieldMockHandler(field.declaringClass).mock(
+            context, field
+        ).let {
+            println(it)
+            assert(it != null)
+            assertEquals(it?.javaClass?.name, Sub::class.java.name)
         }
     }
 }

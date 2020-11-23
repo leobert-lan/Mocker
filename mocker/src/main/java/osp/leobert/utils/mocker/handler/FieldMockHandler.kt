@@ -112,9 +112,6 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
 
-    //todo next
-
-
     object StringFieldMockHandler : FieldMockHandler<String>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): String {
             context.stringValuePool.reset()
@@ -148,6 +145,8 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
                 }
             }
             return context.createInstance(clazz).apply {
+                context.applyField(this, field, owner)
+
                 var currentClass = clazz
                 while (currentClass != Any::class.java) {
                     currentClass.declaredFields.forEach {
@@ -155,8 +154,6 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
                     }
                     currentClass = currentClass.superclass
                 }
-
-                //todo missing apply to owner?
             }
         }
     }
