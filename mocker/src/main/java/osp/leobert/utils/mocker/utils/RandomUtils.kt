@@ -16,20 +16,20 @@ object RandomUtils {
         return RANDOM.nextBoolean()
     }
 
-    fun nextByte(startInclusive: Byte, endExclusive: Byte): Byte {
-        return (startInclusive + RANDOM.nextInt(endExclusive - startInclusive)).toByte()
+    fun nextByte(startInclusive: Byte, endInclusive: Byte): Byte {
+        return (startInclusive + RANDOM.nextInt(endInclusive - startInclusive)).toByte()
     }
 
-    fun nextInt(startInclusive: Int, endExclusive: Int): Int {
-        return startInclusive + RANDOM.nextInt(endExclusive - startInclusive)
+    fun nextInt(startInclusive: Int, endInclusive: Int): Int {
+        return startInclusive + RANDOM.nextInt(endInclusive - startInclusive+1)
     }
 
-    fun nextShort(startInclusive: Short, endExclusive: Short): Short {
-        return (startInclusive + RANDOM.nextInt(endExclusive - startInclusive)).toShort()
+    fun nextShort(startInclusive: Short, endInclusive: Short): Short {
+        return (startInclusive + RANDOM.nextInt(endInclusive - startInclusive)).toShort()
     }
 
-    fun nextLong(startInclusive: Long, endExclusive: Long): Long {
-        return nextDouble(startInclusive.toDouble(), endExclusive.toDouble()).toLong()
+    fun nextLong(startInclusive: Long, endInclusive: Long): Long {
+        return nextDouble(startInclusive.toDouble(), endInclusive.toDouble()).toLong()
     }
 
     fun nextFloat(startInclusive: Float, endInclusive: Float): Float {

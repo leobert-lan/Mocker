@@ -22,10 +22,15 @@ internal class BaseMockHandlerTest {
     open class Foo {
         @MockIntRange(from = 3, to = 4)
         open var i2: Int? = null
+        override fun toString(): String {
+            return "Foo(i2=$i2)"
+        }
+
+
     }
 
     class Bean : Foo() {
-        @MockIntRange(from = 3, to = 4)
+        @MockIntRange(from = 40, to = 40)
         private var i: Int? = null
         override fun toString(): String {
             return "Bean(i=$i,i2=$i2)"
@@ -50,6 +55,12 @@ internal class BaseMockHandlerTest {
         }
     }
 
+    class Foo2<A, B>(var a: A? = null, var b: B? = null) {
+        override fun toString(): String {
+            return "Foo2(a=$a, b=$b)"
+        }
+    }
+
     @Test
     fun mockParameterizedType() {
         val type = object : TypeToken<ParameterizedTypeCase<Bean>>() {}.type
@@ -58,6 +69,20 @@ internal class BaseMockHandlerTest {
                 print(it)
                 assertEquals(it.javaClass, ParameterizedTypeCase::class.java)
                 assertEquals(it.t?.javaClass, Bean::class.java)
+            }
+    }
+
+    @Test
+    fun mockParameterizedType2() {
+        val type = object : TypeToken<Foo2<Foo,Bean>>() {}.type
+        val context = MockContext().apply { parseParameterizedType(type) }
+
+        for (i in 0..100)
+        BaseMockHandler<Foo2<Foo,Bean>>(type)
+            .mock(context).let {
+                println(it)
+                assertEquals(it.javaClass, Foo2::class.java)
+//                assertEquals(it.t?.javaClass, Bean::class.java)
             }
     }
 }
