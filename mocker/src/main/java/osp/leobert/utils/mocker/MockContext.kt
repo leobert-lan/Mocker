@@ -45,6 +45,8 @@ class MockContext {
     val charValuePool: ValuePool<Char> = ValuePool.CharValuePool()
 
     val enumValuePool: ValuePool<Enum<*>> = ValuePool.EnumValuePool()
+    val stringValuePool: ValuePool<String> = ValuePool.StringValuePool()
+
 
 ///////////////////////////////////////////////////////////////////////////
 // field mock adapter
@@ -80,7 +82,7 @@ class MockContext {
     //
 
     val stringMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+        ComposeFieldMockAdapter(arrayListOf(StringDefAdapter))
 
     val enumMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))

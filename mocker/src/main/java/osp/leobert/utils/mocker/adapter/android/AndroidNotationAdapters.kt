@@ -146,6 +146,7 @@ object CharRangeAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
         if (field.isAnnotationPresent(MockCharRange::class.java)) {
             field.getAnnotation(MockCharRange::class.java).let {
+//todo got exception
                 context.charValuePool.setRange(it.from, it.to)
             }
         }
@@ -160,6 +161,20 @@ object CharDefAdapter : FieldMockAdapter {
                     .toMutableList()
                     .let { values ->
                         context.charValuePool.setEnumValues(values)
+                    }
+
+            }
+    }
+}
+
+object StringDefAdapter : FieldMockAdapter {
+    override fun adapt(context: MockContext, field: Field) {
+        field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockStringDef::class.java) }
+            ?.let {
+                it.annotationClass.java.getAnnotation(MockStringDef::class.java).value
+                    .toMutableList()
+                    .let { values ->
+                        context.stringValuePool.setEnumValues(values)
                     }
 
             }

@@ -206,7 +206,8 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
 
         override fun reset() {
             super.reset()
-            ('0'..'Z').toMutableList().let {
+            //默认使用0-122
+            ('0'..'z').toMutableList().let {
                 setEnumValues(it)
             }
         }
@@ -241,7 +242,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         }
     }
 
-    class EnumValuePool<T : Enum<T>>() : LimitValuePool<T>() {
+    class EnumValuePool<T : Enum<T>> : LimitValuePool<T>() {
         companion object {
             private val enumCache: MutableMap<String, Array<Enum<*>>> = HashMap()
         }
@@ -280,6 +281,36 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         override fun randomGet(context: MockContext): T {
             return if (enumValues.size < 1)
                 throw MockException("it's empty in EnumValuePool")
+            else
+                enumValues[RandomUtils.nextInt(0, enumValues.size)]
+        }
+    }
+
+    class StringValuePool : LimitValuePool<String>() {
+
+        init {
+            reset()
+        }
+
+        override fun reset() {
+            super.reset()
+            arrayListOf(
+                "假如生活欺骗了你",
+                "不要悲伤，不要心急!",
+                "忧郁的日子里须要镇静",
+                "相信吧，快乐的日子将会来临！",
+                "心儿永远向往着未来；",
+                "现在却常是忧郁。",
+                "一切都是瞬息，一切都将会过去；",
+                "而那过去了的，就会成为亲切的怀恋。"
+            ).let {
+                setEnumValues(it)
+            }
+        }
+
+        override fun randomGet(context: MockContext): String {
+            return if (enumValues.size < 1)
+                throw MockException("it's empty in CharValuePool")
             else
                 enumValues[RandomUtils.nextInt(0, enumValues.size)]
         }
