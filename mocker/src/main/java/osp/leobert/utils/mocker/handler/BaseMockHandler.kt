@@ -4,6 +4,7 @@ import osp.leobert.utils.mocker.MockContext
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.lang.reflect.TypeVariable
 
 
 /**
@@ -32,11 +33,9 @@ class BaseMockHandler<T>(
 //            is GenericArrayType -> {
 //                mocker = ArrayMocker(type)
 //            }
-//            is TypeVariable<*> ->{
-//                todo
-//             return null
-//            }
-
+            is TypeVariable<*> -> {
+                BaseMockHandler<T>(context.getVariableType(type.name))
+            }
             else -> ClassMockHandler(type as Class<*>, genericTypes)
         }.mock(context, field, owner) as T
     }

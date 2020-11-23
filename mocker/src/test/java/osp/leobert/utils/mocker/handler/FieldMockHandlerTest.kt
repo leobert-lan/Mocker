@@ -311,7 +311,7 @@ internal class FieldMockHandlerTest {
         val field = Case::class.java.getDeclaredField("sub")
         val context = MockContext()
 
-        FieldMockHandler.BeanFieldMockHandler(field.declaringClass).mock(
+        FieldMockHandler.BeanFieldMockHandler(field.type).mock(
             context, field
         ).let {
             println(it)

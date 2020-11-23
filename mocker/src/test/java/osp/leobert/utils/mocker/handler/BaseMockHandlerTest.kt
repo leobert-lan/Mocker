@@ -3,6 +3,7 @@ package osp.leobert.utils.mocker.handler
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import osp.leobert.utils.mocker.MockContext
+import osp.leobert.utils.mocker.TypeToken
 import osp.leobert.utils.mocker.notation.MockIntRange
 
 /**
@@ -29,6 +30,14 @@ internal class BaseMockHandlerTest {
         override fun toString(): String {
             return "Bean(i=$i,i2=$i2)"
         }
+    }
+
+    class ParameterizedTypeCase<T> {
+
+        var t: T? = null
+        override fun toString(): String {
+            return "ParameterizedTypeCase(t=${t.toString()})"
+        }
 
 
     }
@@ -39,5 +48,16 @@ internal class BaseMockHandlerTest {
             print(it)
             assertEquals(it.javaClass, Bean::class.java)
         }
+    }
+
+    @Test
+    fun mockParameterizedType() {
+        val type = object : TypeToken<ParameterizedTypeCase<Bean>>() {}.type
+        BaseMockHandler<ParameterizedTypeCase<Bean>>(type)
+            .mock(MockContext().apply { parseParameterizedType(type) }).let {
+                print(it)
+                assertEquals(it.javaClass, ParameterizedTypeCase::class.java)
+                assertEquals(it.t?.javaClass, Bean::class.java)
+            }
     }
 }

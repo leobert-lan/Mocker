@@ -8,7 +8,9 @@ import osp.leobert.utils.mocker.handler.FieldMockHandler
 import osp.leobert.utils.mocker.handler.MockHandler
 import osp.leobert.utils.mocker.utils.UnsafeUtils
 import java.lang.reflect.Field
+import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.lang.reflect.TypeVariable
 import java.util.*
 
 
@@ -137,6 +139,19 @@ class MockContext {
      * TypeVariable缓存
      */
     private val typeVariableCache: MutableMap<String, Type> = HashMap<String, Type>()
+
+    fun parseParameterizedType(type:Type) {
+        if (type is ParameterizedType) {
+            val clazz = type.rawType as Class<*>
+            val types: Array<Type> = type.actualTypeArguments
+            val typeVariables: Array<out TypeVariable<out Class<*>>>? = clazz.typeParameters
+            if (typeVariables != null && typeVariables.isNotEmpty()) {
+                for (index in typeVariables.indices) {
+                    typeVariableCache[typeVariables[index].name] = types[index]
+                }
+            }
+        }
+    }
 
     fun beanMocker(field: Field): BeanMockHandler {
         //todo consider lru cache

@@ -139,11 +139,6 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
 
     class BeanFieldMockHandler(private val clazz: Class<*>) : FieldMockHandler<Any?>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
-            field?.let {
-                return context.beanMocker(field).mock(context, field, owner).apply {
-                    context.applyField(this, field, owner)
-                }
-            }
             return context.createInstance(clazz).apply {
                 context.applyField(this, field, owner)
 
