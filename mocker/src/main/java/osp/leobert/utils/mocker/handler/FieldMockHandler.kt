@@ -115,10 +115,7 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     //todo next
 
 
-
-
-
-    class StringFieldMockHandler : FieldMockHandler<String>() {
+    object StringFieldMockHandler : FieldMockHandler<String>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): String {
             context.stringValuePool.reset()
             field?.let {
