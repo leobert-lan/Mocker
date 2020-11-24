@@ -30,7 +30,7 @@ internal class BaseMockHandlerTest {
     }
 
     class Bean : Foo() {
-        @MockIntRange(from = 40, to = 40)
+        @MockIntRange(from = 30, to = 40)
         private var i: Int? = null
         override fun toString(): String {
             return "Bean(i=$i,i2=$i2)"

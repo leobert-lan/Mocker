@@ -21,7 +21,7 @@ object RandomUtils {
     }
 
     fun nextInt(startInclusive: Int, endInclusive: Int): Int {
-        return startInclusive + RANDOM.nextInt(endInclusive - startInclusive+1)
+        return startInclusive + RANDOM.nextInt(endInclusive - startInclusive + 1)
     }
 
     fun nextShort(startInclusive: Short, endInclusive: Short): Short {
