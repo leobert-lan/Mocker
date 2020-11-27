@@ -16,7 +16,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * <p><b>Package:</b> osp.leobert.utils.mocker.notation </p>
  * <p><b>Project:</b> Mocker </p>
  * <p><b>Classname:</b> MockCollection </p>
- * <p><b>Description:</b> TODO </p>
  * Created by leobert on 2020/11/24.
  */
 @Retention(RUNTIME)

@@ -9,7 +9,7 @@ import java.lang.reflect.Field
  * <p><b>Package:</b> osp.leobert.utils.mocker.adapter.android </p>
  * <p><b>Project:</b> Mocker </p>
  * <p><b>Classname:</b> AndroidNotationAdapters </p>
- * <p><b>Description:</b> android中的注解限制,然而androidx的注解仅保留到class，迁移了一部分注解 </p>
+ * <p><b>Description:</b> 原意是想使用android中的注解限制,然而androidx的注解仅保留到class，迁移了一部分注解 </p>
  * Created by leobert on 2020/11/19.
  */
 object IntRangeAdapter : FieldMockAdapter {

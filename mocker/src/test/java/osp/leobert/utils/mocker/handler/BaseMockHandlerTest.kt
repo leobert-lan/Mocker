@@ -74,15 +74,41 @@ internal class BaseMockHandlerTest {
 
     @Test
     fun mockParameterizedType2() {
-        val type = object : TypeToken<Foo2<Foo,Bean>>() {}.type
+        val type = object : TypeToken<Foo2<Foo, Bean>>() {}.type
         val context = MockContext().apply { parseParameterizedType(type) }
 
         for (i in 0..100)
-        BaseMockHandler<Foo2<Foo,Bean>>(type)
-            .mock(context).let {
-                println(it)
-                assertEquals(it.javaClass, Foo2::class.java)
+            BaseMockHandler<Foo2<Foo, Bean>>(type)
+                .mock(context).let {
+                    println(it)
+                    assertEquals(it.javaClass, Foo2::class.java)
 //                assertEquals(it.t?.javaClass, Bean::class.java)
-            }
+                }
     }
+
+    class ListTestCase(var list: List<Int>? = null, var arrayList: ArrayList<Int>? = null){
+        override fun toString(): String {
+            return "ListTestCase(list=$list, arrayList=$arrayList)"
+        }
+    }
+
+
+
+    @Test
+    fun mockList() {
+//        val type = object : TypeToken<Foo2<Foo, Bean>>() {}.type
+//        val context = MockContext().apply { parseParameterizedType(type) }
+//
+//        for (i in 0..100)
+//            BaseMockHandler<Foo2<Foo, Bean>>(type)
+//                .mock(context).let {
+//                    println(it)
+//                    assertEquals(it.javaClass, Foo2::class.java)
+//                }
+
+        BaseMockHandler<ListTestCase>(ListTestCase::class.java).mock(MockContext()).let {
+            println(it)
+        }
+    }
+
 }

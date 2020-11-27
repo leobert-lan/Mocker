@@ -2,6 +2,7 @@ package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
 import java.lang.reflect.Field
+import java.lang.reflect.Modifier
 
 /**
  * <p><b>Package:</b> osp.leobert.utils.mocker.handler </p>
@@ -124,7 +125,7 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    class EnumFieldMockHandler<T:Enum<T>> : FieldMockHandler<T>() {
+    class EnumFieldMockHandler<T : Enum<T>> : FieldMockHandler<T>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): T {
             context.enumValuePool.reset()
             field?.let {
@@ -137,15 +138,25 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
 
-    class BeanFieldMockHandler(private val clazz: Class<*>) : FieldMockHandler<Any?>() {
+    class BeanFieldMockHandler(
+        private val clazz: Class<*>,
+        private val considerSuper: Boolean = true
+    ) : FieldMockHandler<Any?>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
             return context.createInstance(clazz).apply {
                 context.applyField(this, field, owner)
 
                 var currentClass = clazz
-                while (currentClass != Any::class.java) {
+                while (considerSuper && currentClass != Any::class.java) {
                     currentClass.declaredFields.forEach {
-                        BaseMockHandler<Any>(type = it.genericType).mock(context, it, this)
+                        val fieldModifiers = it.modifiers
+                        if (Modifier.isAbstract(fieldModifiers) ||
+                            Modifier.isStatic(fieldModifiers)
+                        ) {
+                            // ignore abstract or static field
+                        } else {
+                            BaseMockHandler<Any>(type = it.genericType).mock(context, it, this)
+                        }
                     }
                     currentClass = currentClass.superclass
                 }

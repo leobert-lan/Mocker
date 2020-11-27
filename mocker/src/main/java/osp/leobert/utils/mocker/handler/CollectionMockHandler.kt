@@ -1,6 +1,7 @@
 package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
+import osp.leobert.utils.mocker.MockException
 import java.lang.reflect.Field
 import java.lang.reflect.Type
 
@@ -13,9 +14,21 @@ import java.lang.reflect.Type
  */
 class CollectionMockHandler(
     private val clazz: Class<*>, val genericTypes: Array<Type>
-) :MockHandler<Any> {
-    override fun mock(context: MockContext, field: Field?, owner: Any?): Any {
+) : MockHandler<Any?> {
+    override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
 //        Collection
-        TODO("Not yet implemented")
+        return when {
+            clazz.typeName == List::class.java.typeName ||
+                    clazz.typeName == MutableList::class.java.typeName -> {
+                FieldMockHandler.BeanFieldMockHandler(ArrayList::class.java, false)
+            }
+            List::class.java.isAssignableFrom(clazz) -> {
+                FieldMockHandler.BeanFieldMockHandler(clazz, false)
+            }
+
+            else -> throw MockException("not supported for ${clazz.typeName}")
+        }.mock(context, field, owner)
+
+
     }
 }

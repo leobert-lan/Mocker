@@ -11,7 +11,7 @@ import java.lang.reflect.Type
  * Created by leobert on 2020/11/19.
  */
 internal class ClassMockHandler(
-    private val clazz: Class<*>, val genericTypes: Array<Type>
+    private val clazz: Class<*>, private val genericTypes: Array<Type>
 ) : MockHandler<Any?> {
 
 
@@ -23,9 +23,9 @@ internal class ClassMockHandler(
 //            MutableMap::class.java.isAssignableFrom(clazz) -> {
 //                mocker = MapMocker(genericTypes)
 //            }
-//            MutableCollection::class.java.isAssignableFrom(clazz) -> {
-//                mocker = CollectionMocker(clazz, genericTypes[0])
-//            }
+            Collection::class.java.isAssignableFrom(clazz) -> {
+                CollectionMockHandler(clazz, genericTypes)
+            }
             clazz.isEnum -> FieldMockHandler.EnumFieldMockHandler()
             else -> context.mockHandler(clazz) ?: FieldMockHandler.BeanFieldMockHandler(clazz)
 
