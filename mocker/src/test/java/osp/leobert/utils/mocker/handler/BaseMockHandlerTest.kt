@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.TypeToken
 import osp.leobert.utils.mocker.notation.MockIntRange
+import osp.leobert.utils.mocker.notation.MockSize
 
 /**
  *
@@ -86,12 +87,17 @@ internal class BaseMockHandlerTest {
                 }
     }
 
-    class ListTestCase(var list: List<Int>? = null, var arrayList: ArrayList<Int>? = null){
+    class ListTestCase(
+        @field:MockSize(min = 3, max = 4)
+        var list: List<Int>? = null,
+
+        @field:MockSize(value = 2)
+        var arrayList: ArrayList<Int>? = null
+    ) {
         override fun toString(): String {
             return "ListTestCase(list=$list, arrayList=$arrayList)"
         }
     }
-
 
 
     @Test

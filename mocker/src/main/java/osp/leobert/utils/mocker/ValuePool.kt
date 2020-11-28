@@ -1,5 +1,6 @@
 package osp.leobert.utils.mocker
 
+import osp.leobert.utils.mocker.handler.FieldMockHandler
 import osp.leobert.utils.mocker.utils.RandomUtils
 import java.lang.reflect.Field
 import java.util.*
@@ -89,7 +90,7 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
         }
     }
 
-    class IntValuePool : ValuePool<Int>(comparator = object : Filter<Int> {
+    open class IntValuePool : ValuePool<Int>(comparator = object : Filter<Int> {
         override fun inRange(target: Int, from: Int?, to: Int?): Boolean {
             return (from?.run { target >= this } ?: true) && (to?.run { target <= to } ?: true)
         }
@@ -102,6 +103,20 @@ sealed class ValuePool<T>(private val comparator: Filter<T>) {
                 }
                 else -> {
                     RandomUtils.nextInt(from ?: context.intRange[0], to ?: context.intRange[1])
+                }
+            }
+        }
+    }
+
+    class SizeValuePool:IntValuePool() {
+        override fun randomGet(context: MockContext): Int {
+            return when (type) {
+                TYPE_ENUM -> {
+                    enumValues.getOrNull(RandomUtils.nextInt(0, enumValues.size))
+                        ?: throw MockException("无法获取目标值")
+                }
+                else -> {
+                    RandomUtils.nextInt(from ?: context.sizeRange[0], to ?: context.sizeRange[1])
                 }
             }
         }

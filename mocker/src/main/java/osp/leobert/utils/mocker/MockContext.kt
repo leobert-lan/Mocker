@@ -3,7 +3,6 @@ package osp.leobert.utils.mocker
 import osp.leobert.utils.mocker.adapter.ComposeFieldMockAdapter
 import osp.leobert.utils.mocker.adapter.FieldMockAdapter
 import osp.leobert.utils.mocker.adapter.android.*
-import osp.leobert.utils.mocker.handler.BeanMockHandler
 import osp.leobert.utils.mocker.handler.FieldMockHandler
 import osp.leobert.utils.mocker.handler.MockHandler
 import osp.leobert.utils.mocker.utils.UnsafeUtils
@@ -49,6 +48,8 @@ class MockContext {
     val enumValuePool: ValuePool<Enum<*>> = ValuePool.EnumValuePool()
     val stringValuePool: ValuePool<String> = ValuePool.StringValuePool()
 
+    val sizeValuePool: ValuePool<Int> = ValuePool.SizeValuePool()
+
 
 ///////////////////////////////////////////////////////////////////////////
 // field mock adapter
@@ -88,6 +89,9 @@ class MockContext {
 
     val enumMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+
+    val collectionMockAdapter: FieldMockAdapter =
+        ComposeFieldMockAdapter(arrayListOf(SizeAdapter))
 
     ///////////////////////////////////////////////////////////////////////////
 // strategy
@@ -140,7 +144,13 @@ class MockContext {
      */
     private val typeVariableCache: MutableMap<String, Type> = HashMap<String, Type>()
 
-    fun parseParameterizedType(type:Type) {
+    private val useNewInstanceCases: MutableSet<Class<*>> = hashSetOf(
+        java.util.ArrayList::class.java,
+        java.util.HashSet::class.java,
+        java.util.LinkedHashSet::class.java
+    )
+
+    fun parseParameterizedType(type: Type) {
         if (type is ParameterizedType) {
             val clazz = type.rawType as Class<*>
             val types: Array<Type> = type.actualTypeArguments
@@ -153,11 +163,6 @@ class MockContext {
         }
     }
 
-    fun beanMocker(field: Field): BeanMockHandler {
-        //todo consider lru cache
-        return BeanMockHandler(field.type)
-    }
-
     fun mockHandler(clazz: Class<*>): MockHandler<*>? {
         return fieldMockStrategy[clazz]
     }
@@ -168,9 +173,8 @@ class MockContext {
 
     fun createInstance(clazz: Class<*>): Any {
 //缓存？
-        //adapter
-
-        return UnsafeUtils.newInstance(clazz)
+        return clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
+            ?: UnsafeUtils.newInstance(clazz)
     }
 
     fun applyField(value: Any?, field: Field?, owner: Any?) {

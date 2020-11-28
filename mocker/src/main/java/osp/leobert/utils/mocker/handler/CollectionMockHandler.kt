@@ -16,19 +16,57 @@ class CollectionMockHandler(
     private val clazz: Class<*>, val genericTypes: Array<Type>
 ) : MockHandler<Any?> {
     override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
-//        Collection
         return when {
             clazz.typeName == List::class.java.typeName ||
                     clazz.typeName == MutableList::class.java.typeName -> {
-                FieldMockHandler.BeanFieldMockHandler(ArrayList::class.java, false)
+                mockArrayList(context, field, owner)
             }
             List::class.java.isAssignableFrom(clazz) -> {
-                FieldMockHandler.BeanFieldMockHandler(clazz, false)
+                mockList(context, field, owner)
             }
 
             else -> throw MockException("not supported for ${clazz.typeName}")
-        }.mock(context, field, owner)
+        }
 
+    }
 
+    private fun mockArrayList(context: MockContext, field: Field?, owner: Any?): ArrayList<Any?>? {
+
+        return (FieldMockHandler.BeanFieldMockHandler(
+            ArrayList::class.java,
+            false
+        ).mock(
+            context, field, owner
+        ) as ArrayList<Any?>?)?.apply {
+            insertCollectionItem(context, field, this)
+        }
+    }
+
+    private fun mockList(context: MockContext, field: Field?, owner: Any?): List<Any?>? {
+        return (FieldMockHandler.BeanFieldMockHandler(clazz, false).mock(
+            context, field, owner
+        ) as List<Any?>?)?.apply {
+            if (this is MutableCollection<*>) {
+                insertCollectionItem(context, field, this as MutableCollection<Any?>)
+            }
+        }
+    }
+
+    private fun insertCollectionItem(
+        context: MockContext,
+        field: Field?,
+        collection: MutableCollection<Any?>
+    ) {
+        context.sizeValuePool.reset()
+        field?.let {
+            context.collectionMockAdapter.adapt(context, field)
+        }
+        val size = context.sizeValuePool.randomGet(context)
+        val itemMockHandler = BaseMockHandler<Any?>(genericTypes.first())
+        for (i in 0 until size) {
+            collection.add(
+                itemMockHandler.mock(context)
+            )
+        }
     }
 }

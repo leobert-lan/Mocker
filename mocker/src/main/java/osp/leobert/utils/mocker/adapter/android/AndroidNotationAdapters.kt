@@ -134,7 +134,7 @@ object DoubleRangeAdapter : FieldMockAdapter {
 object BooleanAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
         if (field.isAnnotationPresent(MockTrue::class.java)) {
-                context.boolValuePool.setEnumValues(arrayListOf(true))
+            context.boolValuePool.setEnumValues(arrayListOf(true))
         }
         if (field.isAnnotationPresent(MockFalse::class.java)) {
             context.boolValuePool.setEnumValues(arrayListOf(false))
@@ -177,5 +177,24 @@ object StringDefAdapter : FieldMockAdapter {
                     }
 
             }
+    }
+}
+
+object SizeAdapter : FieldMockAdapter {
+    private val list by lazy { arrayListOf<Int>() }
+    override fun adapt(context: MockContext, field: Field) {
+        if (field.isAnnotationPresent(MockSize::class.java)) {
+            field.getAnnotation(MockSize::class.java).let {
+
+                if (it.value < 0) {
+                    context.sizeValuePool.setRange(it.min, it.max)
+                } else {
+                    list.clear()
+                    list.add(it.value)
+                    context.sizeValuePool.setEnumValues(list)
+                }
+
+            }
+        }
     }
 }
