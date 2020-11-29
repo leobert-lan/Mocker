@@ -1,5 +1,6 @@
 package osp.leobert.utils.mocker.handler
 
+import com.google.gson.Gson
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import osp.leobert.utils.mocker.MockContext
@@ -10,12 +11,8 @@ import osp.leobert.utils.mocker.notation.MockSize
 /**
  *
  * **Package:** osp.leobert.utils.mocker.handler
- *
  * **Project:** Mocker
- *
  * **Classname:** BaseMockHandlerTest
- *
- * **Description:** TODO
  * Created by leobert on 2020/11/19.
  */
 internal class BaseMockHandlerTest {
@@ -99,10 +96,15 @@ internal class BaseMockHandlerTest {
 
         @field:MockSize(value = 2)
         var hashSet: HashSet<Foo>? = null,
+
+        @field:MockSize(min = 3, max = 4)
+        var listOfList: List<List<Foo>>? = null,
     ) {
 
         override fun toString(): String {
-            return "CollectionTestCase(list=$list, arrayList=$arrayList, set=$set, hashSet=$hashSet)"
+            return "CollectionTestCase(list=$list, " +
+                    "arrayList=$arrayList, set=$set, " +
+                    "hashSet=$hashSet, listOfList=$listOfList)"
         }
     }
 
@@ -110,9 +112,38 @@ internal class BaseMockHandlerTest {
     @Test
     fun mockCollection() {
 
-        BaseMockHandler<CollectionTestCase>(CollectionTestCase::class.java).mock(MockContext()).let {
+        BaseMockHandler<CollectionTestCase>(CollectionTestCase::class.java).mock(MockContext())
+            .let {
+                println(it)
+                //todo check size and type
+            }
+    }
+
+    class ArrayTestCase {
+        @field:MockSize(min = 3, max = 4)
+        var intArray: Array<Char>? = null
+
+        @field:MockSize(min = 3, max = 4)
+        var charArrayArray: Array<Array<Int>>? = null
+
+        @field:MockSize(value = 2)
+        var fooArray: Array<Foo>? = null
+
+
+
+        override fun toString(): String {
+            return "ArrayTestCase:${Gson().toJson(this)}"
+        }
+
+
+    }
+
+
+    @Test
+    fun mockArray() {
+
+        BaseMockHandler<ArrayTestCase>(ArrayTestCase::class.java).mock(MockContext()).let {
             println(it)
         }
     }
-
 }

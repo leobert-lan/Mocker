@@ -26,11 +26,9 @@ class BaseMockHandler<T>(
             is ParameterizedType -> {
                 GenericMockHandler(type)
             }
-            //todo 完成这个复杂的玩意
-
-//            is GenericArrayType -> {
-//                mocker = ArrayMocker(type)
-//            }
+            is GenericArrayType -> {
+                ArrayMockHandler(type)
+            }
             is TypeVariable<*> -> {
                 BaseMockHandler<T>(context.getVariableType(type.name))
             }

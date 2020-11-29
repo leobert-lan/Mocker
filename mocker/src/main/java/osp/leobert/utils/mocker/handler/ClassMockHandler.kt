@@ -17,9 +17,9 @@ internal class ClassMockHandler(
 
     override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
         return when {
-//            clazz.isArray -> {
-//                mocker = ArrayMocker(clazz)
-//            }
+            clazz.isArray -> {
+                ArrayMockHandler(clazz)
+            }
 //            MutableMap::class.java.isAssignableFrom(clazz) -> {
 //                mocker = MapMocker(genericTypes)
 //            }

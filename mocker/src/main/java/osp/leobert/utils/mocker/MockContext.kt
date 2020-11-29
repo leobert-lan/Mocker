@@ -33,7 +33,7 @@ class MockContext {
     var dateRange = arrayOf("1970-01-01", "2100-12-31")
 
     //存在嵌套使用时的风险，需深度优先，创建完目标size后立即使用，再对item进行mock
-    var sizeRange = intArrayOf(2, 20)
+    var sizeRange = intArrayOf(2, 3)
 
     val intValuePool: ValuePool<Int> = ValuePool.IntValuePool()
     val shortValuePool: ValuePool<Short> = ValuePool.ShortValuePool()
@@ -122,11 +122,12 @@ class MockContext {
             this[Char::class.java] = FieldMockHandler.CharFieldMockHandler
             this[java.lang.Character::class.java] = FieldMockHandler.CharFieldMockHandler
 
+            this[java.lang.String::class.java] = FieldMockHandler.StringFieldMockHandler
+
             // TODO: 2020/11/20 next
 
             //        registerMocker(BIG_INTEGER_MOCKER, BigInteger.class);
             //        registerMocker(BIG_DECIMAL_MOCKER, BigDecimal.class);
-            //        registerMocker(STRING_MOCKER, String.class);
             //        registerMocker(DATE_MOCKER, Date.class);
         }
 
