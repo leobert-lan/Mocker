@@ -26,8 +26,6 @@ internal class BaseMockHandlerTest {
         override fun toString(): String {
             return "Foo(i2=$i2)"
         }
-
-
     }
 
     class Bean : Foo() {
@@ -87,32 +85,32 @@ internal class BaseMockHandlerTest {
                 }
     }
 
-    class ListTestCase(
+    class CollectionTestCase(
         @field:MockSize(min = 3, max = 4)
         var list: List<Int>? = null,
 
         @field:MockSize(value = 2)
-        var arrayList: ArrayList<Int>? = null
+        var arrayList: ArrayList<Int>? = null,
+
+        //相当于：? extends osp.leobert.utils.mocker.handler.BaseMockHandlerTest$Foo
+        //因为是out Foo
+        @field:MockSize(min = 3, max = 4)
+        var set: Set<Foo>? = null,
+
+        @field:MockSize(value = 2)
+        var hashSet: HashSet<Foo>? = null,
     ) {
+
         override fun toString(): String {
-            return "ListTestCase(list=$list, arrayList=$arrayList)"
+            return "CollectionTestCase(list=$list, arrayList=$arrayList, set=$set, hashSet=$hashSet)"
         }
     }
 
 
     @Test
-    fun mockList() {
-//        val type = object : TypeToken<Foo2<Foo, Bean>>() {}.type
-//        val context = MockContext().apply { parseParameterizedType(type) }
-//
-//        for (i in 0..100)
-//            BaseMockHandler<Foo2<Foo, Bean>>(type)
-//                .mock(context).let {
-//                    println(it)
-//                    assertEquals(it.javaClass, Foo2::class.java)
-//                }
+    fun mockCollection() {
 
-        BaseMockHandler<ListTestCase>(ListTestCase::class.java).mock(MockContext()).let {
+        BaseMockHandler<CollectionTestCase>(CollectionTestCase::class.java).mock(MockContext()).let {
             println(it)
         }
     }

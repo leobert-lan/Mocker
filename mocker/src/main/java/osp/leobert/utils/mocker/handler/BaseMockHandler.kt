@@ -1,10 +1,8 @@
 package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
-import java.lang.reflect.Field
-import java.lang.reflect.ParameterizedType
-import java.lang.reflect.Type
-import java.lang.reflect.TypeVariable
+import osp.leobert.utils.mocker.MockException
+import java.lang.reflect.*
 
 
 /**
@@ -36,7 +34,13 @@ class BaseMockHandler<T>(
             is TypeVariable<*> -> {
                 BaseMockHandler<T>(context.getVariableType(type.name))
             }
-            else -> ClassMockHandler(type as Class<*>, genericTypes)
+            is WildcardType -> {
+                BaseMockHandler<Any>(type.upperBounds[0], genericTypes)
+            }
+            is Class<*> -> {
+                ClassMockHandler(type, genericTypes)
+            }
+            else -> throw MockException("暂不支持${type.typeName}")
         }.mock(context, field, owner) as T
     }
 

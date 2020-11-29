@@ -9,11 +9,10 @@ import java.lang.reflect.Type
  * <p><b>Package:</b> osp.leobert.utils.mocker.handler </p>
  * <p><b>Project:</b> Mocker </p>
  * <p><b>Classname:</b> CollectionMockHandler </p>
- * <p><b>Description:</b> TODO </p>
  * Created by leobert on 2020/11/24.
  */
 class CollectionMockHandler(
-    private val clazz: Class<*>, val genericTypes: Array<Type>
+    private val clazz: Class<*>, private val genericTypes: Array<Type>
 ) : MockHandler<Any?> {
     override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
         return when {
@@ -23,6 +22,13 @@ class CollectionMockHandler(
             }
             List::class.java.isAssignableFrom(clazz) -> {
                 mockList(context, field, owner)
+            }
+            clazz.typeName == Set::class.java.typeName ||
+                    clazz.typeName == MutableSet::class.java.typeName -> {
+                mockHashSet(context, field, owner)
+            }
+            Set::class.java.isAssignableFrom(clazz) -> {
+                mockSet(context, field, owner)
             }
 
             else -> throw MockException("not supported for ${clazz.typeName}")
@@ -46,6 +52,28 @@ class CollectionMockHandler(
         return (FieldMockHandler.BeanFieldMockHandler(clazz, false).mock(
             context, field, owner
         ) as List<Any?>?)?.apply {
+            if (this is MutableCollection<*>) {
+                insertCollectionItem(context, field, this as MutableCollection<Any?>)
+            }
+        }
+    }
+
+    private fun mockHashSet(context: MockContext, field: Field?, owner: Any?): HashSet<Any?>? {
+
+        return (FieldMockHandler.BeanFieldMockHandler(
+            HashSet::class.java,
+            false
+        ).mock(
+            context, field, owner
+        ) as HashSet<Any?>?)?.apply {
+            insertCollectionItem(context, field, this)
+        }
+    }
+
+    private fun mockSet(context: MockContext, field: Field?, owner: Any?): Set<Any?>? {
+        return (FieldMockHandler.BeanFieldMockHandler(clazz, false).mock(
+            context, field, owner
+        ) as Set<Any?>?)?.apply {
             if (this is MutableCollection<*>) {
                 insertCollectionItem(context, field, this as MutableCollection<Any?>)
             }
