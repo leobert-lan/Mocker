@@ -129,6 +129,11 @@ internal class BaseMockHandlerTest {
         @field:MockSize(value = 2)
         var fooArray: Array<Foo>? = null
 
+        @field:MockSize(value = 1)
+        var genericArray: Array<ParameterizedTypeCase<Foo>>? = null
+
+        @field:MockSize(value = 2)
+        var genericArrayArrayArray: Array<Array<Array<ParameterizedTypeCase<Foo>>>>? = null
 
 
         override fun toString(): String {

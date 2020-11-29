@@ -82,8 +82,6 @@ class MockContext {
     val charMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(CharRangeAdapter, CharDefAdapter))
 
-    //
-
     val stringMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(StringDefAdapter))
 
