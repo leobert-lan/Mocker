@@ -146,7 +146,9 @@ class MockContext {
     private val useNewInstanceCases: MutableSet<Class<*>> = hashSetOf(
         java.util.ArrayList::class.java,
         java.util.HashSet::class.java,
-        java.util.LinkedHashSet::class.java
+        java.util.LinkedHashSet::class.java,
+        java.util.HashMap::class.java,
+        java.util.LinkedHashMap::class.java
     )
 
     fun parseParameterizedType(type: Type) {
@@ -182,6 +184,4 @@ class MockContext {
             field?.set(it, value)
         }
     }
-
-    //todo 其他基本类型的adapter
 }

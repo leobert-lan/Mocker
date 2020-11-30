@@ -90,7 +90,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockIntRange() {
         val field = Case::class.java.getDeclaredField("intRange")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.IntFieldMockHandler.mock(
@@ -105,7 +105,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockIntDef() {
         val field = Case::class.java.getDeclaredField("intDef")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.IntFieldMockHandler.mock(
@@ -120,7 +120,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockLongRange() {
         val field = Case::class.java.getDeclaredField("longRange")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.LongFieldMockHandler.mock(
@@ -135,7 +135,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockLongDef() {
         val field = Case::class.java.getDeclaredField("longDef")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.LongFieldMockHandler.mock(
@@ -150,7 +150,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockShortRange() {
         val field = Case::class.java.getDeclaredField("shortRange")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.ShortFieldMockHandler.mock(
@@ -165,7 +165,6 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockShortDef() {
         val field = Case::class.java.getDeclaredField("shortDef")
-        //JavaCase::class.java.getDeclaredField("range")
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.ShortFieldMockHandler.mock(
@@ -180,7 +179,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockByteRange() {
         val field = Case::class.java.getDeclaredField("byteRange")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.ByteFieldMockHandler.mock(
@@ -195,7 +194,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockByteDef() {
         val field = Case::class.java.getDeclaredField("byteDef")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.ByteFieldMockHandler.mock(
@@ -210,7 +209,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockFloatRange() {
         val field = Case::class.java.getDeclaredField("floatRange")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.FloatFieldMockHandler.mock(
@@ -225,7 +224,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockDoubleRange() {
         val field = Case::class.java.getDeclaredField("doubleRange")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.DoubleFieldMockHandler.mock(
@@ -240,7 +239,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockBool() {
         var field = Case::class.java.getDeclaredField("trueTest")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.BooleanFieldMockHandler.mock(
@@ -251,7 +250,7 @@ internal class FieldMockHandlerTest {
         }
 
         field = Case::class.java.getDeclaredField("falseTest")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         for (i in 0..100) {
             FieldMockHandler.BooleanFieldMockHandler.mock(
                 context, field
@@ -264,7 +263,6 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockCharRange() {
         val field = Case::class.java.getDeclaredField("charRange")
-        //JavaCase::class.java.getDeclaredField("range")
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.CharFieldMockHandler.mock(
@@ -279,7 +277,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockCharDef() {
         val field = Case::class.java.getDeclaredField("charDef")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.CharFieldMockHandler.mock(
@@ -294,7 +292,7 @@ internal class FieldMockHandlerTest {
     @Test
     fun mockStringDef() {
         val field = Case::class.java.getDeclaredField("stringDef")
-        //JavaCase::class.java.getDeclaredField("range")
+        
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.StringFieldMockHandler.mock(
@@ -316,7 +314,7 @@ internal class FieldMockHandlerTest {
         ).let {
             println(it)
             assert(it != null)
-            assertEquals(it?.javaClass?.name, Sub::class.java.name)
+            assertEquals( Sub::class.java.name,it?.javaClass?.name)
         }
     }
 }

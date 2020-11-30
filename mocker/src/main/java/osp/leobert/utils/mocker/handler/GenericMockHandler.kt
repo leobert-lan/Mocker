@@ -12,6 +12,7 @@ import java.lang.reflect.ParameterizedType
  */
 internal class GenericMockHandler(private val type: ParameterizedType) : MockHandler<Any> {
     override fun mock(context: MockContext, field: Field?, owner: Any?): Any {
+        context.parseParameterizedType(type)
         return BaseMockHandler<Any>(type.rawType, type.actualTypeArguments).mock(context,field, owner)
     }
 }

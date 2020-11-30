@@ -22,7 +22,7 @@ internal class RandomUtilsTest {
 
     @Test
     fun nextInt() {
-        RandomUtils.nextInt(0, 1).let {
+        RandomUtils.nextInt(0, 0).let {
             assertEquals(it, 0)
         }
     }

@@ -20,9 +20,9 @@ internal class ClassMockHandler(
             clazz.isArray -> {
                 ArrayMockHandler(clazz)
             }
-//            MutableMap::class.java.isAssignableFrom(clazz) -> {
-//                mocker = MapMocker(genericTypes)
-//            }
+            Map::class.java.isAssignableFrom(clazz) -> {
+                MapMockHandler(clazz, genericTypes)
+            }
             Collection::class.java.isAssignableFrom(clazz) -> {
                 CollectionMockHandler(clazz, genericTypes)
             }

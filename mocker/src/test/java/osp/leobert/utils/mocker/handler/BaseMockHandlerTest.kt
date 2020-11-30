@@ -47,7 +47,7 @@ internal class BaseMockHandlerTest {
     fun mockBean() {
         BaseMockHandler<Bean>(Bean::class.java).mock(MockContext()).let {
             print(it)
-            assertEquals(it.javaClass, Bean::class.java)
+            assertEquals(Bean::class.java, it.javaClass)
         }
     }
 
@@ -63,8 +63,8 @@ internal class BaseMockHandlerTest {
         BaseMockHandler<ParameterizedTypeCase<Bean>>(type)
             .mock(MockContext().apply { parseParameterizedType(type) }).let {
                 print(it)
-                assertEquals(it.javaClass, ParameterizedTypeCase::class.java)
-                assertEquals(it.t?.javaClass, Bean::class.java)
+                assertEquals(ParameterizedTypeCase::class.java, it.javaClass)
+                assertEquals(Bean::class.java, it.t?.javaClass)
             }
     }
 
@@ -77,8 +77,7 @@ internal class BaseMockHandlerTest {
             BaseMockHandler<Foo2<Foo, Bean>>(type)
                 .mock(context).let {
                     println(it)
-                    assertEquals(it.javaClass, Foo2::class.java)
-//                assertEquals(it.t?.javaClass, Bean::class.java)
+                    assertEquals(Foo2::class.java, it.javaClass)
                 }
     }
 
@@ -115,7 +114,11 @@ internal class BaseMockHandlerTest {
         BaseMockHandler<CollectionTestCase>(CollectionTestCase::class.java).mock(MockContext())
             .let {
                 println(it)
-                //todo check size and type
+                assert(it.list?.size ?: 0 in 3..4)
+                assert(it.arrayList?.size == 2)
+                assert(it.set?.size ?: 0 in 3..4)
+                assert(it.hashSet?.size == 2)
+                assert(it.listOfList?.size ?: 0 in 3..4)
             }
     }
 
@@ -130,7 +133,7 @@ internal class BaseMockHandlerTest {
         var fooArray: Array<Foo>? = null
 
         @field:MockSize(value = 1)
-        var genericArray: Array<ParameterizedTypeCase<Foo>>? = null
+        var genericArray: Array<ParameterizedTypeCase<Foo2<Int,Foo>>>? = null
 
         @field:MockSize(value = 2)
         var genericArrayArrayArray: Array<Array<Array<ParameterizedTypeCase<Foo>>>>? = null
@@ -139,8 +142,6 @@ internal class BaseMockHandlerTest {
         override fun toString(): String {
             return "ArrayTestCase:${Gson().toJson(this)}"
         }
-
-
     }
 
 
@@ -150,5 +151,37 @@ internal class BaseMockHandlerTest {
         BaseMockHandler<ArrayTestCase>(ArrayTestCase::class.java).mock(MockContext()).let {
             println(it)
         }
+    }
+
+    class MapTestCase {
+        @field:MockSize(min = 3, max = 4)
+        var map: Map<String,Foo>? = null
+
+        @field:MockSize(min = 3, max = 4)
+        var hashMap: HashMap<Int,String>? = null
+
+        @field:MockSize(min = 3, max = 4)
+        var hashMap2: HashMap<Int,ParameterizedTypeCase<Foo>>? = null
+
+        override fun toString(): String {
+            return "MapTestCase:${Gson().toJson(this)}"
+        }
+    }
+
+    @Test
+    fun mockMap() {
+        val typetoken = object :TypeToken<MapTestCase>(){}
+
+        BaseMockHandler<MapTestCase>(typetoken.type)
+            .mock(MockContext().apply { parseParameterizedType(typetoken.type) }
+            ).let {
+            println(it)
+        }
+
+        BaseMockHandler<MapTestCase>(MapTestCase::class.java)
+            .mock(MockContext()
+            ).let {
+                println(it)
+            }
     }
 }
