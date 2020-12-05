@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test
  * **Project:** Mocker
  *
  * **Classname:** RandomUtilsTest
- *
- * **Description:** TODO
  * Created by leobert on 2020/11/18.
  */
 internal class RandomUtilsTest {

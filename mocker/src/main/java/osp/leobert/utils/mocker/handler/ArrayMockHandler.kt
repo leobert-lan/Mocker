@@ -20,14 +20,10 @@ class ArrayMockHandler(private val type: Type) : MockHandler<Any?> {
                     insertItemIntoArray(context, type.componentType, this as Array<Any?>)
                 }
             }
-            // e.g. TODO:Array mock;
-            //  osp.leobert.utils.mocker.handler.BaseMockHandlerTest$ParameterizedTypeCase<osp.leobert.utils.mocker.handler.BaseMockHandlerTest$Foo>[],
-            //  osp.leobert.utils.mocker.handler.BaseMockHandlerTest$ParameterizedTypeCase<osp.leobert.utils.mocker.handler.BaseMockHandlerTest$Foo>[]
             is GenericArrayType -> {
-                // TODO: 2020/11/29
                 createGenericArray(context,field, type)
             }
-            else -> throw MockException("TODO:Array mock; ${type.typeName},${type}")
+            else -> throw MockException("Not Supported:Array mock; ${type.typeName},${type}")
         }.apply {
             context.applyField(this, field, owner)
         }

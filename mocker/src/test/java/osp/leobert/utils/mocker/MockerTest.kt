@@ -11,8 +11,6 @@ import osp.leobert.utils.mocker.notation.*
  * **Project:** Mocker
  *
  * **Classname:** MockerTest
- *
- * **Description:** TODO
  * Created by leobert on 2020/11/29.
  */
 internal class MockerTest {

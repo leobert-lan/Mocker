@@ -9,7 +9,6 @@ import java.lang.reflect.*
  * <p><b>Package:</b> osp.leobert.utils.mocker.handler </p>
  * <p><b>Project:</b> Mocker </p>
  * <p><b>Classname:</b> BaseMockHandler </p>
- * <p><b>Description:</b> TODO </p>
  * Created by leobert on 2020/11/19.
  */
 @Suppress("UNCHECKED_CAST")
