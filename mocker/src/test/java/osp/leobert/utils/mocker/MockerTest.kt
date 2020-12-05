@@ -127,6 +127,8 @@ internal class MockerTest {
 
         val i:Int = Mocker.mock(Int::class.java)
         println(i)
+
+        MockContext().intMockAdapter
     }
 
 

@@ -69,38 +69,37 @@ class MockContext {
     ///////////////////////////////////////////////////////////////////////////
 
 
-    //int long short byte
-    val intMockAdapter: FieldMockAdapter =
+    var intMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
-    val longMockAdapter: FieldMockAdapter =
+    var longMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(LongRangeAdapter, LongDefAdapter))
 
-    val shortMockAdapter: FieldMockAdapter =
+    var shortMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(ShortRangeAdapter, ShortDefAdapter))
 
-    val byteMockAdapter: FieldMockAdapter =
+    var byteMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(ByteRangeAdapter, ByteDefAdapter))
 
-    val floatMockAdapter: FieldMockAdapter =
+    var floatMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(FloatRangeAdapter))
 
-    val doubleMockAdapter: FieldMockAdapter =
+    var doubleMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(DoubleRangeAdapter))
 
-    val booleanMockAdapter: FieldMockAdapter =
+    var booleanMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(BooleanAdapter))
 
-    val charMockAdapter: FieldMockAdapter =
+    var charMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(CharRangeAdapter, CharDefAdapter))
 
-    val stringMockAdapter: FieldMockAdapter =
+    var stringMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(StringDefAdapter))
 
-    val enumMockAdapter: FieldMockAdapter =
+    var enumMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
-    val collectionMockAdapter: FieldMockAdapter =
+    var collectionMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(SizeAdapter))
 
     ///////////////////////////////////////////////////////////////////////////

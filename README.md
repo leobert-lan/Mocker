@@ -216,7 +216,103 @@ println(Gson().toJson(bean))
 更多内容先行略去。
 可以在单元测试中找到上述内容。
 
-*我实在是一个不太喜欢写这类文档的人*😂😂
 
+## 也可以指定Mock时的上下文
 
+```
+inline fun <reified T> mock(): T {
+    return mock(MockContext())
+}
+
+inline fun <reified T> mock(context: MockContext): T {
+    return mock(T::class.java, context)
+}
+
+fun <T> mock(clazz: Class<T>): T {
+    return mock(clazz, MockContext())
+}
+
+fun <T> mock(clazz: Class<T>, context: MockContext): T {
+    return BaseMockHandler<T>(clazz).mock(context)
+}
+
+fun <T> mock(typeToken: TypeToken<T>): T {
+    return mock(typeToken,MockContext())
+}
+
+fun <T> mock(typeToken: TypeToken<T>, context: MockContext): T {
+    return BaseMockHandler<T>(typeToken.type).mock(context.apply { this.parseParameterizedType(typeToken.type) })
+}
+```
+
+我们可以指定对象依赖成环的处理策略，以及不使用注解限定时的默认限定。修改以下配置：
+
+```
+ /**
+ * If true, will use the same beans that have been created ever when mock the same type.
+ *
+ * */
+var skipSameType = false
+
+///////////////////////////////////////////////////////////////////////////
+// default configs
+///////////////////////////////////////////////////////////////////////////
+var byteRange = byteArrayOf(0, 127)
+var shortRange = shortArrayOf(0, 1000)
+var intRange = intArrayOf(0, 10000)
+var floatRange = floatArrayOf(0.0f, 10000.00f)
+var doubleRange = doubleArrayOf(0.0, 10000.00)
+var longRange = longArrayOf(0L, 10000L)
+var dateRange = arrayOf("1970-01-01", "2100-12-31")
+
+//存在嵌套使用时的风险，需深度优先，创建完目标size后立即使用，再对item进行mock
+var sizeRange = intArrayOf(2, 3)
+```
+
+当然，我们也可以扩展注解限定
+
+注解限定的处理中，存在Adapter机制，可以影响Mock时的取值池
+
+对于需要扩展的情况，如：
+
+```
+var intMockAdapter: FieldMockAdapter =
+        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+
+var longMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(LongRangeAdapter, LongDefAdapter))
+
+var shortMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(ShortRangeAdapter, ShortDefAdapter))
+
+var byteMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(ByteRangeAdapter, ByteDefAdapter))
+
+var floatMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(FloatRangeAdapter))
+
+var doubleMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(DoubleRangeAdapter))
+
+var booleanMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(BooleanAdapter))
+
+var charMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(CharRangeAdapter, CharDefAdapter))
+
+var stringMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(StringDefAdapter))
+
+var enumMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+
+var collectionMockAdapter: FieldMockAdapter =
+    ComposeFieldMockAdapter(arrayListOf(SizeAdapter))
+```
+
+对应增加Adapter即可。
+
+更多内容还请探究源码吧，*我实在是一个不太喜欢写这类文档的人*😂😂
+
+喜欢的话，点个星？
 
