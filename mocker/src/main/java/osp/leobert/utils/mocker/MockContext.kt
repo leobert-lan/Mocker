@@ -21,6 +21,13 @@ import java.util.*
  */
 class MockContext {
 
+    var logger: Logger = object : Logger {
+        override fun log(any: Any, thr: Throwable?) {
+            println(any)
+            thr?.let { println(it) }
+        }
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // default configs
     ///////////////////////////////////////////////////////////////////////////
@@ -51,11 +58,10 @@ class MockContext {
     val sizeValuePool: ValuePool<Int> = ValuePool.SizeValuePool()
 
 
-///////////////////////////////////////////////////////////////////////////
-// field mock adapter
-///////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
+    // field mock adapter
+    ///////////////////////////////////////////////////////////////////////////
 
-    //long,float double boolean char byte string enum todo
 
     //int long short byte
     val intMockAdapter: FieldMockAdapter =
@@ -92,8 +98,8 @@ class MockContext {
         ComposeFieldMockAdapter(arrayListOf(SizeAdapter))
 
     ///////////////////////////////////////////////////////////////////////////
-// strategy
-///////////////////////////////////////////////////////////////////////////
+    // strategy
+    ///////////////////////////////////////////////////////////////////////////
     val fieldMockStrategy: MutableMap<Class<*>, MockHandler<*>> =
         hashMapOf<Class<*>, MockHandler<*>>().apply {
             this[Int::class.java] = FieldMockHandler.IntFieldMockHandler
@@ -136,13 +142,14 @@ class MockContext {
     /**
      * Bean缓存
      */
-    private val beanCache: Map<String, Any> = HashMap()
+    private val beanCache: MutableMap<String, Any> = HashMap()
 
     /**
      * TypeVariable缓存
      */
     private val typeVariableCache: MutableMap<String, Type> = HashMap<String, Type>()
 
+    //TODO: refactor, 这样做实在是太愚蠢了！！
     private val useNewInstanceCases: MutableSet<Class<*>> = hashSetOf(
         java.util.ArrayList::class.java,
         java.util.HashSet::class.java,
@@ -173,9 +180,12 @@ class MockContext {
     }
 
     fun createInstance(clazz: Class<*>): Any {
-//缓存？
-        return clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
-            ?: UnsafeUtils.newInstance(clazz)
+        return beanCache.getOrPut(clazz.typeName, {
+            (clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
+                ?: UnsafeUtils.newInstance(clazz)).apply {
+                beanCache[clazz.typeName] = this
+            }
+        })
     }
 
     fun applyField(value: Any?, field: Field?, owner: Any?) {

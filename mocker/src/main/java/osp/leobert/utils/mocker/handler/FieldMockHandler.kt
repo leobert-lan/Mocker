@@ -1,6 +1,7 @@
 package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
+import osp.leobert.utils.mocker.notation.MockIgnore
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 
@@ -12,9 +13,6 @@ import java.lang.reflect.Modifier
  * Created by leobert on 2020/11/18.
  */
 sealed class FieldMockHandler<T> : MockHandler<T> {
-
-    //todo add pending jobs / supply result to owner immediately
-
 
     object IntFieldMockHandler : FieldMockHandler<Int>() {
         override fun mock(context: MockContext, field: Field?, owner: Any?): Int {
@@ -150,12 +148,21 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
                 while (considerSuper && currentClass != Any::class.java) {
                     currentClass.declaredFields.forEach {
                         val fieldModifiers = it.modifiers
-                        if (Modifier.isAbstract(fieldModifiers) ||
-                            Modifier.isStatic(fieldModifiers)
-                        ) {
-                            // ignore abstract or static field
-                        } else {
-                            BaseMockHandler<Any>(type = it.genericType).mock(context, it, this)
+
+                        when {
+                            it.get(clazz) != null -> {                                              //ignore not null
+                                context.logger.log("ignore nul null: ${it.name}")
+                            }
+                            it.getAnnotation(MockIgnore::class.java) != null -> {                   //annotated with MockIgnore
+                                context.logger.log("ignore MockIgnore: ${it.name}")
+                            }
+                            Modifier.isAbstract(fieldModifiers) -> {                                //is abstract
+                                context.logger.log("ignore abstract: ${it.name}")
+                            }
+                            Modifier.isStatic(fieldModifiers) -> {                                  //ignore static
+                            }
+                            else ->
+                                BaseMockHandler<Any>(type = it.genericType).mock(context, it, this)
                         }
                     }
                     currentClass = currentClass.superclass
