@@ -148,10 +148,11 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
                 while (considerSuper && currentClass != Any::class.java) {
                     currentClass.declaredFields.forEach {
                         val fieldModifiers = it.modifiers
+                        it.isAccessible = true
 
                         when {
-                            it.get(clazz) != null -> {                                              //ignore not null
-                                context.logger.log("ignore nul null: ${it.name}")
+                            it.get(this) != null -> {                                              //ignore not null
+                                context.logger.log("ignore not null: ${it.name}")
                             }
                             it.getAnnotation(MockIgnore::class.java) != null -> {                   //annotated with MockIgnore
                                 context.logger.log("ignore MockIgnore: ${it.name}")

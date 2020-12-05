@@ -162,10 +162,16 @@ internal class BaseMockHandlerTest {
 
         @field:MockSize(min = 3, max = 4)
         var hashMap2: HashMap<Int,ParameterizedTypeCase<Foo>>? = null
-
         override fun toString(): String {
-            return "MapTestCase:${Gson().toJson(this)}"
+            return "MapTestCase(map=$map, hashMap=$hashMap, hashMap2=$hashMap2)"
         }
+
+//        override fun toString(): String {
+//
+////            return "MapTestCase:${Gson().toJson(this)}"
+//        }
+
+
     }
 
     @Test

@@ -28,6 +28,12 @@ class MockContext {
         }
     }
 
+    /**
+     * If true, will use the same beans that have been created ever when mock the same type.
+     *
+     * */
+    var skipSameType = false
+
     ///////////////////////////////////////////////////////////////////////////
     // default configs
     ///////////////////////////////////////////////////////////////////////////
@@ -180,12 +186,19 @@ class MockContext {
     }
 
     fun createInstance(clazz: Class<*>): Any {
-        return beanCache.getOrPut(clazz.typeName, {
+        return if (skipSameType) {
+            beanCache.getOrPut(clazz.typeName, {
+                (clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
+                    ?: UnsafeUtils.newInstance(clazz)).apply {
+                    beanCache[clazz.typeName] = this
+                }
+            })
+        } else {
             (clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
                 ?: UnsafeUtils.newInstance(clazz)).apply {
                 beanCache[clazz.typeName] = this
             }
-        })
+        }
     }
 
     fun applyField(value: Any?, field: Field?, owner: Any?) {
