@@ -3,9 +3,10 @@ package osp.leobert.utils.mocker
 import osp.leobert.utils.mocker.adapter.ComposeFieldMockAdapter
 import osp.leobert.utils.mocker.adapter.FieldMockAdapter
 import osp.leobert.utils.mocker.adapter.android.*
+import osp.leobert.utils.mocker.constructor.ConstructorConstructor
+import osp.leobert.utils.mocker.constructor.InstanceCreator
 import osp.leobert.utils.mocker.handler.FieldMockHandler
 import osp.leobert.utils.mocker.handler.MockHandler
-import osp.leobert.utils.mocker.utils.UnsafeUtils
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -154,14 +155,19 @@ class MockContext {
      */
     private val typeVariableCache: MutableMap<String, Type> = HashMap<String, Type>()
 
-    //TODO: refactor, 这样做实在是太愚蠢了！！
-    private val useNewInstanceCases: MutableSet<Class<*>> = hashSetOf(
-        java.util.ArrayList::class.java,
-        java.util.HashSet::class.java,
-        java.util.LinkedHashSet::class.java,
-        java.util.HashMap::class.java,
-        java.util.LinkedHashMap::class.java
-    )
+    val constructorMap: MutableMap<Type, InstanceCreator<*>> = hashMapOf()
+
+    private val constructorConstructor: ConstructorConstructor =
+        ConstructorConstructor(constructorMap)
+
+//    //TODO: refactor, 这样做实在是太愚蠢了！！
+//    private val useNewInstanceCases: MutableSet<Class<*>> = hashSetOf(
+//        java.util.ArrayList::class.java,
+//        java.util.HashSet::class.java,
+//        java.util.LinkedHashSet::class.java,
+//        java.util.HashMap::class.java,
+//        java.util.LinkedHashMap::class.java
+//    )
 
     fun parseParameterizedType(type: Type) {
         if (type is ParameterizedType) {
@@ -187,17 +193,22 @@ class MockContext {
     fun createInstance(clazz: Class<*>): Any {
         return if (skipSameType) {
             beanCache.getOrPut(clazz.typeName, {
-                (clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
-                    ?: UnsafeUtils.newInstance(clazz)).apply {
+                construct(clazz).apply {
                     beanCache[clazz.typeName] = this
                 }
             })
         } else {
-            (clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
-                ?: UnsafeUtils.newInstance(clazz)).apply {
+            construct(clazz).apply {
                 beanCache[clazz.typeName] = this
             }
         }
+    }
+
+    private fun construct(clazz: Class<*>): Any {
+        return constructorConstructor.get(TypeToken[clazz]).construct()
+
+//       return (clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
+//            ?: UnsafeUtils.newInstance(clazz))
     }
 
     fun applyField(value: Any?, field: Field?, owner: Any?) {
