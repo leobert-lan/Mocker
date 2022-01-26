@@ -50,14 +50,15 @@ internal class MockerTest {
         println(Gson().toJson(bean))
     }
 
-    open class I
-    class A(val a: Int) : I()
+    interface I
+    open class S<out S> : I
+    class A(val a: Int) : S<A>(), I
 
-    class B(val b: Boolean) : I()
+    class B(val b: Boolean) : S<B>(), I
 
     @Test
     fun testMock3() {
-        val bean: List<out I> = Mocker.mock(object : TypeToken<List<out I>>() {})
+        val bean: List<out S<A>> = Mocker.mock(object : TypeToken<List<out S<A>>>() {})
         println(Gson().toJson(bean))
     }
 
@@ -125,7 +126,7 @@ internal class MockerTest {
         val bean: Sample = Mocker.mock(Sample::class.java)
         println(Gson().toJson(bean))
 
-        val i:Int = Mocker.mock(Int::class.java)
+        val i: Int = Mocker.mock(Int::class.java)
         println(i)
 
         MockContext().intMockAdapter
