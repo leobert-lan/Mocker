@@ -97,7 +97,6 @@ class MockContext {
     var stringMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(StringDefAdapter))
 
-    // TODO: 此处疑似错误
     var enumMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
@@ -161,15 +160,6 @@ class MockContext {
     private val constructorConstructor: ConstructorConstructor =
         ConstructorConstructor(constructorMap)
 
-//    //TODO: refactor, 这样做实在是太愚蠢了！！
-//    private val useNewInstanceCases: MutableSet<Class<*>> = hashSetOf(
-//        java.util.ArrayList::class.java,
-//        java.util.HashSet::class.java,
-//        java.util.LinkedHashSet::class.java,
-//        java.util.HashMap::class.java,
-//        java.util.LinkedHashMap::class.java
-//    )
-
     fun parseParameterizedType(type: Type) {
         if (type is ParameterizedType) {
             val clazz = type.rawType as Class<*>
@@ -207,9 +197,6 @@ class MockContext {
 
     private fun construct(clazz: Class<*>): Any {
         return constructorConstructor.get(TypeToken[clazz]).construct()
-
-//       return (clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
-//            ?: UnsafeUtils.newInstance(clazz))
     }
 
     fun applyField(value: Any?, field: Field?, owner: Any?) {
