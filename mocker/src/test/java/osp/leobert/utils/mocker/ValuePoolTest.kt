@@ -1,7 +1,9 @@
 package osp.leobert.utils.mocker
 
+import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
 /**
  * ```
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test
  *
  * Created by leobert on 2020/11/22.
  */
+@RunWith(JUnit4::class)
 internal class ValuePoolTest {
 
     enum class E {
@@ -20,7 +23,7 @@ internal class ValuePoolTest {
 
     @Test
     fun randomGetEnum() {
-        val pool = ValuePool.EnumValuePool<E>().apply {
+        val pool = ValuePool.EnumValuePool().apply {
             this.clazz = E::class.java
         }
         for (i in 0..100) {

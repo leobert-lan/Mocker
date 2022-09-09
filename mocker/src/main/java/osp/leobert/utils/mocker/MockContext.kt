@@ -59,7 +59,7 @@ class MockContext {
     val boolValuePool: ValuePool<Boolean> = ValuePool.BoolValuePool()
     val charValuePool: ValuePool<Char> = ValuePool.CharValuePool()
 
-    val enumValuePool: ValuePool<Enum<*>> = ValuePool.EnumValuePool()
+//    val enumValuePool: ValuePool.EnumValuePool<*> = ValuePool.EnumValuePool()
     val stringValuePool: ValuePool<String> = ValuePool.StringValuePool()
 
     val sizeValuePool: ValuePool<Int> = ValuePool.SizeValuePool()
@@ -97,6 +97,7 @@ class MockContext {
     var stringMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(StringDefAdapter))
 
+    // TODO: 此处疑似错误
     var enumMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
@@ -192,11 +193,11 @@ class MockContext {
 
     fun createInstance(clazz: Class<*>): Any {
         return if (skipSameType) {
-            beanCache.getOrPut(clazz.typeName, {
+            beanCache.getOrPut(clazz.typeName) {
                 construct(clazz).apply {
                     beanCache[clazz.typeName] = this
                 }
-            })
+            }
         } else {
             construct(clazz).apply {
                 beanCache[clazz.typeName] = this
