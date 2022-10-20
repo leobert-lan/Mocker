@@ -7,6 +7,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
@@ -18,6 +19,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE})
+@Repeatable(MockIntRanges.class)
 public @interface MockIntRange {
     /**
      * Smallest value, inclusive

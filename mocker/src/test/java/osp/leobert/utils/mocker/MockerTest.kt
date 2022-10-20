@@ -78,6 +78,7 @@ internal class MockerTest {
 
     class Sample {
         @field:MockIntRange(from = -5, to = -1)
+//        @field:MockIntRange(from = 1, to = 2)
         var intRange: Int? = null
 
         @field:Type
