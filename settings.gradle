@@ -1,2 +1,3 @@
 include ':mocker'
 rootProject.name = "Mocker"
+include ':mocker-notation'

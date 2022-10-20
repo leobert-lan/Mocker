@@ -59,7 +59,7 @@ class MockContext {
     val boolValuePool: ValuePool<Boolean> = ValuePool.BoolValuePool()
     val charValuePool: ValuePool<Char> = ValuePool.CharValuePool()
 
-    val enumValuePool: ValuePool<Enum<*>> = ValuePool.EnumValuePool()
+//    val enumValuePool: ValuePool.EnumValuePool<*> = ValuePool.EnumValuePool()
     val stringValuePool: ValuePool<String> = ValuePool.StringValuePool()
 
     val sizeValuePool: ValuePool<Int> = ValuePool.SizeValuePool()
@@ -160,15 +160,6 @@ class MockContext {
     private val constructorConstructor: ConstructorConstructor =
         ConstructorConstructor(constructorMap)
 
-//    //TODO: refactor, 这样做实在是太愚蠢了！！
-//    private val useNewInstanceCases: MutableSet<Class<*>> = hashSetOf(
-//        java.util.ArrayList::class.java,
-//        java.util.HashSet::class.java,
-//        java.util.LinkedHashSet::class.java,
-//        java.util.HashMap::class.java,
-//        java.util.LinkedHashMap::class.java
-//    )
-
     fun parseParameterizedType(type: Type) {
         if (type is ParameterizedType) {
             val clazz = type.rawType as Class<*>
@@ -192,11 +183,11 @@ class MockContext {
 
     fun createInstance(clazz: Class<*>): Any {
         return if (skipSameType) {
-            beanCache.getOrPut(clazz.typeName, {
+            beanCache.getOrPut(clazz.typeName) {
                 construct(clazz).apply {
                     beanCache[clazz.typeName] = this
                 }
-            })
+            }
         } else {
             construct(clazz).apply {
                 beanCache[clazz.typeName] = this
@@ -206,9 +197,6 @@ class MockContext {
 
     private fun construct(clazz: Class<*>): Any {
         return constructorConstructor.get(TypeToken[clazz]).construct()
-
-//       return (clazz.takeIf { useNewInstanceCases.contains(clazz) }?.newInstance()
-//            ?: UnsafeUtils.newInstance(clazz))
     }
 
     fun applyField(value: Any?, field: Field?, owner: Any?) {

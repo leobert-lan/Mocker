@@ -1,6 +1,7 @@
 package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
+import osp.leobert.utils.mocker.ValuePool
 import osp.leobert.utils.mocker.notation.MockIgnore
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
@@ -123,13 +124,29 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         }
     }
 
-    class EnumFieldMockHandler<T : Enum<T>> : FieldMockHandler<T>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): T {
-            context.enumValuePool.reset()
+//    class EnumFieldMockHandler<T : Enum<T>> : FieldMockHandler<T>() {
+//        override fun mock(context: MockContext, field: Field?, owner: Any?): T {
+//            val enumValuePool: ValuePool.EnumValuePool<T> = ValuePool.EnumValuePool()
+//            enumValuePool.reset()
+//            field?.let {
+//                enumValuePool.clazz = field.type as Class<T>?
+//                context.enumMockAdapter.adapt(context, field)
+//            }
+//            return enumValuePool.randomGet(context).apply {
+//                context.applyField(this, field, owner)
+//            }
+//        }
+//    }
+
+    object EnumFieldMockHandler2 : FieldMockHandler<Enum<*>>() {
+        override fun mock(context: MockContext, field: Field?, owner: Any?): Enum<*> {
+            val enumValuePool: ValuePool.EnumValuePool = ValuePool.EnumValuePool()
+            enumValuePool.reset()
             field?.let {
+                enumValuePool.clazz = field.type
                 context.enumMockAdapter.adapt(context, field)
             }
-            return (context.enumValuePool.randomGet(context) as T).apply {
+            return enumValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
             }
         }

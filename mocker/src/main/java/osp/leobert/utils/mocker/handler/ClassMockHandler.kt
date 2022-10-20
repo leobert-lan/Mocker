@@ -26,7 +26,9 @@ internal class ClassMockHandler(
             Collection::class.java.isAssignableFrom(clazz) -> {
                 CollectionMockHandler(clazz, genericTypes)
             }
-            clazz.isEnum -> FieldMockHandler.EnumFieldMockHandler()
+            clazz.isEnum -> {
+                FieldMockHandler.EnumFieldMockHandler2
+            }
             else -> context.mockHandler(clazz) ?: FieldMockHandler.BeanFieldMockHandler(clazz)
 
         }.mock(context, field, owner)
