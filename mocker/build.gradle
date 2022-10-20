@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'kotlin'
+    id 'com.vanniktech.maven.publish'
 }
 
 java {
@@ -11,9 +12,9 @@ java {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testImplementation "org.junit.jupiter:junit-jupiter-engine:5.5.2"
-//    implementation "androidx.annotation:annotation:1.1.0"
+    implementation "io.github.leobert-lan:mocker-notation:1.0.0"
 
-    implementation(project(":mocker-notation"))
+//    implementation(project(":mocker-notation"))
 
     testImplementation "com.google.code.gson:gson:2.8.5"
     testImplementation 'junit:junit:4.12'
