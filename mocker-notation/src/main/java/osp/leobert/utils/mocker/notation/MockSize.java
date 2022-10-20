@@ -7,8 +7,11 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import osp.leobert.utils.mocker.notation.repeat.MockSizes;
 
 /**
  * <p><b>Package:</b> osp.leobert.utils.mocker.notation </p>
@@ -18,6 +21,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target({PARAMETER, LOCAL_VARIABLE, METHOD, FIELD, ANNOTATION_TYPE})
+@Repeatable(MockSizes.class)
 public @interface MockSize {
 
     /**
@@ -39,4 +43,11 @@ public @interface MockSize {
 //     * The size must be a multiple of this factor
 //     */
 //    long multiple() default 1;
+
+    /**
+     * @return the groups of the config, {} is the same effect to { Default.class}
+     * @see osp.leobert.utils.mocker.notation.group.Default
+     * @since 1.0.1
+     */
+    Class<?>[] groups() default {};
 }

@@ -1,4 +1,4 @@
-package osp.leobert.utils.mocker.notation;
+package osp.leobert.utils.mocker.notation.repeat;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -12,15 +12,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import osp.leobert.utils.mocker.notation.MockCharRange;
+
 /**
- * Classname: MockIntRanges </p>
- * Description: repeat for {@link MockIntRange}  </p>
+ * Classname: MockCharRanges </p>
+ * Description: repeat for {@link osp.leobert.utils.mocker.notation.MockCharRange} </p>
  * Created by leobert on 2022/10/20.
+ *
+ * @since 1.0.1
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE})
 @Documented
 @Inherited
-public @interface MockIntRanges {
-    MockIntRange[] value();
+public @interface MockCharRanges {
+    MockCharRange[] value();
 }

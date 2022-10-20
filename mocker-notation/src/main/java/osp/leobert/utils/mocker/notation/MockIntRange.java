@@ -11,6 +11,8 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import osp.leobert.utils.mocker.notation.repeat.MockIntRanges;
+
 /**
  * <p><b>Package:</b> osp.leobert.utils.mocker.notation </p>
  * <p><b>Project:</b> Mocker </p>
@@ -30,4 +32,11 @@ public @interface MockIntRange {
      * Largest value, inclusive
      */
     long to() default Long.MAX_VALUE;
+
+    /**
+     * @return the groups of the config, {} is the same effect to { Default.class}
+     * @see osp.leobert.utils.mocker.notation.group.Default
+     * @since 1.0.1
+     */
+    Class<?>[] groups() default {};
 }

@@ -18,4 +18,10 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 @Target({PARAMETER, FIELD, LOCAL_VARIABLE})
 public @interface MockIgnore {
+    /**
+     * @return the groups of the config, {} is the same effect to { Default.class}
+     * @see osp.leobert.utils.mocker.notation.group.Default
+     * @since 1.0.1
+     */
+    Class<?>[] groups() default {};
 }

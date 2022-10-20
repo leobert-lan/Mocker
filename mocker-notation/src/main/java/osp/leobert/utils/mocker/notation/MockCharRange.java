@@ -7,8 +7,11 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
+import osp.leobert.utils.mocker.notation.repeat.MockCharRanges;
 
 /**
  * <p><b>Package:</b> osp.leobert.utils.mocker.notation </p>
@@ -18,6 +21,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RUNTIME)
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE})
+@Repeatable(MockCharRanges.class)
 public @interface MockCharRange {
     /**
      * Smallest value, inclusive
@@ -28,4 +32,11 @@ public @interface MockCharRange {
      * Largest value, inclusive
      */
     char to() default Character.MAX_VALUE;
+
+    /**
+     * @return the groups of the config, {} is the same effect to { Default.class}
+     * @see osp.leobert.utils.mocker.notation.group.Default
+     * @since 1.0.1
+     */
+    Class<?>[] groups() default {};
 }
