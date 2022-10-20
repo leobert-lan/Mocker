@@ -1,7 +1,9 @@
 package osp.leobert.utils.mocker
 
 import com.google.gson.Gson
-import org.junit.jupiter.api.Test
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import osp.leobert.utils.mocker.notation.*
 
 /**
@@ -13,6 +15,8 @@ import osp.leobert.utils.mocker.notation.*
  * **Classname:** MockerTest
  * Created by leobert on 2020/11/29.
  */
+@RunWith(JUnit4::class)
+@Suppress("unused")
 internal class MockerTest {
 
     @Retention(AnnotationRetention.RUNTIME)
