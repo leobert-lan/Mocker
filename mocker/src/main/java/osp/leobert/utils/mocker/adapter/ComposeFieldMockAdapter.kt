@@ -9,7 +9,15 @@ import java.lang.reflect.Field
  * <p><b>Classname:</b> ComposeFieldMockAdapter </p>
  * Created by leobert on 2020/11/19.
  */
-class ComposeFieldMockAdapter(val leaf: MutableList<FieldMockAdapter>) : FieldMockAdapter {
+@Deprecated(
+    message = "cannot support different configurations",
+    replaceWith = ReplaceWith(
+        expression = "ComposeFieldMockAdapterV2",
+        imports = ["osp.leobert.utils.mocker.adapter.ComposeFieldMockAdapterV2"]
+    )
+)
+class ComposeFieldMockAdapter constructor(val leaf: MutableList<FieldMockAdapter>) :
+    FieldMockAdapter {
 
     override fun adapt(context: MockContext, field: Field) {
         leaf.forEach { it.adapt(context, field) }

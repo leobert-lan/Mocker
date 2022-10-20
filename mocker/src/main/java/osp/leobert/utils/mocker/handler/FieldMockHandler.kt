@@ -13,10 +13,19 @@ import java.lang.reflect.Modifier
  * 处理特定的field，扩展了注解约束处理
  * Created by leobert on 2020/11/18.
  */
-sealed class FieldMockHandler<T> : MockHandler<T> {
+sealed class FieldMockHandler<T> : MockHandlerV2<T> {
+
+    final override fun mock(context: MockContext, field: Field?, owner: Any?): T {
+        return super.mock(context, field, owner)
+    }
 
     object IntFieldMockHandler : FieldMockHandler<Int>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Int {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Int {
             context.intValuePool.reset()
             field?.let {
                 context.intMockAdapter.adapt(context, field)
@@ -28,7 +37,12 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
     object ShortFieldMockHandler : FieldMockHandler<Short>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Short {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Short {
             context.shortValuePool.reset()
             field?.let {
                 context.shortMockAdapter.adapt(context, field)
@@ -40,7 +54,12 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
     object LongFieldMockHandler : FieldMockHandler<Long>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Long {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Long {
             context.longValuePool.reset()
             field?.let {
                 context.longMockAdapter.adapt(context, field)
@@ -52,10 +71,15 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
     object FloatFieldMockHandler : FieldMockHandler<Float>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Float {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Float {
             context.floatValuePool.reset()
             field?.let {
-                context.floatMockAdapter.adapt(context, field)
+                context.floatMockAdapter.adapt(context, field, *groups)
             }
             return context.floatValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -64,10 +88,15 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
     object DoubleFieldMockHandler : FieldMockHandler<Double>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Double {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Double {
             context.doubleValuePool.reset()
             field?.let {
-                context.doubleMockAdapter.adapt(context, field)
+                context.doubleMockAdapter.adapt(context, field, *groups)
             }
             return context.doubleValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -76,7 +105,12 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
     object ByteFieldMockHandler : FieldMockHandler<Byte>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Byte {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Byte {
             context.byteValuePool.reset()
             field?.let {
                 context.byteMockAdapter.adapt(context, field)
@@ -88,10 +122,15 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
     object BooleanFieldMockHandler : FieldMockHandler<Boolean>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Boolean {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Boolean {
             context.boolValuePool.reset()
             field?.let {
-                context.booleanMockAdapter.adapt(context, field)
+                context.booleanMockAdapter.adapt(context, field, *groups)
             }
             return context.boolValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -100,7 +139,12 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
     }
 
     object CharFieldMockHandler : FieldMockHandler<Char>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Char {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Char {
             context.charValuePool.reset()
             field?.let {
                 context.charMockAdapter.adapt(context, field)
@@ -113,7 +157,12 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
 
 
     object StringFieldMockHandler : FieldMockHandler<String>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): String {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): String {
             context.stringValuePool.reset()
             field?.let {
                 context.stringMockAdapter.adapt(context, field)
@@ -139,7 +188,12 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
 //    }
 
     object EnumFieldMockHandler2 : FieldMockHandler<Enum<*>>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Enum<*> {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Enum<*> {
             val enumValuePool: ValuePool.EnumValuePool = ValuePool.EnumValuePool()
             enumValuePool.reset()
             field?.let {
@@ -157,7 +211,12 @@ sealed class FieldMockHandler<T> : MockHandler<T> {
         private val clazz: Class<*>,
         private val considerSuper: Boolean = true
     ) : FieldMockHandler<Any?>() {
-        override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
+        override fun mock(
+            context: MockContext,
+            field: Field?,
+            owner: Any?,
+            vararg groups: Class<*>
+        ): Any? {
             return context.createInstance(clazz).apply {
                 context.applyField(this, field, owner)
 

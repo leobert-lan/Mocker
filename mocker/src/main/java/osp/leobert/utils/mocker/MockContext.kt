@@ -2,6 +2,7 @@ package osp.leobert.utils.mocker
 
 import osp.leobert.utils.mocker.adapter.ComposeFieldMockAdapter
 import osp.leobert.utils.mocker.adapter.FieldMockAdapter
+import osp.leobert.utils.mocker.adapter.FieldMockAdapterV2
 import osp.leobert.utils.mocker.adapter.impl.*
 import osp.leobert.utils.mocker.constructor.ConstructorConstructor
 import osp.leobert.utils.mocker.constructor.InstanceCreator
@@ -82,14 +83,14 @@ class MockContext {
     var byteMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(ByteRangeAdapter, ByteDefAdapter))
 
-    var floatMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(FloatRangeAdapter))
+    var floatMockAdapter: FieldMockAdapterV2 = FloatRangeAdapterV2
+//        ComposeFieldMockAdapter(arrayListOf(FloatRangeAdapter))
 
-    var doubleMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(DoubleRangeAdapter))
+    var doubleMockAdapter: FieldMockAdapterV2 = DoubleRangeAdapterV2
+//        ComposeFieldMockAdapter(arrayListOf(DoubleRangeAdapter))
 
-    var booleanMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(BooleanAdapter))
+    var booleanMockAdapter: FieldMockAdapterV2 = BooleanAdapterV2
+//        ComposeFieldMockAdapter(arrayListOf(BooleanAdapter))
 
     var charMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(CharRangeAdapter, CharDefAdapter))
@@ -100,8 +101,8 @@ class MockContext {
     var enumMockAdapter: FieldMockAdapter =
         ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
 
-    var collectionMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(SizeAdapter))
+    var collectionMockAdapter: FieldMockAdapterV2 = SizeAdapterV2
+//        ComposeFieldMockAdapter(arrayListOf(SizeAdapter))
 
     ///////////////////////////////////////////////////////////////////////////
     // strategy

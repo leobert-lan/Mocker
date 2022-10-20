@@ -12,16 +12,7 @@ import java.lang.reflect.Field
  * <p><b>Description:</b> 原意是想使用android中的注解限制,然而androidx的注解仅保留到class，迁移了一部分注解 </p>
  * Created by leobert on 2020/11/19.
  */
-object IntRangeAdapter : FieldMockAdapter {
-    override fun adapt(context: MockContext, field: Field) {
-        if (field.isAnnotationPresent(MockIntRange::class.java)) {
-            field.getAnnotation(MockIntRange::class.java).let {
 
-                context.intValuePool.setRange(it.from.toInt(), it.to.toInt())
-            }
-        }
-    }
-}
 
 object IntDefAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
@@ -38,15 +29,6 @@ object IntDefAdapter : FieldMockAdapter {
     }
 }
 
-object LongRangeAdapter : FieldMockAdapter {
-    override fun adapt(context: MockContext, field: Field) {
-        if (field.isAnnotationPresent(MockIntRange::class.java)) {
-            field.getAnnotation(MockIntRange::class.java).let {
-                context.longValuePool.setRange(it.from, it.to)
-            }
-        }
-    }
-}
 
 object LongDefAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
@@ -61,16 +43,9 @@ object LongDefAdapter : FieldMockAdapter {
     }
 }
 
-object ShortRangeAdapter : FieldMockAdapter {
-    override fun adapt(context: MockContext, field: Field) {
-        if (field.isAnnotationPresent(MockIntRange::class.java)) {
-            field.getAnnotation(MockIntRange::class.java).let {
-                context.shortValuePool.setRange(it.from.toShort(), it.to.toShort())
-            }
-        }
-    }
-}
 
+
+@Deprecated("cannot support different configurations")
 object ShortDefAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
         field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockIntDef::class.java) }
@@ -86,16 +61,9 @@ object ShortDefAdapter : FieldMockAdapter {
     }
 }
 
-object ByteRangeAdapter : FieldMockAdapter {
-    override fun adapt(context: MockContext, field: Field) {
-        if (field.isAnnotationPresent(MockIntRange::class.java)) {
-            field.getAnnotation(MockIntRange::class.java).let {
-                context.byteValuePool.setRange(it.from.toByte(), it.to.toByte())
-            }
-        }
-    }
-}
 
+
+@Deprecated("cannot support different configurations")
 object ByteDefAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
         field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockIntDef::class.java) }
@@ -111,47 +79,8 @@ object ByteDefAdapter : FieldMockAdapter {
     }
 }
 
-object FloatRangeAdapter : FieldMockAdapter {
-    override fun adapt(context: MockContext, field: Field) {
-        if (field.isAnnotationPresent(MockFloatRange::class.java)) {
-            field.getAnnotation(MockFloatRange::class.java).let {
-                context.floatValuePool.setRange(it.from, it.to)
-            }
-        }
-    }
-}
 
-object DoubleRangeAdapter : FieldMockAdapter {
-    override fun adapt(context: MockContext, field: Field) {
-        if (field.isAnnotationPresent(MockFloatRange::class.java)) {
-            field.getAnnotation(MockFloatRange::class.java).let {
-                context.doubleValuePool.setRange(it.from.toDouble(), it.to.toDouble())
-            }
-        }
-    }
-}
-
-object BooleanAdapter : FieldMockAdapter {
-    override fun adapt(context: MockContext, field: Field) {
-        if (field.isAnnotationPresent(MockTrue::class.java)) {
-            context.boolValuePool.setEnumValues(arrayListOf(true))
-        }
-        if (field.isAnnotationPresent(MockFalse::class.java)) {
-            context.boolValuePool.setEnumValues(arrayListOf(false))
-        }
-    }
-}
-
-object CharRangeAdapter : FieldMockAdapter {
-    override fun adapt(context: MockContext, field: Field) {
-        if (field.isAnnotationPresent(MockCharRange::class.java)) {
-            field.getAnnotation(MockCharRange::class.java).let {
-                context.charValuePool.setRange(it.from, it.to)
-            }
-        }
-    }
-}
-
+@Deprecated("cannot support different configurations")
 object CharDefAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
         field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockCharDef::class.java) }
@@ -166,6 +95,7 @@ object CharDefAdapter : FieldMockAdapter {
     }
 }
 
+@Deprecated("cannot support different configurations")
 object StringDefAdapter : FieldMockAdapter {
     override fun adapt(context: MockContext, field: Field) {
         field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockStringDef::class.java) }
@@ -177,24 +107,5 @@ object StringDefAdapter : FieldMockAdapter {
                     }
 
             }
-    }
-}
-
-object SizeAdapter : FieldMockAdapter {
-    private val list by lazy { arrayListOf<Int>() }
-    override fun adapt(context: MockContext, field: Field) {
-        if (field.isAnnotationPresent(MockSize::class.java)) {
-            field.getAnnotation(MockSize::class.java).let {
-
-                if (it.value < 0) {
-                    context.sizeValuePool.setRange(it.min, it.max)
-                } else {
-                    list.clear()
-                    list.add(it.value)
-                    context.sizeValuePool.setEnumValues(list)
-                }
-
-            }
-        }
     }
 }
