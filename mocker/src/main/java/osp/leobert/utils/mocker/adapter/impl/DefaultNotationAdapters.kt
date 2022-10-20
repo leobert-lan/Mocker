@@ -1,4 +1,4 @@
-package osp.leobert.utils.mocker.adapter.android
+package osp.leobert.utils.mocker.adapter.impl
 
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.adapter.FieldMockAdapter

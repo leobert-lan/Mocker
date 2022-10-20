@@ -2,7 +2,7 @@ package osp.leobert.utils.mocker
 
 import osp.leobert.utils.mocker.adapter.ComposeFieldMockAdapter
 import osp.leobert.utils.mocker.adapter.FieldMockAdapter
-import osp.leobert.utils.mocker.adapter.android.*
+import osp.leobert.utils.mocker.adapter.impl.*
 import osp.leobert.utils.mocker.constructor.ConstructorConstructor
 import osp.leobert.utils.mocker.constructor.InstanceCreator
 import osp.leobert.utils.mocker.handler.FieldMockHandler
