@@ -13,6 +13,8 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-engine:5.5.2"
 //    implementation "androidx.annotation:annotation:1.1.0"
 
+    implementation(project(":mocker-notation"))
+
     testImplementation "com.google.code.gson:gson:2.8.5"
     testImplementation 'junit:junit:4.12'
 }
