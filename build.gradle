@@ -20,6 +20,17 @@ allprojects {
     repositories {
         google()
         jcenter()
+        mavenCentral()
+        maven {
+            url="https://s01.oss.sonatype.org/content/repositories/releases"
+        }
+//        mavenLocal()
+    }
+
+    plugins.withId("com.vanniktech.maven.publish") {
+        mavenPublish {
+            sonatypeHost = "S01"
+        }
     }
 
     plugins.withId("com.vanniktech.maven.publish") {
