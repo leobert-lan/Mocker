@@ -1,8 +1,10 @@
 package osp.leobert.utils.mocker.handler
 
 import com.google.gson.Gson
+import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.TypeToken
 import osp.leobert.utils.mocker.notation.MockIntRange
@@ -15,6 +17,7 @@ import osp.leobert.utils.mocker.notation.MockSize
  * **Classname:** BaseMockHandlerTest
  * Created by leobert on 2020/11/19.
  */
+@RunWith(JUnit4::class)
 internal class BaseMockHandlerTest {
 
     open class Foo {

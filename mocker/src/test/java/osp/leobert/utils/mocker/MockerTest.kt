@@ -146,10 +146,9 @@ internal class MockerTest {
 
     @Test
     fun testMock2() {
-//        val bean: List<BarFoo> = Mocker.mock(object : TypeToken<List<BarFoo>>() {})
-//        println(Gson().toJson(bean))
+        val bean: List<BarFoo> = Mocker.mock(object : TypeToken<List<BarFoo>>() {})
+        println(Gson().toJson(bean))
 
-        //todo error,传递参数丢失
         val bean2: List<BarFoo> =
             Mocker.mockWithGroup(object : TypeToken<List<BarFoo>>() {}, Group2::class.java)
         println(Gson().toJson(bean2))

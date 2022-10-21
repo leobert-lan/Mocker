@@ -1,7 +1,9 @@
 package osp.leobert.utils.mocker.utils
 
+import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 
 /**
  *
@@ -12,6 +14,7 @@ import org.junit.jupiter.api.Test
  * **Classname:** RandomUtilsTest
  * Created by leobert on 2020/11/18.
  */
+@RunWith(JUnit4::class)
 internal class RandomUtilsTest {
 
     @Test
