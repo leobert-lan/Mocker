@@ -14,9 +14,6 @@ import java.lang.reflect.Type
 class MapMockHandler(
     private val clazz: Class<*>, private val genericTypes: Array<Type>
 ) : MockHandlerV2<Map<Any?, Any?>?> {
-    override fun mock(context: MockContext, field: Field?, owner: Any?): Map<Any?, Any?>? {
-        return mock(context, field, owner, Default::class.java)
-    }
 
     override fun mock(
         context: MockContext,

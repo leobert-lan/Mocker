@@ -9,6 +9,7 @@ import java.lang.reflect.Field
  * <p><b>Classname:</b> MockHandler </p>
  * Created by leobert on 2020/11/18.
  */
+@Deprecated(message = "")
 interface MockHandler<T> {
     fun mock(
         context: MockContext,

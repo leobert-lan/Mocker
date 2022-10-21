@@ -13,27 +13,52 @@ import java.lang.reflect.Type
  */
 class CollectionMockHandler(
     private val clazz: Class<*>, private val genericTypes: Array<Type>
-) : MockHandler<Any?> {
-    override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
+) : MockHandlerV2<Any?> {
+//    override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
+//        return when {
+//            clazz.typeName == List::class.java.typeName ||
+//                    clazz.typeName == MutableList::class.java.typeName -> {
+//                mockArrayList(context, field, owner)
+//            }
+//            List::class.java.isAssignableFrom(clazz) -> {
+//                mockList(context, field, owner)
+//            }
+//            clazz.typeName == Set::class.java.typeName ||
+//                    clazz.typeName == MutableSet::class.java.typeName -> {
+//                mockHashSet(context, field, owner)
+//            }
+//            Set::class.java.isAssignableFrom(clazz) -> {
+//                mockSet(context, field, owner)
+//            }
+//
+//            else -> throw MockException("not supported for ${clazz.typeName}")
+//        }
+//    }
+
+    override fun mock(
+        context: MockContext,
+        field: Field?,
+        owner: Any?,
+        vararg groups: Class<*>
+    ): Any? {
         return when {
             clazz.typeName == List::class.java.typeName ||
                     clazz.typeName == MutableList::class.java.typeName -> {
-                mockArrayList(context, field, owner)
+                mockArrayList(context, field, owner, *groups)
             }
             List::class.java.isAssignableFrom(clazz) -> {
-                mockList(context, field, owner)
+                mockList(context, field, owner, *groups)
             }
             clazz.typeName == Set::class.java.typeName ||
                     clazz.typeName == MutableSet::class.java.typeName -> {
-                mockHashSet(context, field, owner)
+                mockHashSet(context, field, owner, *groups)
             }
             Set::class.java.isAssignableFrom(clazz) -> {
-                mockSet(context, field, owner)
+                mockSet(context, field, owner, *groups)
             }
 
             else -> throw MockException("not supported for ${clazz.typeName}")
         }
-
     }
 
     private fun mockArrayList(

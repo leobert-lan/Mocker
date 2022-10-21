@@ -4,27 +4,30 @@ import osp.leobert.utils.mocker.handler.BaseMockHandler
 
 object Mocker {
 
-    inline fun <reified T> mock(): T {
-        return mock(MockContext())
+    inline fun <reified T> mock(vararg groups: Class<*>): T {
+        return mock(context = MockContext(), groups = groups)
     }
 
-    inline fun <reified T> mock(context: MockContext): T {
-        return mock(T::class.java, context)
+    inline fun <reified T> mock(context: MockContext, vararg groups: Class<*>): T {
+        return mock(clazz = T::class.java, context = context, groups = groups)
     }
 
-    fun <T> mock(clazz: Class<T>): T {
-        return mock(clazz, MockContext())
+    fun <T> mock(clazz: Class<T>, vararg groups: Class<*>): T {
+        return mock(clazz = clazz, context = MockContext(), groups = groups)
     }
 
-    fun <T> mock(clazz: Class<T>, context: MockContext): T {
-        return BaseMockHandler<T>(clazz).mock(context)
+    fun <T> mock(clazz: Class<T>, context: MockContext, vararg groups: Class<*>): T {
+        return BaseMockHandler<T>(clazz).mock(context = context, groups = groups)
     }
 
-    fun <T> mock(typeToken: TypeToken<T>): T {
-        return mock(typeToken,MockContext())
+    fun <T> mock(typeToken: TypeToken<T>, vararg groups: Class<*>): T {
+        return mock(typeToken = typeToken, context = MockContext(), groups = groups)
     }
 
-    fun <T> mock(typeToken: TypeToken<T>, context: MockContext): T {
-        return BaseMockHandler<T>(typeToken.type).mock(context.apply { this.parseParameterizedType(typeToken.type) })
+    fun <T> mock(typeToken: TypeToken<T>, context: MockContext, vararg groups: Class<*>): T {
+        return BaseMockHandler<T>(typeToken.type).mock(
+            context = context.apply { this.parseParameterizedType(typeToken.type) },
+            groups = groups
+        )
     }
 }

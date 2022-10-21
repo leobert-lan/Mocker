@@ -14,11 +14,6 @@ import java.lang.reflect.*
  */
 class ArrayMockHandler(private val type: Type) : MockHandlerV2<Any?> {
 
-    override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
-        return mock(context, field, owner, Default::class.java)
-
-    }
-
     override fun mock(
         context: MockContext,
         field: Field?,

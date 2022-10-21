@@ -12,10 +12,35 @@ import java.lang.reflect.Type
  */
 internal class ClassMockHandler(
     private val clazz: Class<*>, private val genericTypes: Array<Type>
-) : MockHandler<Any?> {
+) : MockHandlerV2<Any?> {
 
 
-    override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
+//    override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
+//        return when {
+//            clazz.isArray -> {
+//                ArrayMockHandler(clazz)
+//            }
+//            Map::class.java.isAssignableFrom(clazz) -> {
+//                MapMockHandler(clazz, genericTypes)
+//            }
+//            Collection::class.java.isAssignableFrom(clazz) -> {
+//                CollectionMockHandler(clazz, genericTypes)
+//            }
+//            clazz.isEnum -> {
+//                FieldMockHandler.EnumFieldMockHandler2
+//            }
+//            else -> context.mockHandler(clazz) ?: FieldMockHandler.BeanFieldMockHandler(clazz)
+//
+//        }.mock(context, field, owner)
+//    }
+
+    override fun mock(
+        context: MockContext,
+        field: Field?,
+        owner: Any?,
+        vararg groups: Class<*>
+    ): Any? {
+
         return when {
             clazz.isArray -> {
                 ArrayMockHandler(clazz)
@@ -31,6 +56,6 @@ internal class ClassMockHandler(
             }
             else -> context.mockHandler(clazz) ?: FieldMockHandler.BeanFieldMockHandler(clazz)
 
-        }.mock(context, field, owner)
+        }.mock(context, field, owner, *groups)
     }
 }

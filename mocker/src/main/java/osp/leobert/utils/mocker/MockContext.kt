@@ -6,7 +6,7 @@ import osp.leobert.utils.mocker.adapter.impl.*
 import osp.leobert.utils.mocker.constructor.ConstructorConstructor
 import osp.leobert.utils.mocker.constructor.InstanceCreator
 import osp.leobert.utils.mocker.handler.FieldMockHandler
-import osp.leobert.utils.mocker.handler.MockHandler
+import osp.leobert.utils.mocker.handler.MockHandlerV2
 import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -105,8 +105,8 @@ class MockContext {
     ///////////////////////////////////////////////////////////////////////////
     // strategy
     ///////////////////////////////////////////////////////////////////////////
-    val fieldMockStrategy: MutableMap<Class<*>, MockHandler<*>> =
-        hashMapOf<Class<*>, MockHandler<*>>().apply {
+    val fieldMockStrategy: MutableMap<Class<*>, MockHandlerV2<*>> =
+        hashMapOf<Class<*>, MockHandlerV2<*>>().apply {
             this[Int::class.java] = FieldMockHandler.IntFieldMockHandler
             this[Integer::class.java] = FieldMockHandler.IntFieldMockHandler
 
@@ -172,7 +172,7 @@ class MockContext {
         }
     }
 
-    fun mockHandler(clazz: Class<*>): MockHandler<*>? {
+    fun mockHandler(clazz: Class<*>): MockHandlerV2<*>? {
         return fieldMockStrategy[clazz]
     }
 

@@ -15,10 +15,6 @@ import java.lang.reflect.Modifier
  */
 sealed class FieldMockHandler<T> : MockHandlerV2<T> {
 
-    final override fun mock(context: MockContext, field: Field?, owner: Any?): T {
-        return super.mock(context, field, owner)
-    }
-
     object IntFieldMockHandler : FieldMockHandler<Int>() {
         override fun mock(
             context: MockContext,
@@ -211,6 +207,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
         private val clazz: Class<*>,
         private val considerSuper: Boolean = true
     ) : FieldMockHandler<Any?>() {
+
         override fun mock(
             context: MockContext,
             field: Field?,
@@ -240,7 +237,12 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
                             Modifier.isStatic(fieldModifiers) -> {                                  //ignore static
                             }
                             else ->
-                                BaseMockHandler<Any>(type = it.genericType).mock(context, it, this)
+                                BaseMockHandler<Any>(type = it.genericType).mock(
+                                    context,
+                                    it,
+                                    this,
+                                    *groups
+                                )
                         }
                     }
                     currentClass = currentClass.superclass
