@@ -36,7 +36,12 @@ class CollectionMockHandler(
 
     }
 
-    private fun mockArrayList(context: MockContext, field: Field?, owner: Any?): ArrayList<Any?>? {
+    private fun mockArrayList(
+        context: MockContext,
+        field: Field?,
+        owner: Any?,
+        vararg groups: Class<*>
+    ): ArrayList<Any?>? {
 
         return (FieldMockHandler.BeanFieldMockHandler(
             ArrayList::class.java,
@@ -44,21 +49,31 @@ class CollectionMockHandler(
         ).mock(
             context, field, owner
         ) as ArrayList<Any?>?)?.apply {
-            insertCollectionItem(context, field, this)
+            insertCollectionItem(context, field, this, *groups)
         }
     }
 
-    private fun mockList(context: MockContext, field: Field?, owner: Any?): List<Any?>? {
+    private fun mockList(
+        context: MockContext,
+        field: Field?,
+        owner: Any?,
+        vararg groups: Class<*>
+    ): List<Any?>? {
         return (FieldMockHandler.BeanFieldMockHandler(clazz, false).mock(
             context, field, owner
         ) as List<Any?>?)?.apply {
             if (this is MutableCollection<*>) {
-                insertCollectionItem(context, field, this as MutableCollection<Any?>)
+                insertCollectionItem(context, field, this as MutableCollection<Any?>, *groups)
             }
         }
     }
 
-    private fun mockHashSet(context: MockContext, field: Field?, owner: Any?): HashSet<Any?>? {
+    private fun mockHashSet(
+        context: MockContext,
+        field: Field?,
+        owner: Any?,
+        vararg groups: Class<*>
+    ): HashSet<Any?>? {
 
         return (FieldMockHandler.BeanFieldMockHandler(
             HashSet::class.java,
@@ -66,16 +81,21 @@ class CollectionMockHandler(
         ).mock(
             context, field, owner
         ) as HashSet<Any?>?)?.apply {
-            insertCollectionItem(context, field, this)
+            insertCollectionItem(context, field, this, *groups)
         }
     }
 
-    private fun mockSet(context: MockContext, field: Field?, owner: Any?): Set<Any?>? {
+    private fun mockSet(
+        context: MockContext,
+        field: Field?,
+        owner: Any?,
+        vararg groups: Class<*>
+    ): Set<Any?>? {
         return (FieldMockHandler.BeanFieldMockHandler(clazz, false).mock(
             context, field, owner
         ) as Set<Any?>?)?.apply {
             if (this is MutableCollection<*>) {
-                insertCollectionItem(context, field, this as MutableCollection<Any?>)
+                insertCollectionItem(context, field, this as MutableCollection<Any?>, *groups)
             }
         }
     }
@@ -83,11 +103,12 @@ class CollectionMockHandler(
     private fun insertCollectionItem(
         context: MockContext,
         field: Field?,
-        collection: MutableCollection<Any?>
+        collection: MutableCollection<Any?>,
+        vararg groups: Class<*>
     ) {
         context.sizeValuePool.reset()
         field?.let {
-            context.collectionMockAdapter.adapt(context, field)
+            context.collectionMockAdapter.adapt(context, field, *groups)
         }
         val size = context.sizeValuePool.randomGet(context)
         val itemMockHandler = BaseMockHandler<Any?>(genericTypes.first())

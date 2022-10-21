@@ -28,7 +28,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
         ): Int {
             context.intValuePool.reset()
             field?.let {
-                context.intMockAdapter.adapt(context, field)
+                context.intMockAdapter.adapt(context, field, *groups)
             }
             return context.intValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -45,7 +45,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
         ): Short {
             context.shortValuePool.reset()
             field?.let {
-                context.shortMockAdapter.adapt(context, field)
+                context.shortMockAdapter.adapt(context, field, *groups)
             }
             return context.shortValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -62,7 +62,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
         ): Long {
             context.longValuePool.reset()
             field?.let {
-                context.longMockAdapter.adapt(context, field)
+                context.longMockAdapter.adapt(context, field, *groups)
             }
             return context.longValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -113,7 +113,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
         ): Byte {
             context.byteValuePool.reset()
             field?.let {
-                context.byteMockAdapter.adapt(context, field)
+                context.byteMockAdapter.adapt(context, field, *groups)
             }
             return context.byteValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -147,7 +147,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
         ): Char {
             context.charValuePool.reset()
             field?.let {
-                context.charMockAdapter.adapt(context, field)
+                context.charMockAdapter.adapt(context, field, *groups)
             }
             return context.charValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -165,7 +165,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
         ): String {
             context.stringValuePool.reset()
             field?.let {
-                context.stringMockAdapter.adapt(context, field)
+                context.stringMockAdapter.adapt(context, field, *groups)
             }
             return context.stringValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -198,7 +198,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             enumValuePool.reset()
             field?.let {
                 enumValuePool.clazz = field.type
-                context.enumMockAdapter.adapt(context, field)
+                context.enumMockAdapter.adapt(context, field, *groups)
             }
             return enumValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)

@@ -2,6 +2,7 @@ package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.MockException
+import osp.leobert.utils.mocker.notation.group.Default
 import java.lang.reflect.*
 
 
@@ -11,17 +12,27 @@ import java.lang.reflect.*
  * <p><b>Classname:</b> ArrayMockHandler </p>
  * Created by leobert on 2020/11/29.
  */
-class ArrayMockHandler(private val type: Type) : MockHandler<Any?> {
+class ArrayMockHandler(private val type: Type) : MockHandlerV2<Any?> {
 
     override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
+        return mock(context, field, owner, Default::class.java)
+
+    }
+
+    override fun mock(
+        context: MockContext,
+        field: Field?,
+        owner: Any?,
+        vararg groups: Class<*>
+    ): Any? {
         return when (type) {
             is Class<*> -> {
-                createArray(context, field, type.componentType)?.apply {
+                createArray(context, field, type.componentType, *groups)?.apply {
                     insertItemIntoArray(context, type.componentType, this as Array<Any?>)
                 }
             }
             is GenericArrayType -> {
-                createGenericArray(context,field, type)
+                createGenericArray(context, field, type, *groups)
             }
             else -> throw MockException("Not Supported:Array mock; ${type.typeName},${type}")
         }.apply {
@@ -30,10 +41,15 @@ class ArrayMockHandler(private val type: Type) : MockHandler<Any?> {
     }
 
 
-    private fun createArray(context: MockContext, field: Field?, clazz: Class<*>): Any? {
+    private fun createArray(
+        context: MockContext,
+        field: Field?,
+        clazz: Class<*>,
+        vararg groups: Class<*>
+    ): Any? {
         context.sizeValuePool.reset()
         field?.let {
-            context.collectionMockAdapter.adapt(context, field)
+            context.collectionMockAdapter.adapt(context, field, *groups)
         }
         val size = context.sizeValuePool.randomGet(context)
         return java.lang.reflect.Array.newInstance(clazz, size)
@@ -48,13 +64,18 @@ class ArrayMockHandler(private val type: Type) : MockHandler<Any?> {
         }
     }
 
-    private fun createGenericArray(context: MockContext,field: Field?, type: GenericArrayType): Any? {
+    private fun createGenericArray(
+        context: MockContext,
+        field: Field?,
+        type: GenericArrayType,
+        vararg groups: Class<*>
+    ): Any? {
 
         val model = parse(context, type, 1)
 
         context.sizeValuePool.reset()
         field?.let {
-            context.collectionMockAdapter.adapt(context, field)
+            context.collectionMockAdapter.adapt(context, field, *groups)
         }
 
         var clazz = model.second.first
@@ -62,18 +83,24 @@ class ArrayMockHandler(private val type: Type) : MockHandler<Any?> {
         val list: MutableList<Array<Any?>> = ArrayList(model.first)
 
         for (i in (0 until model.first).reversed()) {
-            val array: Array<Any?> = java.lang.reflect.Array.newInstance(clazz, context.sizeValuePool.randomGet(context)) as Array<Any?>
+            val array: Array<Any?> = java.lang.reflect.Array.newInstance(
+                clazz,
+                context.sizeValuePool.randomGet(context)
+            ) as Array<Any?>
             clazz = array.javaClass
             list.add(array)
         }
 
-        var baseResult: Any? = BaseMockHandler<Any?>(model.second.first,model.second.second?: arrayOf()).mock(context)
+        var baseResult: Any? = BaseMockHandler<Any?>(
+            model.second.first,
+            model.second.second ?: arrayOf()
+        ).mock(context)
 
         //上一次是尾递归，此处头递归是从内而外的。
         for (i in list.indices) {
             val array = list[i]
             for (j in 0 until context.sizeValuePool.randomGet(context)) {
-               java.lang.reflect.Array.set(array, j, baseResult)
+                java.lang.reflect.Array.set(array, j, baseResult)
             }
             baseResult = array
         }
