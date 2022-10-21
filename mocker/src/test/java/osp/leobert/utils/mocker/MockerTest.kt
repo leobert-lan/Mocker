@@ -1,10 +1,12 @@
 package osp.leobert.utils.mocker
 
 import com.google.gson.Gson
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import osp.leobert.utils.mocker.notation.*
+import osp.leobert.utils.mocker.notation.group.Default
 
 /**
  *
@@ -19,12 +21,32 @@ import osp.leobert.utils.mocker.notation.*
 @Suppress("unused")
 internal class MockerTest {
 
+    interface Group1
+    interface Group2
+
     @Retention(AnnotationRetention.RUNTIME)
     @Target(AnnotationTarget.FIELD)
-    @MockStringDef(value = ["Leobert", "Tony"])
+    @MockStringDef(value = ["Leobert", "Tony"], groups = [Group1::class, Default::class])
+    @MockStringDef(value = ["Leobert2"], groups = [Group2::class])
     annotation class Name
 
-    class Foo(@field:Name val name: String)
+    class Foo(@field:Name val name: String) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Foo
+
+            if (name != other.name) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            return name.hashCode()
+        }
+    }
+
     class Bar<T>(val t: T? = null)
 
     class BarFoo(val bar: Bar<Foo>)
@@ -38,8 +60,66 @@ internal class MockerTest {
 
     @Test
     fun testMock() {
-        val foo: Foo = Mocker.mock(Foo::class.java)
-        println(Gson().toJson(foo))
+        val group1Results = hashSetOf(Foo("Leobert"), Foo("Tony"))
+        val group2Results = hashSetOf(Foo("Leobert2"))
+
+        repeat(20) {
+            val foo: Foo = Mocker.mock(Foo::class.java)
+            println(Gson().toJson(foo))
+            Assert.assertEquals(true, group1Results.contains(foo))
+
+            Assert.assertEquals(
+                true,
+                group1Results.contains(
+                    Mocker.mockWithGroup(
+                        Foo::class.java,
+                        Group1::class.java
+                    )
+                )
+            )
+
+            Assert.assertEquals(
+                true,
+                group1Results.contains(
+                    Mocker.mockWithGroup(
+                        Foo::class.java,
+                        Default::class.java
+                    )
+                )
+            )
+
+            Assert.assertEquals(
+                true,
+                group1Results.contains(
+                    Mocker.mockWithGroup(
+                        Foo::class.java,
+                        Group1::class.java, Group2::class.java
+                    )
+                )
+            )
+
+            Assert.assertEquals(
+                false,
+                group1Results.contains(
+                    Mocker.mockWithGroup(
+                        Foo::class.java,
+                        Group2::class.java
+                    )
+                )
+            )
+
+            Assert.assertEquals(
+                true,
+                group2Results.contains(
+                    Mocker.mockWithGroup(
+                        Foo::class.java,
+                        Group2::class.java
+                    )
+                )
+            )
+
+        }
+
     }
 
     @Test

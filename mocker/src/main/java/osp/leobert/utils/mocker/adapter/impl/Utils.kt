@@ -192,7 +192,8 @@ internal object Utils {
         val isDefaultGroup = isDefaultGroup(distinctGroups)
         return allGroups.indexOfFirst { g ->
             if (isDefaultGroup) {
-                g.isEmpty() || isDefaultGroup(g)
+                //declined group in notation: {} || {Default} || {others,Default}
+                g.isEmpty() || isDefaultGroup(g) || g.contains(Default::class.java)
             } else {
                 val firstMatchedConfig = distinctGroups.find {
                     if (it == Default::class.java) {

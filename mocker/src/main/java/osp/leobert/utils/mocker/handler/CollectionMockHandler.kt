@@ -14,26 +14,6 @@ import java.lang.reflect.Type
 class CollectionMockHandler(
     private val clazz: Class<*>, private val genericTypes: Array<Type>
 ) : MockHandlerV2<Any?> {
-//    override fun mock(context: MockContext, field: Field?, owner: Any?): Any? {
-//        return when {
-//            clazz.typeName == List::class.java.typeName ||
-//                    clazz.typeName == MutableList::class.java.typeName -> {
-//                mockArrayList(context, field, owner)
-//            }
-//            List::class.java.isAssignableFrom(clazz) -> {
-//                mockList(context, field, owner)
-//            }
-//            clazz.typeName == Set::class.java.typeName ||
-//                    clazz.typeName == MutableSet::class.java.typeName -> {
-//                mockHashSet(context, field, owner)
-//            }
-//            Set::class.java.isAssignableFrom(clazz) -> {
-//                mockSet(context, field, owner)
-//            }
-//
-//            else -> throw MockException("not supported for ${clazz.typeName}")
-//        }
-//    }
 
     override fun mock(
         context: MockContext,

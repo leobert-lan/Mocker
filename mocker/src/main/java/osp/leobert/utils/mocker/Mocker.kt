@@ -31,11 +31,11 @@ object Mocker {
     }
 
 
-    inline fun <reified T> mockWithGroup(vararg groups: Class<*>): T {
-        return mockWithGroup(context = MockContext(), groups = groups)
+    inline fun <reified T> mockWithGroupInline(vararg groups: Class<*>): T {
+        return mockWithGroupInline(context = MockContext(), groups = groups)
     }
 
-    inline fun <reified T> mockWithGroup(context: MockContext, vararg groups: Class<*>): T {
+    inline fun <reified T> mockWithGroupInline(context: MockContext, vararg groups: Class<*>): T {
         return mockWithGroup(clazz = T::class.java, context = context, groups = groups)
     }
 
