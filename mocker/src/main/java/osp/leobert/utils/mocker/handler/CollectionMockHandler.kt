@@ -119,7 +119,7 @@ class CollectionMockHandler(
         val itemMockHandler = BaseMockHandler<Any?>(genericTypes.first())
         for (i in 0 until size) {
             collection.add(
-                itemMockHandler.mock(context)
+                itemMockHandler.mock(context = context, groups = groups)
             )
         }
     }

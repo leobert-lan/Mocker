@@ -53,8 +53,15 @@ internal class MockerTest {
 
     @Test
     fun mock() {
-        val bar: Bar<Foo> = Mocker.mock(object : TypeToken<Bar<Foo>>() {})
-        println(Gson().toJson(bar))
+        repeat(10) {
+
+            val bar: Bar<Foo> = Mocker.mock(object : TypeToken<Bar<Foo>>() {})
+            println(Gson().toJson(bar))
+
+            val bar2: Bar<Foo> =
+                Mocker.mockWithGroup(object : TypeToken<Bar<Foo>>() {}, Group2::class.java)
+            println(Gson().toJson(bar2))
+        }
     }
 
 
@@ -124,14 +131,28 @@ internal class MockerTest {
 
     @Test
     fun testMock1() {
-        val bean: BarFoo = Mocker.mock(BarFoo::class.java)
-        println(Gson().toJson(bean))
+        repeat(10) {
+            val bean: BarFoo = Mocker.mock(BarFoo::class.java)
+            println(Gson().toJson(bean))
+
+            val bean2: BarFoo = Mocker.mockWithGroup(BarFoo::class.java, Group2::class.java)
+            println(Gson().toJson(bean2))
+
+            //will miss group
+            val bean3: BarFoo = Mocker.mockWithGroup(BarFoo::class.java, MockerTest::class.java)
+            println(Gson().toJson(bean3))
+        }
     }
 
     @Test
     fun testMock2() {
-        val bean: List<BarFoo> = Mocker.mock(object : TypeToken<List<BarFoo>>() {})
-        println(Gson().toJson(bean))
+//        val bean: List<BarFoo> = Mocker.mock(object : TypeToken<List<BarFoo>>() {})
+//        println(Gson().toJson(bean))
+
+        //todo error,传递参数丢失
+        val bean2: List<BarFoo> =
+            Mocker.mockWithGroup(object : TypeToken<List<BarFoo>>() {}, Group2::class.java)
+        println(Gson().toJson(bean2))
     }
 
     interface I
