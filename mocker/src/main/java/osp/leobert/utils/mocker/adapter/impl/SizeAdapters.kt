@@ -33,8 +33,8 @@ import java.lang.reflect.Field
 object SizeAdapterV2 : FieldMockAdapterV2 {
     private val list by lazy { arrayListOf<Int>() }
 
-    override fun adapt(context: MockContext, field: Field, vararg groups: Class<*>) {
-        field.findMockSize(*groups)?.let {
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        field.findMockSize(groups)?.let {
             if (it.value < 0) {
                 context.sizeValuePool.setRange(it.min, it.max)
             } else {

@@ -24,7 +24,7 @@ class BaseMockHandler<T>(
         context: MockContext,
         field: Field?,
         owner: Any?,
-        vararg groups: Class<*>
+        groups: Array<out Class<*>>
     ): T {
         return when (type) {
             is ParameterizedType -> {
@@ -43,7 +43,7 @@ class BaseMockHandler<T>(
                 ClassMockHandler(type, genericTypes)
             }
             else -> throw MockException("暂不支持${type.typeName}")
-        }.mock(context, field, owner,*groups) as T
+        }.mock(context, field, owner, groups) as T
     }
 
 

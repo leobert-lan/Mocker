@@ -46,34 +46,48 @@ internal class NotationFetcherTest {
 
         //java8方式验证
         val field = Foo::class.java.getDeclaredField("aInt")
-        assertEquals(1L, field.findMockIntRange()?.from)
-        assertEquals(1L, field.findMockIntRange(Default::class.java)?.from)
-        assertEquals(2L, field.findMockIntRange(NotationFetcherTest::class.java)?.from)
+        assertEquals(1L, field.findMockIntRange(arrayOf())?.from)
+        assertEquals(1L, field.findMockIntRange(arrayOf(Default::class.java))?.from)
+        assertEquals(2L, field.findMockIntRange(arrayOf(NotationFetcherTest::class.java))?.from)
 
-        assertEquals(null, field.findMockIntRange(Foo::class.java)?.from)
+        assertEquals(null, field.findMockIntRange(arrayOf(Foo::class.java))?.from)
 
-        assertEquals(3L, field.findMockIntRange(Integer::class.java)?.from)
-        assertEquals(3L, field.findMockIntRange(Foo::class.java, Integer::class.java)?.from)
+        assertEquals(3L, field.findMockIntRange(arrayOf(Integer::class.java))?.from)
+        assertEquals(
+            3L,
+            field.findMockIntRange(arrayOf(Foo::class.java, Integer::class.java))?.from
+        )
 
         assertEquals(
             1L,
-            field.findMockIntRange(Foo::class.java, Default::class.java, Integer::class.java)?.from
+            field.findMockIntRange(
+                arrayOf(Foo::class.java, Default::class.java, Integer::class.java)
+            )?.from
         )
 
         //集合方式验证
         val field2 = Foo::class.java.getDeclaredField("aInt2")
-        assertEquals(1L, field2.findMockIntRange()?.from)
-        assertEquals(1L, field2.findMockIntRange(Default::class.java)?.from)
-        assertEquals(2L, field2.findMockIntRange(NotationFetcherTest::class.java)?.from)
+        assertEquals(1L, field2.findMockIntRange(arrayOf())?.from)
+        assertEquals(1L, field2.findMockIntRange(arrayOf(Default::class.java))?.from)
+        assertEquals(2L, field2.findMockIntRange(arrayOf(NotationFetcherTest::class.java))?.from)
 
-        assertEquals(null, field2.findMockIntRange(Foo::class.java)?.from)
+        assertEquals(null, field2.findMockIntRange(arrayOf(Foo::class.java))?.from)
 
-        assertEquals(3L, field2.findMockIntRange(Integer::class.java)?.from)
-        assertEquals(3L, field2.findMockIntRange(Foo::class.java, Integer::class.java)?.from)
+        assertEquals(3L, field2.findMockIntRange(arrayOf(Integer::class.java))?.from)
+        assertEquals(
+            3L,
+            field2.findMockIntRange(arrayOf(Foo::class.java, Integer::class.java))?.from
+        )
 
         assertEquals(
             1L,
-            field2.findMockIntRange(Foo::class.java, Default::class.java, Integer::class.java)?.from
+            field2.findMockIntRange(
+                arrayOf(
+                    Foo::class.java,
+                    Default::class.java,
+                    Integer::class.java
+                )
+            )?.from
         )
 
     }
@@ -84,34 +98,52 @@ internal class NotationFetcherTest {
 
         //java8方式验证
         val field = JavaFoo::class.java.getDeclaredField("aInt")
-        assertEquals(1L, field.findMockIntRange()?.from)
-        assertEquals(1L, field.findMockIntRange(Default::class.java)?.from)
-        assertEquals(2L, field.findMockIntRange(NotationFetcherTest::class.java)?.from)
+        assertEquals(1L, field.findMockIntRange(arrayOf())?.from)
+        assertEquals(1L, field.findMockIntRange(arrayOf(Default::class.java))?.from)
+        assertEquals(2L, field.findMockIntRange(arrayOf(NotationFetcherTest::class.java))?.from)
 
-        assertEquals(null, field.findMockIntRange(Foo::class.java)?.from)
+        assertEquals(null, field.findMockIntRange(arrayOf(Foo::class.java))?.from)
 
-        assertEquals(3L, field.findMockIntRange(Integer::class.java)?.from)
-        assertEquals(3L, field.findMockIntRange(Foo::class.java, Integer::class.java)?.from)
+        assertEquals(3L, field.findMockIntRange(arrayOf(Integer::class.java))?.from)
+        assertEquals(
+            3L,
+            field.findMockIntRange(arrayOf(Foo::class.java, Integer::class.java))?.from
+        )
 
         assertEquals(
             1L,
-            field.findMockIntRange(Foo::class.java, Default::class.java, Integer::class.java)?.from
+            field.findMockIntRange(
+                arrayOf(
+                    Foo::class.java,
+                    Default::class.java,
+                    Integer::class.java
+                )
+            )?.from
         )
 
         //集合方式验证
         val field2 = JavaFoo::class.java.getDeclaredField("aInt2")
-        assertEquals(1L, field2.findMockIntRange()?.from)
-        assertEquals(1L, field2.findMockIntRange(Default::class.java)?.from)
-        assertEquals(2L, field2.findMockIntRange(NotationFetcherTest::class.java)?.from)
+        assertEquals(1L, field2.findMockIntRange(arrayOf())?.from)
+        assertEquals(1L, field2.findMockIntRange(arrayOf(Default::class.java))?.from)
+        assertEquals(2L, field2.findMockIntRange(arrayOf(NotationFetcherTest::class.java))?.from)
 
-        assertEquals(null, field2.findMockIntRange(Foo::class.java)?.from)
+        assertEquals(null, field2.findMockIntRange(arrayOf(Foo::class.java))?.from)
 
-        assertEquals(3L, field2.findMockIntRange(Integer::class.java)?.from)
-        assertEquals(3L, field2.findMockIntRange(Foo::class.java, Integer::class.java)?.from)
+        assertEquals(3L, field2.findMockIntRange(arrayOf(Integer::class.java))?.from)
+        assertEquals(
+            3L,
+            field2.findMockIntRange(arrayOf(Foo::class.java, Integer::class.java))?.from
+        )
 
         assertEquals(
             1L,
-            field2.findMockIntRange(Foo::class.java, Default::class.java, Integer::class.java)?.from
+            field2.findMockIntRange(
+                arrayOf(
+                    Foo::class.java,
+                    Default::class.java,
+                    Integer::class.java
+                )
+            )?.from
         )
     }
 
@@ -148,34 +180,83 @@ internal class NotationFetcherTest {
     fun testFieldAnnotationDefFetcher() {
 
         val field = Bar::class.java.getDeclaredField("aInt")
-        assertEquals(11, field.findMockIntDefAboveNotation()?.value?.first())
-        assertEquals(11, field.findMockIntDefAboveNotation(Default::class.java)?.value?.first())
-        assertEquals(12, field.findMockIntDefAboveNotation(NotationFetcherTest::class.java)?.value?.first())
+        assertEquals(11, field.findMockIntDefAboveNotation(arrayOf())?.value?.first())
+        assertEquals(
+            11,
+            field.findMockIntDefAboveNotation(arrayOf(Default::class.java))?.value?.first()
+        )
+        assertEquals(
+            12,
+            field.findMockIntDefAboveNotation(arrayOf(NotationFetcherTest::class.java))?.value?.first()
+        )
 
-        assertEquals(null, field.findMockIntDefAboveNotation(Foo::class.java))
+        assertEquals(null, field.findMockIntDefAboveNotation(arrayOf(Foo::class.java)))
 
-        assertEquals(13L, field.findMockIntDefAboveNotation(Integer::class.java)?.value?.first())
-        assertEquals(13L, field.findMockIntDefAboveNotation(Foo::class.java, Integer::class.java)?.value?.first())
+        assertEquals(
+            13L,
+            field.findMockIntDefAboveNotation(arrayOf(Integer::class.java))?.value?.first()
+        )
+        assertEquals(
+            13L,
+            field.findMockIntDefAboveNotation(
+                arrayOf(
+                    Foo::class.java,
+                    Integer::class.java
+                )
+            )?.value?.first()
+        )
 
         assertEquals(
             11L,
-            field.findMockIntDefAboveNotation(Foo::class.java, Default::class.java, Integer::class.java)?.value?.first()
+            field.findMockIntDefAboveNotation(
+                arrayOf(
+                    Foo::class.java,
+                    Default::class.java,
+                    Integer::class.java
+                )
+            )?.value?.first()
         )
 
 //        //集合方式验证
         val field2 = Bar::class.java.getDeclaredField("aInt2")
-        assertEquals(21L, field2.findMockIntDefAboveNotation()?.value?.first())
-        assertEquals(21L, field2.findMockIntDefAboveNotation(Default::class.java)?.value?.first())
-        assertEquals(22L, field2.findMockIntDefAboveNotation(NotationFetcherTest::class.java)?.value?.first())
+        assertEquals(21L, field2.findMockIntDefAboveNotation(arrayOf())?.value?.first())
+        assertEquals(
+            21L,
+            field2.findMockIntDefAboveNotation(arrayOf(Default::class.java))?.value?.first()
+        )
+        assertEquals(
+            22L,
+            field2.findMockIntDefAboveNotation(arrayOf(NotationFetcherTest::class.java))?.value?.first()
+        )
 
-        assertEquals(null, field2.findMockIntDefAboveNotation(Foo::class.java)?.value?.first())
+        assertEquals(
+            null,
+            field2.findMockIntDefAboveNotation(arrayOf(Foo::class.java))?.value?.first()
+        )
 
-        assertEquals(23L, field2.findMockIntDefAboveNotation(Integer::class.java)?.value?.first())
-        assertEquals(23L, field2.findMockIntDefAboveNotation(Foo::class.java, Integer::class.java)?.value?.first())
+        assertEquals(
+            23L,
+            field2.findMockIntDefAboveNotation(arrayOf(Integer::class.java))?.value?.first()
+        )
+        assertEquals(
+            23L,
+            field2.findMockIntDefAboveNotation(
+                arrayOf(
+                    Foo::class.java,
+                    Integer::class.java
+                )
+            )?.value?.first()
+        )
 
         assertEquals(
             21L,
-            field2.findMockIntDefAboveNotation(Foo::class.java, Default::class.java, Integer::class.java)?.value?.first()
+            field2.findMockIntDefAboveNotation(
+                arrayOf(
+                    Foo::class.java,
+                    Default::class.java,
+                    Integer::class.java
+                )
+            )?.value?.first()
         )
 
     }

@@ -24,11 +24,11 @@ import java.lang.reflect.Field
 //}
 
 object BooleanAdapterV2 : FieldMockAdapterV2 {
-    override fun adapt(context: MockContext, field: Field, vararg groups: Class<*>) {
-        field.findMockTrue(*groups)?.let {
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        field.findMockTrue(groups)?.let {
             context.boolValuePool.setEnumValues(arrayListOf(true))
         }
-        field.findMockFalse(*groups)?.let {
+        field.findMockFalse(groups)?.let {
             context.boolValuePool.setEnumValues(arrayListOf(false))
         }
     }

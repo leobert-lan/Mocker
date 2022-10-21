@@ -24,8 +24,8 @@ import java.lang.reflect.Field
 
 
 object CharRangeAdapterV2 : FieldMockAdapterV2 {
-    override fun adapt(context: MockContext, field: Field, vararg groups: Class<*>) {
-        field.findMockCharRange(*groups)?.let {
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        field.findMockCharRange(groups)?.let {
             context.charValuePool.setRange(it.from, it.to)
         }
     }

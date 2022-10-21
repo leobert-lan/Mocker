@@ -20,11 +20,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Int {
             context.intValuePool.reset()
             field?.let {
-                context.intMockAdapter.adapt(context, field, *groups)
+                context.intMockAdapter.adapt(context, field, groups)
             }
             return context.intValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -37,11 +37,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Short {
             context.shortValuePool.reset()
             field?.let {
-                context.shortMockAdapter.adapt(context, field, *groups)
+                context.shortMockAdapter.adapt(context, field, groups)
             }
             return context.shortValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -54,11 +54,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Long {
             context.longValuePool.reset()
             field?.let {
-                context.longMockAdapter.adapt(context, field, *groups)
+                context.longMockAdapter.adapt(context, field, groups)
             }
             return context.longValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -71,11 +71,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Float {
             context.floatValuePool.reset()
             field?.let {
-                context.floatMockAdapter.adapt(context, field, *groups)
+                context.floatMockAdapter.adapt(context, field, groups)
             }
             return context.floatValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -88,11 +88,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Double {
             context.doubleValuePool.reset()
             field?.let {
-                context.doubleMockAdapter.adapt(context, field, *groups)
+                context.doubleMockAdapter.adapt(context, field, groups)
             }
             return context.doubleValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -105,11 +105,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Byte {
             context.byteValuePool.reset()
             field?.let {
-                context.byteMockAdapter.adapt(context, field, *groups)
+                context.byteMockAdapter.adapt(context, field, groups)
             }
             return context.byteValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -122,11 +122,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Boolean {
             context.boolValuePool.reset()
             field?.let {
-                context.booleanMockAdapter.adapt(context, field, *groups)
+                context.booleanMockAdapter.adapt(context, field, groups)
             }
             return context.boolValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -139,11 +139,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Char {
             context.charValuePool.reset()
             field?.let {
-                context.charMockAdapter.adapt(context, field, *groups)
+                context.charMockAdapter.adapt(context, field, groups)
             }
             return context.charValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -157,11 +157,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): String {
             context.stringValuePool.reset()
             field?.let {
-                context.stringMockAdapter.adapt(context, field, *groups)
+                context.stringMockAdapter.adapt(context, field, groups)
             }
             return context.stringValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -188,13 +188,13 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Enum<*> {
             val enumValuePool: ValuePool.EnumValuePool = ValuePool.EnumValuePool()
             enumValuePool.reset()
             field?.let {
                 enumValuePool.clazz = field.type
-                context.enumMockAdapter.adapt(context, field, *groups)
+                context.enumMockAdapter.adapt(context, field, groups)
             }
             return enumValuePool.randomGet(context).apply {
                 context.applyField(this, field, owner)
@@ -212,7 +212,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             context: MockContext,
             field: Field?,
             owner: Any?,
-            vararg groups: Class<*>
+            groups: Array<out Class<*>>
         ): Any? {
             return context.createInstance(clazz).apply {
                 context.applyField(this, field, owner)
@@ -241,7 +241,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
                                     context,
                                     it,
                                     this,
-                                    *groups
+                                    groups
                                 )
                         }
                     }

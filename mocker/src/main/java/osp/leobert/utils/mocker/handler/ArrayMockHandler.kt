@@ -2,7 +2,6 @@ package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.MockException
-import osp.leobert.utils.mocker.notation.group.Default
 import java.lang.reflect.*
 
 
@@ -18,16 +17,16 @@ class ArrayMockHandler(private val type: Type) : MockHandlerV2<Any?> {
         context: MockContext,
         field: Field?,
         owner: Any?,
-        vararg groups: Class<*>
+        groups: Array<out Class<*>>
     ): Any? {
         return when (type) {
             is Class<*> -> {
-                createArray(context, field, type.componentType, *groups)?.apply {
-                    insertItemIntoArray(context, type.componentType, this as Array<Any?>)
+                createArray(context, field, type.componentType, groups)?.apply {
+                    insertItemIntoArray(context, type.componentType, this as Array<Any?>, groups)
                 }
             }
             is GenericArrayType -> {
-                createGenericArray(context, field, type, *groups)
+                createGenericArray(context, field, type, groups)
             }
             else -> throw MockException("Not Supported:Array mock; ${type.typeName},${type}")
         }.apply {
@@ -40,22 +39,27 @@ class ArrayMockHandler(private val type: Type) : MockHandlerV2<Any?> {
         context: MockContext,
         field: Field?,
         clazz: Class<*>,
-        vararg groups: Class<*>
+        groups: Array<out Class<*>>
     ): Any? {
         context.sizeValuePool.reset()
         field?.let {
-            context.collectionMockAdapter.adapt(context, field, *groups)
+            context.collectionMockAdapter.adapt(context, field, groups)
         }
         val size = context.sizeValuePool.randomGet(context)
         return java.lang.reflect.Array.newInstance(clazz, size)
     }
 
-    private fun insertItemIntoArray(context: MockContext, type: Type, array: Array<Any?>) {
+    private fun insertItemIntoArray(
+        context: MockContext,
+        type: Type,
+        array: Array<Any?>,
+        groups: Array<out Class<*>>
+    ) {
 
         val itemMockHandler = BaseMockHandler<Any?>(type)
 
         for (i in array.indices) {
-            array[i] = itemMockHandler.mock(context)
+            array[i] = itemMockHandler.mock(context = context, groups = groups)
         }
     }
 
@@ -63,14 +67,14 @@ class ArrayMockHandler(private val type: Type) : MockHandlerV2<Any?> {
         context: MockContext,
         field: Field?,
         type: GenericArrayType,
-        vararg groups: Class<*>
+        groups: Array<out Class<*>>
     ): Any? {
 
         val model = parse(context, type, 1)
 
         context.sizeValuePool.reset()
         field?.let {
-            context.collectionMockAdapter.adapt(context, field, *groups)
+            context.collectionMockAdapter.adapt(context, field, groups)
         }
 
         var clazz = model.second.first
@@ -89,7 +93,7 @@ class ArrayMockHandler(private val type: Type) : MockHandlerV2<Any?> {
         var baseResult: Any? = BaseMockHandler<Any?>(
             model.second.first,
             model.second.second ?: arrayOf()
-        ).mock(context)
+        ).mock(context = context, groups = groups)
 
         //上一次是尾递归，此处头递归是从内而外的。
         for (i in list.indices) {

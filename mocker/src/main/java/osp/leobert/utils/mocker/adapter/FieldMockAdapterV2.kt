@@ -1,7 +1,7 @@
 package osp.leobert.utils.mocker.adapter
 
 import osp.leobert.utils.mocker.MockContext
-import osp.leobert.utils.mocker.notation.group.Default
+import osp.leobert.utils.mocker.Mocker
 import java.lang.reflect.Field
 
 /**
@@ -10,9 +10,10 @@ import java.lang.reflect.Field
  * Created by leobert on 2022/10/20.
  */
 interface FieldMockAdapterV2 : FieldMockAdapter {
+
     override fun adapt(context: MockContext, field: Field) {
-        adapt(context, field, Default::class.java)
+        adapt(context, field, Mocker.DEFAULT_GROUP)
     }
 
-    fun adapt(context: MockContext, field: Field, vararg groups: Class<*>)
+    fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>)
 }

@@ -103,7 +103,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.IntFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it >= -5) && (it <= -1))
@@ -118,7 +118,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.IntFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it == 3) || (it == 4) || it == 6)
@@ -133,7 +133,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.LongFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it >= -5) && (it <= -1))
@@ -148,7 +148,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.LongFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it == 3L) || (it == 4L) || it == 6L)
@@ -163,7 +163,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.ShortFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it >= 1) && (it <= 5))
@@ -177,7 +177,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.ShortFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it == 3.toShort()) || (it == 4.toShort()) || it == 6.toShort())
@@ -192,7 +192,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.ByteFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it >= 1) && (it <= 5))
@@ -207,7 +207,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.ByteFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it == 3.toByte()) || (it == 4.toByte()) || it == 6.toByte())
@@ -222,7 +222,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.FloatFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it >= -1000f) && (it <= 1000))
@@ -237,7 +237,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.DoubleFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it >= -1000) && (it <= 1000))
@@ -252,7 +252,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.BooleanFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 assert(it)
             }
@@ -262,7 +262,7 @@ internal class FieldMockHandlerTest {
 
         for (i in 0..100) {
             FieldMockHandler.BooleanFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 assert(it == false)
             }
@@ -275,7 +275,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.CharFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert((it >= 'a') && (it <= 'z'))
@@ -290,7 +290,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.CharFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert(it == 'M')
@@ -305,7 +305,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
         for (i in 0..100) {
             FieldMockHandler.StringFieldMockHandler.mock(
-                context, field
+                context, field, groups = arrayOf()
             ).let {
                 println(it)
                 assert(it == "Leobert" || it == "Tony")
@@ -319,7 +319,7 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
 
         FieldMockHandler.BeanFieldMockHandler(field.type).mock(
-            context, field
+            context, field, groups = arrayOf()
         ).let {
             println(it)
             assert(it != null)
@@ -333,11 +333,11 @@ internal class FieldMockHandlerTest {
         val context = MockContext()
 
         FieldMockHandler.EnumFieldMockHandler2.mock(
-            context, field
+            context, field, groups = arrayOf()
         ).let {
             println(it)
             assert(it != null)
-            assertEquals(EnumSub::class.java.name, it?.javaClass?.name)
+            assertEquals(EnumSub::class.java.name, it.javaClass.name)
         }
     }
 }

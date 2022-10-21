@@ -18,7 +18,7 @@ internal class ClassMockHandler(
         context: MockContext,
         field: Field?,
         owner: Any?,
-        vararg groups: Class<*>
+        groups: Array<out Class<*>>
     ): Any? {
 
         return when {
@@ -36,6 +36,6 @@ internal class ClassMockHandler(
             }
             else -> context.mockHandler(clazz) ?: FieldMockHandler.BeanFieldMockHandler(clazz)
 
-        }.mock(context, field, owner, *groups)
+        }.mock(context, field, owner, groups)
     }
 }

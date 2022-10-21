@@ -18,6 +18,6 @@ interface MockHandlerV2<T> /*: MockHandler<T>*/ {
         context: MockContext,
         field: Field? = null,
         owner: Any? = null,
-        vararg groups: Class<*>
+        groups: Array<out Class<*>>
     ): T
 }

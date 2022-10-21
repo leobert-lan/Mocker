@@ -28,8 +28,8 @@ import java.lang.reflect.Field
 //}
 
 object ShortDefAdapterV2 : FieldMockAdapterV2 {
-    override fun adapt(context: MockContext, field: Field, vararg groups: Class<*>) {
-        field.findMockIntDefAboveNotation(*groups)?.value
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        field.findMockIntDefAboveNotation(groups)?.value
             ?.map { l -> l.toShort() }
             ?.toMutableList()
             ?.let { values ->

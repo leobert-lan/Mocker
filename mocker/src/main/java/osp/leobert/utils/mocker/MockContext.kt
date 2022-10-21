@@ -58,7 +58,7 @@ class MockContext {
     val boolValuePool: ValuePool<Boolean> = ValuePool.BoolValuePool()
     val charValuePool: ValuePool<Char> = ValuePool.CharValuePool()
 
-//    val enumValuePool: ValuePool.EnumValuePool<*> = ValuePool.EnumValuePool()
+    //    val enumValuePool: ValuePool.EnumValuePool<*> = ValuePool.EnumValuePool()
     val stringValuePool: ValuePool<String> = ValuePool.StringValuePool()
 
     val sizeValuePool: ValuePool<Int> = ValuePool.SizeValuePool()

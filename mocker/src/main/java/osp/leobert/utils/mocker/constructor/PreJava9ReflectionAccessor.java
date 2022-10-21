@@ -25,9 +25,11 @@ import java.lang.reflect.AccessibleObject;
  */
 final class PreJava9ReflectionAccessor extends ReflectionAccessor {
 
-  /** {@inheritDoc} */
-  @Override
-  public void makeAccessible(AccessibleObject ao) {
-    ao.setAccessible(true);
-  }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void makeAccessible(AccessibleObject ao) {
+        ao.setAccessible(true);
+    }
 }

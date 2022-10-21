@@ -24,8 +24,8 @@ import java.lang.reflect.Field
 //}
 
 object IntRangeAdapterV2 : FieldMockAdapterV2 {
-    override fun adapt(context: MockContext, field: Field, vararg groups: Class<*>) {
-        field.findMockIntRange(*groups)?.let {
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        field.findMockIntRange(groups)?.let {
             context.intValuePool.setRange(it.from.toInt(), it.to.toInt())
         }
     }

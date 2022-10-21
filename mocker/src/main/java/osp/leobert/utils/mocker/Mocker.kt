@@ -5,6 +5,8 @@ import osp.leobert.utils.mocker.notation.group.Default
 
 object Mocker {
 
+    val DEFAULT_GROUP: Array<Class<*>> = arrayOf(Default::class.java)
+
 
     inline fun <reified T> mock(): T {
         return mock(MockContext())

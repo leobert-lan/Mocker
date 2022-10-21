@@ -1,7 +1,7 @@
 package osp.leobert.utils.mocker.adapter
 
 import osp.leobert.utils.mocker.MockContext
-import osp.leobert.utils.mocker.notation.group.Default
+import osp.leobert.utils.mocker.Mocker
 import java.lang.reflect.Field
 
 /**
@@ -16,10 +16,10 @@ class ComposeFieldMockAdapterV2 constructor(val leaf: MutableList<FieldMockAdapt
     FieldMockAdapterV2 {
 
     override fun adapt(context: MockContext, field: Field) {
-        adapt(context, field, Default::class.java)
+        adapt(context, field, Mocker.DEFAULT_GROUP)
     }
 
-    override fun adapt(context: MockContext, field: Field, vararg groups: Class<*>) {
-        leaf.forEach { it.adapt(context, field, *groups) }
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        leaf.forEach { it.adapt(context, field, groups) }
     }
 }

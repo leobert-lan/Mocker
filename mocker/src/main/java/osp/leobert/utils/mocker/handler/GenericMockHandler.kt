@@ -16,14 +16,14 @@ internal class GenericMockHandler(private val type: ParameterizedType) : MockHan
         context: MockContext,
         field: Field?,
         owner: Any?,
-        vararg groups: Class<*>
+        groups: Array<out Class<*>>
     ): Any {
         context.parseParameterizedType(type)
         return BaseMockHandler<Any>(type.rawType, type.actualTypeArguments).mock(
             context,
             field,
             owner,
-            *groups
+            groups
         )
     }
 }

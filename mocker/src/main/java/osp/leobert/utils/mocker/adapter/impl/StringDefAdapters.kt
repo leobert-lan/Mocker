@@ -26,8 +26,8 @@ import java.lang.reflect.Field
 //}
 
 object StringDefAdapterV2 : FieldMockAdapterV2 {
-    override fun adapt(context: MockContext, field: Field, vararg groups: Class<*>) {
-        field.findMockStringDefAboveNotation(*groups)?.value
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        field.findMockStringDefAboveNotation(groups)?.value
             ?.toMutableList()
             ?.let { values ->
                 context.stringValuePool.setEnumValues(values)

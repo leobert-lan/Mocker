@@ -15,11 +15,11 @@ internal object Utils {
 
     private val CLZ_DEFAULT = Default::class.java
 
-    fun isDefaultGroup(group: Collection<Class<*>>): Boolean {
+    private fun isDefaultGroup(group: Collection<Class<*>>): Boolean {
         return group.isEmpty() || (group.size == 1 && group.contains(CLZ_DEFAULT))
     }
 
-    fun Field.findMockIntRange(vararg groups: Class<*>): MockIntRange? {
+    fun Field.findMockIntRange(groups: Array<out Class<*>>): MockIntRange? {
         val notations: List<MockIntRange> =
             if (this.isAnnotationPresent(MockIntRanges::class.java)) {
                 getAnnotation(MockIntRanges::class.java).value.asList()
@@ -29,7 +29,7 @@ internal object Utils {
                 Collections.emptyList()
             }
 
-        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, groups)
         return if (index >= 0) {
             notations[index]
         } else {
@@ -37,7 +37,7 @@ internal object Utils {
         }
     }
 
-    fun Field.findMockIntDefAboveNotation(vararg groups: Class<*>): MockIntDef? {
+    fun Field.findMockIntDefAboveNotation(groups: Array<out Class<*>>): MockIntDef? {
         val notations: List<MockIntDef> = annotations?.flatMap { n ->
             if (n.annotationClass.java.isAnnotationPresent(MockIntDefs::class.java)) {
                 n.annotationClass.java.getAnnotation(MockIntDefs::class.java).value.asList()
@@ -49,7 +49,7 @@ internal object Utils {
             }
         } ?: Collections.emptyList()
 
-        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, groups)
         return if (index >= 0) {
             notations[index]
         } else {
@@ -57,7 +57,7 @@ internal object Utils {
         }
     }
 
-    fun Field.findMockFloatRange(vararg groups: Class<*>): MockFloatRange? {
+    fun Field.findMockFloatRange(groups: Array<out Class<*>>): MockFloatRange? {
         val notations: List<MockFloatRange> =
             if (this.isAnnotationPresent(MockFloatRanges::class.java)) {
                 getAnnotation(MockFloatRanges::class.java).value.asList()
@@ -67,7 +67,7 @@ internal object Utils {
                 Collections.emptyList()
             }
 
-        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, groups)
         return if (index >= 0) {
             notations[index]
         } else {
@@ -75,7 +75,7 @@ internal object Utils {
         }
     }
 
-    fun Field.findMockCharRange(vararg groups: Class<*>): MockCharRange? {
+    fun Field.findMockCharRange(groups: Array<out Class<*>>): MockCharRange? {
         val notations: List<MockCharRange> =
             if (this.isAnnotationPresent(MockCharRanges::class.java)) {
                 getAnnotation(MockCharRanges::class.java).value.asList()
@@ -85,7 +85,7 @@ internal object Utils {
                 Collections.emptyList()
             }
 
-        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, groups)
         return if (index >= 0) {
             notations[index]
         } else {
@@ -93,7 +93,7 @@ internal object Utils {
         }
     }
 
-    fun Field.findMockTrue(vararg groups: Class<*>): MockTrue? {
+    fun Field.findMockTrue(groups: Array<out Class<*>>): MockTrue? {
         val notations: List<MockTrue> =
             if (this.isAnnotationPresent(MockTrues::class.java)) {
                 getAnnotation(MockTrues::class.java).value.asList()
@@ -103,7 +103,7 @@ internal object Utils {
                 Collections.emptyList()
             }
 
-        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, groups)
         return if (index >= 0) {
             notations[index]
         } else {
@@ -111,7 +111,7 @@ internal object Utils {
         }
     }
 
-    fun Field.findMockFalse(vararg groups: Class<*>): MockFalse? {
+    fun Field.findMockFalse(groups: Array<out Class<*>>): MockFalse? {
         val notations: List<MockFalse> =
             if (this.isAnnotationPresent(MockFalses::class.java)) {
                 getAnnotation(MockFalses::class.java).value.asList()
@@ -121,7 +121,7 @@ internal object Utils {
                 Collections.emptyList()
             }
 
-        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, groups)
         return if (index >= 0) {
             notations[index]
         } else {
@@ -129,7 +129,7 @@ internal object Utils {
         }
     }
 
-    fun Field.findMockSize(vararg groups: Class<*>): MockSize? {
+    fun Field.findMockSize(groups: Array<out Class<*>>): MockSize? {
         val notations: List<MockSize> =
             if (this.isAnnotationPresent(MockSizes::class.java)) {
                 getAnnotation(MockSizes::class.java).value.asList()
@@ -139,7 +139,7 @@ internal object Utils {
                 Collections.emptyList()
             }
 
-        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, groups)
         return if (index >= 0) {
             notations[index]
         } else {
@@ -147,7 +147,7 @@ internal object Utils {
         }
     }
 
-    fun Field.findMockCharDefAboveNotation(vararg groups: Class<*>): MockCharDef? {
+    fun Field.findMockCharDefAboveNotation(groups: Array<out Class<*>>): MockCharDef? {
         val notations: List<MockCharDef> = annotations?.flatMap { n ->
             if (n.annotationClass.java.isAnnotationPresent(MockCharDefs::class.java)) {
                 n.annotationClass.java.getAnnotation(MockCharDefs::class.java).value.asList()
@@ -159,7 +159,7 @@ internal object Utils {
             }
         } ?: Collections.emptyList()
 
-        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, groups)
         return if (index >= 0) {
             notations[index]
         } else {
@@ -167,7 +167,7 @@ internal object Utils {
         }
     }
 
-    fun Field.findMockStringDefAboveNotation(vararg groups: Class<*>): MockStringDef? {
+    fun Field.findMockStringDefAboveNotation(groups: Array<out Class<*>>): MockStringDef? {
         val notations: List<MockStringDef> = annotations?.flatMap { n ->
             if (n.annotationClass.java.isAnnotationPresent(MockStringDefs::class.java)) {
                 n.annotationClass.java.getAnnotation(MockStringDefs::class.java).value.asList()
@@ -179,7 +179,7 @@ internal object Utils {
             }
         } ?: Collections.emptyList()
 
-        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, groups)
         return if (index >= 0) {
             notations[index]
         } else {
@@ -187,7 +187,7 @@ internal object Utils {
         }
     }
 
-    private fun findIndex(allGroups: List<List<Class<out Any>>>, vararg groups: Class<*>): Int {
+    private fun findIndex(allGroups: List<List<Class<out Any>>>, groups: Array<out Class<*>>): Int {
         val distinctGroups = groups.toMutableSet()
         val isDefaultGroup = isDefaultGroup(distinctGroups)
         return allGroups.indexOfFirst { g ->

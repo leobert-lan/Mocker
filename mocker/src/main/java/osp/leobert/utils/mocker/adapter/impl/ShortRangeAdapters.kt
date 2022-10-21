@@ -23,8 +23,8 @@ import java.lang.reflect.Field
 //}
 
 object ShortRangeAdapterV2 : FieldMockAdapterV2 {
-    override fun adapt(context: MockContext, field: Field, vararg groups: Class<*>) {
-        field.findMockIntRange(*groups)?.let {
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        field.findMockIntRange(groups)?.let {
             context.shortValuePool.setRange(it.from.toShort(), it.to.toShort())
         }
     }

@@ -23,8 +23,8 @@ import java.lang.reflect.Field
 //}
 
 object DoubleRangeAdapterV2 : FieldMockAdapterV2 {
-    override fun adapt(context: MockContext, field: Field, vararg groups: Class<*>) {
-        field.findMockFloatRange(*groups)?.let {
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        field.findMockFloatRange(groups)?.let {
             context.doubleValuePool.setRange(it.from.toDouble(), it.to.toDouble())
         }
     }

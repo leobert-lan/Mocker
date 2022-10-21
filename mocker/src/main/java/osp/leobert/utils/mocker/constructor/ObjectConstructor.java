@@ -28,8 +28,8 @@ import osp.leobert.utils.mocker.MockException;
  */
 public interface ObjectConstructor<T> {
 
-  /**
-   * Returns a new instance.
-   */
-  public T construct() throws MockException;
+    /**
+     * Returns a new instance.
+     */
+    public T construct() throws MockException;
 }
