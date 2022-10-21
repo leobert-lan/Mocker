@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: ShortDefAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for Short Range mock </p>
  * Created by leobert on 2022/10/21.
  */
 

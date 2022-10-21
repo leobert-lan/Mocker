@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: IntDefAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for Int Def mock </p>
  * Created by leobert on 2022/10/21.
  */
 //@Deprecated("cannot support different configurations")

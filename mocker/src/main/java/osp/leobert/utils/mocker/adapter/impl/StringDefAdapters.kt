@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: StringDefAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for String Def mock </p>
  * Created by leobert on 2022/10/21.
  */
 //@Deprecated("cannot support different configurations")

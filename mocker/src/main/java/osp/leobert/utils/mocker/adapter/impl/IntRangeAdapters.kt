@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: IntRangeAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for Int Range mock </p>
  * Created by leobert on 2022/10/20.
  */
 

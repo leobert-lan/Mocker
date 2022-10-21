@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: DoubleRangeAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for Double Range mock </p>
  * Created by leobert on 2022/10/20.
  */
 

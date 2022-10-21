@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: ByteDefAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for ByteDef mock </p>
  * Created by leobert on 2022/10/21.
  */
 //@Deprecated("cannot support different configurations")

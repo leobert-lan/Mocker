@@ -6,7 +6,6 @@ import osp.leobert.utils.mocker.notation.repeat.MockIntRanges;
 
 /**
  * Classname: JavaFoo </p>
- * Description: TODO </p>
  * Created by leobert on 2022/10/20.
  */
 public class JavaFoo {

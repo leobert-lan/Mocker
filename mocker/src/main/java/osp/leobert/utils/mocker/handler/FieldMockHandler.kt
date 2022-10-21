@@ -227,7 +227,7 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
                             it.get(this) != null -> {                                              //ignore not null
                                 context.logger.log("ignore not null: ${it.name}")
                             }
-                            //todo
+                            //todo ignore?????
                             it.getAnnotation(MockIgnore::class.java) != null -> {                   //annotated with MockIgnore
                                 context.logger.log("ignore MockIgnore: ${it.name}")
                             }

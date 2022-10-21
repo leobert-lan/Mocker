@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: SizeAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for Size mock </p>
  * Created by leobert on 2022/10/20.
  */
 //@Deprecated("cannot support different configurations")

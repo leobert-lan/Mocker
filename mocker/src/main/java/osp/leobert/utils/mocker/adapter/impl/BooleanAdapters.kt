@@ -8,7 +8,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: BooleanAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for boolean mock </p>
  * Created by leobert on 2022/10/20.
  */
 //@Deprecated("cannot support different configurations")

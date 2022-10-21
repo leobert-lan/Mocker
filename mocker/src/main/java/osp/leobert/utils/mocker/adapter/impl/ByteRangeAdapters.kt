@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: ByteRangeAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for Byte Range mock </p>
  * Created by leobert on 2022/10/20.
  */
 //@Deprecated("cannot support different configurations")

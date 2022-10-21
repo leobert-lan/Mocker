@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: CharDefAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for Char Def mock </p>
  * Created by leobert on 2022/10/21.
  */
 

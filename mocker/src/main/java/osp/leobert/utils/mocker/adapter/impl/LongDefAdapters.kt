@@ -7,7 +7,7 @@ import java.lang.reflect.Field
 
 /**
  * Classname: LongDefAdapters </p>
- * Description: TODO </p>
+ * Description: adapters for Long Def mock </p>
  * Created by leobert on 2022/10/21.
  */
 //object LongDefAdapter : FieldMockAdapter {
