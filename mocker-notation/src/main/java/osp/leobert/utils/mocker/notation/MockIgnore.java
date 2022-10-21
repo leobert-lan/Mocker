@@ -23,5 +23,6 @@ public @interface MockIgnore {
      * @see osp.leobert.utils.mocker.notation.group.Default
      * @since 1.0.1
      */
+    // TODO: 2022/10/20 思考下如何最恰当的ignore
     Class<?>[] groups() default {};
 }

@@ -4,10 +4,13 @@ import org.junit.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import osp.leobert.utils.mocker.adapter.impl.Utils.findMockIntDefAboveNotation
 import osp.leobert.utils.mocker.adapter.impl.Utils.findMockIntRange
 import osp.leobert.utils.mocker.jcase.JavaFoo
+import osp.leobert.utils.mocker.notation.MockIntDef
 import osp.leobert.utils.mocker.notation.MockIntRange
 import osp.leobert.utils.mocker.notation.group.Default
+import osp.leobert.utils.mocker.notation.repeat.MockIntDefs
 import osp.leobert.utils.mocker.notation.repeat.MockIntRanges
 
 /**
@@ -35,7 +38,7 @@ internal class NotationFetcherTest {
                 MockIntRange(from = 3, groups = [NotationFetcherTest::class, Integer::class])
             ]
         )
-        val aInt2 :Int? = null
+        val aInt2: Int? = null
     }
 
     @Test
@@ -110,8 +113,70 @@ internal class NotationFetcherTest {
             1L,
             field2.findMockIntRange(Foo::class.java, Default::class.java, Integer::class.java)?.from
         )
+    }
+
+    @MockIntDef(value = [11])
+    @MockIntDef(value = [12], groups = [NotationFetcherTest::class])
+    @MockIntDef(value = [13], groups = [NotationFetcherTest::class, Integer::class])
+    @Retention(AnnotationRetention.RUNTIME)
+    @Target(AnnotationTarget.FIELD)
+    annotation class IntEnum
+
+    @MockIntDefs(
+        value = [
+            MockIntDef(value = [21]),
+            MockIntDef(value = [22], groups = [NotationFetcherTest::class]),
+            MockIntDef(value = [23], groups = [NotationFetcherTest::class, Integer::class])
+        ]
+    )
+    @Retention(AnnotationRetention.RUNTIME)
+    @Target(AnnotationTarget.FIELD)
+    annotation class IntEnum2
 
 
+    class Bar {
+        @IntEnum //优先生效
+        @IntEnum2
+        var aInt: Int? = null
+
+        @IntEnum2
+        @IntEnum
+        val aInt2: Int? = null
+    }
+
+    @Test
+    fun testFieldAnnotationDefFetcher() {
+
+        val field = Bar::class.java.getDeclaredField("aInt")
+        assertEquals(11, field.findMockIntDefAboveNotation()?.value?.first())
+        assertEquals(11, field.findMockIntDefAboveNotation(Default::class.java)?.value?.first())
+        assertEquals(12, field.findMockIntDefAboveNotation(NotationFetcherTest::class.java)?.value?.first())
+
+        assertEquals(null, field.findMockIntDefAboveNotation(Foo::class.java))
+
+        assertEquals(13L, field.findMockIntDefAboveNotation(Integer::class.java)?.value?.first())
+        assertEquals(13L, field.findMockIntDefAboveNotation(Foo::class.java, Integer::class.java)?.value?.first())
+
+        assertEquals(
+            11L,
+            field.findMockIntDefAboveNotation(Foo::class.java, Default::class.java, Integer::class.java)?.value?.first()
+        )
+
+//        //集合方式验证
+        val field2 = Bar::class.java.getDeclaredField("aInt2")
+        assertEquals(21L, field2.findMockIntDefAboveNotation()?.value?.first())
+        assertEquals(21L, field2.findMockIntDefAboveNotation(Default::class.java)?.value?.first())
+        assertEquals(22L, field2.findMockIntDefAboveNotation(NotationFetcherTest::class.java)?.value?.first())
+
+        assertEquals(null, field2.findMockIntDefAboveNotation(Foo::class.java)?.value?.first())
+
+        assertEquals(23L, field2.findMockIntDefAboveNotation(Integer::class.java)?.value?.first())
+        assertEquals(23L, field2.findMockIntDefAboveNotation(Foo::class.java, Integer::class.java)?.value?.first())
+
+        assertEquals(
+            21L,
+            field2.findMockIntDefAboveNotation(Foo::class.java, Default::class.java, Integer::class.java)?.value?.first()
+        )
 
     }
 }

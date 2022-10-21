@@ -37,15 +37,17 @@ internal object Utils {
         }
     }
 
-    fun Field.findMockIntDef(vararg groups: Class<*>): MockIntDef? {
-        val notations: List<MockIntDef> =
-            if (this.isAnnotationPresent(MockIntDefs::class.java)) {
-                getAnnotation(MockIntDefs::class.java).value.asList()
-            } else if (this.isAnnotationPresent(MockIntDef::class.java)) {
-                getAnnotation(MockIntDef::class.java).run { Collections.singletonList(this) }
+    fun Field.findMockIntDefAboveNotation(vararg groups: Class<*>): MockIntDef? {
+        val notations: List<MockIntDef> = annotations?.flatMap { n ->
+            if (n.annotationClass.java.isAnnotationPresent(MockIntDefs::class.java)) {
+                n.annotationClass.java.getAnnotation(MockIntDefs::class.java).value.asList()
+            } else if (n.annotationClass.java.isAnnotationPresent(MockIntDef::class.java)) {
+                n.annotationClass.java.getAnnotation(MockIntDef::class.java)
+                    .run { Collections.singletonList(this) }
             } else {
                 Collections.emptyList()
             }
+        } ?: Collections.emptyList()
 
         val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
         return if (index >= 0) {
@@ -136,6 +138,46 @@ internal object Utils {
             } else {
                 Collections.emptyList()
             }
+
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        return if (index >= 0) {
+            notations[index]
+        } else {
+            null
+        }
+    }
+
+    fun Field.findMockCharDefAboveNotation(vararg groups: Class<*>): MockCharDef? {
+        val notations: List<MockCharDef> = annotations?.flatMap { n ->
+            if (n.annotationClass.java.isAnnotationPresent(MockCharDefs::class.java)) {
+                n.annotationClass.java.getAnnotation(MockCharDefs::class.java).value.asList()
+            } else if (n.annotationClass.java.isAnnotationPresent(MockCharDef::class.java)) {
+                n.annotationClass.java.getAnnotation(MockCharDef::class.java)
+                    .run { Collections.singletonList(this) }
+            } else {
+                Collections.emptyList()
+            }
+        } ?: Collections.emptyList()
+
+        val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
+        return if (index >= 0) {
+            notations[index]
+        } else {
+            null
+        }
+    }
+
+    fun Field.findMockStringDefAboveNotation(vararg groups: Class<*>): MockStringDef? {
+        val notations: List<MockStringDef> = annotations?.flatMap { n ->
+            if (n.annotationClass.java.isAnnotationPresent(MockStringDefs::class.java)) {
+                n.annotationClass.java.getAnnotation(MockStringDefs::class.java).value.asList()
+            } else if (n.annotationClass.java.isAnnotationPresent(MockStringDef::class.java)) {
+                n.annotationClass.java.getAnnotation(MockStringDef::class.java)
+                    .run { Collections.singletonList(this) }
+            } else {
+                Collections.emptyList()
+            }
+        } ?: Collections.emptyList()
 
         val index = findIndex(notations.map { n -> n.groups.map { it.java }.distinct() }, *groups)
         return if (index >= 0) {

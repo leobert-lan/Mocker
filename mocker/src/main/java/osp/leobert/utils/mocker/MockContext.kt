@@ -1,7 +1,6 @@
 package osp.leobert.utils.mocker
 
-import osp.leobert.utils.mocker.adapter.ComposeFieldMockAdapter
-import osp.leobert.utils.mocker.adapter.FieldMockAdapter
+import osp.leobert.utils.mocker.adapter.ComposeFieldMockAdapterV2
 import osp.leobert.utils.mocker.adapter.FieldMockAdapterV2
 import osp.leobert.utils.mocker.adapter.impl.*
 import osp.leobert.utils.mocker.constructor.ConstructorConstructor
@@ -12,7 +11,6 @@ import java.lang.reflect.Field
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import java.lang.reflect.TypeVariable
-import java.util.*
 
 
 /**
@@ -71,17 +69,17 @@ class MockContext {
     ///////////////////////////////////////////////////////////////////////////
 
 
-    var intMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+    var intMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(IntRangeAdapterV2, IntDefAdapterV2))
 
-    var longMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(LongRangeAdapter, LongDefAdapter))
+    var longMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(LongRangeAdapterV2, LongDefAdapterV2))
 
-    var shortMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(ShortRangeAdapter, ShortDefAdapter))
+    var shortMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(ShortRangeAdapterV2, ShortDefAdapterV2))
 
-    var byteMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(ByteRangeAdapter, ByteDefAdapter))
+    var byteMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(ByteRangeAdapterV2, ByteDefAdapterV2))
 
     var floatMockAdapter: FieldMockAdapterV2 = FloatRangeAdapterV2
 //        ComposeFieldMockAdapter(arrayListOf(FloatRangeAdapter))
@@ -92,14 +90,14 @@ class MockContext {
     var booleanMockAdapter: FieldMockAdapterV2 = BooleanAdapterV2
 //        ComposeFieldMockAdapter(arrayListOf(BooleanAdapter))
 
-    var charMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(CharRangeAdapter, CharDefAdapter))
+    var charMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(CharRangeAdapterV2, CharDefAdapterV2))
 
-    var stringMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(StringDefAdapter))
+    var stringMockAdapter: FieldMockAdapterV2 = StringDefAdapterV2
+//        ComposeFieldMockAdapterV2(arrayListOf(StringDefAdapter))
 
-    var enumMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+    var enumMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(IntRangeAdapterV2, IntDefAdapterV2))
 
     var collectionMockAdapter: FieldMockAdapterV2 = SizeAdapterV2
 //        ComposeFieldMockAdapter(arrayListOf(SizeAdapter))
@@ -154,7 +152,7 @@ class MockContext {
     /**
      * TypeVariable缓存
      */
-    private val typeVariableCache: MutableMap<String, Type> = HashMap<String, Type>()
+    private val typeVariableCache: MutableMap<String, Type> = HashMap()
 
     val constructorMap: MutableMap<Type, InstanceCreator<*>> = hashMapOf()
 
