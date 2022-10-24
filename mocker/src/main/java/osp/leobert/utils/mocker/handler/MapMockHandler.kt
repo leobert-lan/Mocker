@@ -1,6 +1,7 @@
 package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
+import osp.leobert.utils.mocker.utils.isA
 import java.lang.reflect.Field
 import java.lang.reflect.Type
 
@@ -40,7 +41,7 @@ class MapMockHandler(
     ): HashMap<Any?, Any?>? {
         return (FieldMockHandler.BeanFieldMockHandler(HashMap::class.java, false).mock(
             context = context, field = field, owner = owner, groups = groups
-        ) as HashMap<Any?, Any?>?)
+        ).isA<HashMap<Any?, Any?>?>())
             ?.apply {
                 insertMapItem(context, field, this, groups)
             }
@@ -54,7 +55,7 @@ class MapMockHandler(
     ): Map<Any?, Any?>? {
         return (FieldMockHandler.BeanFieldMockHandler(clazz, false).mock(
             context = context, field = field, owner = owner, groups = groups
-        ) as Map<Any?, Any?>?)?.apply {
+        ).isA<Map<Any?, Any?>?>())?.apply {
             if (this is MutableMap<*, *>) {
                 insertMapItem(context, field, this as MutableMap<Any?, Any?>, groups)
             }

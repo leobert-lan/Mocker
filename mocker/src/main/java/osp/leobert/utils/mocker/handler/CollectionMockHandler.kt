@@ -2,6 +2,7 @@ package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.MockException
+import osp.leobert.utils.mocker.utils.isA
 import java.lang.reflect.Field
 import java.lang.reflect.Type
 
@@ -53,7 +54,7 @@ class CollectionMockHandler(
             false
         ).mock(
             context = context, field = field, owner = owner, groups = groups
-        ) as ArrayList<Any?>?)?.apply {
+        ).isA<ArrayList<Any?>?>())?.apply {
             insertCollectionItem(context, field, this, groups)
         }
     }
@@ -68,7 +69,7 @@ class CollectionMockHandler(
             context = context, field = field, owner = owner, groups = groups
         ) as List<Any?>?)?.apply {
             if (this is MutableCollection<*>) {
-                insertCollectionItem(context, field, this as MutableCollection<Any?>, groups)
+                insertCollectionItem(context, field, this.isA(), groups)
             }
         }
     }
@@ -85,7 +86,7 @@ class CollectionMockHandler(
             false
         ).mock(
             context = context, field = field, owner = owner, groups = groups
-        ) as HashSet<Any?>?)?.apply {
+        ).isA<HashSet<Any?>?>())?.apply {
             insertCollectionItem(context, field, this, groups)
         }
     }
@@ -100,7 +101,7 @@ class CollectionMockHandler(
             context = context, field = field, owner = owner, groups = groups
         ) as Set<Any?>?)?.apply {
             if (this is MutableCollection<*>) {
-                insertCollectionItem(context, field, this as MutableCollection<Any?>, groups)
+                insertCollectionItem(context, field, this.isA(), groups)
             }
         }
     }

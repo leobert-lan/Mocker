@@ -2,6 +2,7 @@ package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.MockException
+import osp.leobert.utils.mocker.utils.isA
 import java.lang.reflect.*
 
 
@@ -22,7 +23,7 @@ class ArrayMockHandler(private val type: Type) : MockHandlerV2<Any?> {
         return when (type) {
             is Class<*> -> {
                 createArray(context, field, type.componentType, groups)?.apply {
-                    insertItemIntoArray(context, type.componentType, this as Array<Any?>, groups)
+                    insertItemIntoArray(context, type.componentType, this.isA(), groups)
                 }
             }
             is GenericArrayType -> {
@@ -85,7 +86,7 @@ class ArrayMockHandler(private val type: Type) : MockHandlerV2<Any?> {
             val array: Array<Any?> = java.lang.reflect.Array.newInstance(
                 clazz,
                 context.sizeValuePool.randomGet(context)
-            ) as Array<Any?>
+            ).isA()
             clazz = array.javaClass
             list.add(array)
         }

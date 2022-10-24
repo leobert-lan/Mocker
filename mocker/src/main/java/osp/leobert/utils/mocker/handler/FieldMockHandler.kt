@@ -213,7 +213,11 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
             field: Field?,
             owner: Any?,
             groups: Array<out Class<*>>
-        ): Any? {
+        ): Any {
+
+            // if any where request to mock a bean , we always return a nonnull result
+            // otherwise it has been ignored by an activated 'MockIgnore'
+
             return context.createInstance(clazz).apply {
                 context.applyField(this, field, owner)
 
