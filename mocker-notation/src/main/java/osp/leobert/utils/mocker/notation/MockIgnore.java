@@ -8,6 +8,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import osp.leobert.utils.mocker.notation.group.Default;
+
 /**
  * <p><b>Package:</b> osp.leobert.utils.mocker.notation </p>
  * <p><b>Project:</b> Mocker </p>
@@ -19,10 +21,14 @@ import java.lang.annotation.Target;
 @Target({PARAMETER, FIELD, LOCAL_VARIABLE})
 public @interface MockIgnore {
     /**
+     *
+     * if it's a default group or contains {@link Default}, always ignore
+     *
+     * otherwise, only ignore when all given groups within this
+     *
      * @return the groups of the config, {} is the same effect to { Default.class}
      * @see osp.leobert.utils.mocker.notation.group.Default
      * @since 1.0.1
      */
-    // TODO: 2022/10/20 思考下如何最恰当的ignore
     Class<?>[] groups() default {};
 }

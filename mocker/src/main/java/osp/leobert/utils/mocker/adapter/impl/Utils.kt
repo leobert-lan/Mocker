@@ -1,5 +1,6 @@
 package osp.leobert.utils.mocker.adapter.impl
 
+import osp.leobert.utils.mocker.Logger
 import osp.leobert.utils.mocker.notation.*
 import osp.leobert.utils.mocker.notation.group.Default
 import osp.leobert.utils.mocker.notation.repeat.*
@@ -207,5 +208,21 @@ internal object Utils {
                 firstMatchedConfig != null
             }
         }
+    }
+
+      fun Field.shouldIgnoreMock(groups: Array<out Class<*>>, logger: Logger): Boolean {
+
+        val mockIgnore = getAnnotation(MockIgnore::class.java) ?: return false
+        val groupsConfig = mockIgnore.groups.map { it.java }.toMutableSet()
+        if (isDefaultGroup(groupsConfig) || groupsConfig.contains(Default::class.java)) {
+            logger.log("ignore ${this.declaringClass.name} ${this.toGenericString()} will ignore mock,")
+            return true
+        }
+        val cannotIgnore = groups.find { !groupsConfig.contains(it) } != null
+        if (cannotIgnore) {
+            return false
+        }
+        logger.log("ignore ${this.declaringClass.name} ${this.toGenericString()} will ignore mock,")
+        return true
     }
 }

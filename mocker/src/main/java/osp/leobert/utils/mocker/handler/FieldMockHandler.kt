@@ -2,7 +2,7 @@ package osp.leobert.utils.mocker.handler
 
 import osp.leobert.utils.mocker.MockContext
 import osp.leobert.utils.mocker.ValuePool
-import osp.leobert.utils.mocker.notation.MockIgnore
+import osp.leobert.utils.mocker.adapter.impl.Utils.shouldIgnoreMock
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 
@@ -224,11 +224,13 @@ sealed class FieldMockHandler<T> : MockHandlerV2<T> {
                         it.isAccessible = true
 
                         when {
-                            it.get(this) != null -> {                                              //ignore not null
+                            it.get(this) != null -> {                                               //ignore not null
                                 context.logger.log("ignore not null: ${it.name}")
                             }
-                            //todo ignore?????
-                            it.getAnnotation(MockIgnore::class.java) != null -> {                   //annotated with MockIgnore
+                            it.shouldIgnoreMock(
+                                groups,
+                                context.logger
+                            ) -> {                                                                  //annotated with MockIgnore
                                 context.logger.log("ignore MockIgnore: ${it.name}")
                             }
                             Modifier.isAbstract(fieldModifiers) -> {                                //is abstract
