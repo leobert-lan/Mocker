@@ -178,7 +178,7 @@ internal class MockerTest {
 
     class Sample {
         @field:MockIntRange(from = -5, to = -1)
-//        @field:MockIntRange(from = 1, to = 2)
+        @field:MockIntRange(from = 1, to = 2)
         var intRange: Int? = null
 
         @field:Type
@@ -224,6 +224,9 @@ internal class MockerTest {
         @field:Name
         var stringDef: String? = null
 
+        @field:MockIgnore(groups = [MockerTest::class, Default::class])
+        var ignore: String? = null
+
     }
 
     @Test
@@ -231,8 +234,12 @@ internal class MockerTest {
         val bean: Sample = Mocker.mock(Sample::class.java)
         println(Gson().toJson(bean))
 
+        Assert.assertEquals(null, bean.ignore)
+
         val i: Int = Mocker.mock(Int::class.java)
         println(i)
+
+
 
         MockContext().intMockAdapter
     }
