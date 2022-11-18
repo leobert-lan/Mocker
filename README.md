@@ -1,21 +1,161 @@
 # Mocker
+
 为POJO生成假数据，面向kotlin和java
 
 ## 能解决什么问题？
+
 很方便的生成假数据！！但是仅面向Java或者Kotlin.
 
 ## 为什么写这个库？
-Mock是一个很长久的话题了，单纯是因为想自己实现一些有意思的内容&避免自己一直写业务写的脑子坏掉了😀
+
+Mock是一个很长久的话题了，搞这个轮子的原因如下：
+
+* 有趣、有意思且用得上
+* 常见的mock都难以解决 "取值范围定制性" 问题
+* 避免自己一直写业务写的脑子坏掉，适当的练练😀
+
+## 最简单的使用：
+
+您将从下文得到以下类型的使用示例：
+
+* mock基本类型
+* mock对象类
+* mock泛型类
+* mock列表等集合, List、Set、Map
+* mock数组
+
+### mock基本类型
+
+```kotlin
+Mocker.mock(Int::class.java)
+Mocker.mock(Long::class.java)
+Mocker.mock(Short::class.java)
+Mocker.mock(Char::class.java)
+Mocker.mock(Boolean::class.java)
+Mocker.mock(Float::class.java)
+Mocker.mock(Double::class.java)
+Mocker.mock(String::class.java)
+```
+
+### mock一个对象
+
+当然，您需要先定义一个类
+
+```kotlin
+class Example(val aInt: Int?, val aStr: String)
+```
+
+然后就是这么简单：
+
+```kotlin
+val entity: Example = Mocker.mock(Example::class.java)
+```
+
+也可以是 data class
+
+```kotlin
+data class DataExample(val aInt: Int?, val aStr: String)
+
+val entity: DataExample = Mocker.mock(DataExample::class.java)
+```
+
+也可以Java类或者是这样：
+
+```java
+public class JavaExample {
+    private String aStr;
+    private Integer aInt;
+}
+```
+
+```kotlin
+val entity = Mocker.mock(JavaExample::class.java)
+```
+
+```kotlin
+class PropertyExample {
+    var aInt: Int? = null
+    var aStr: String? = null
+}
+
+val entity = Mocker.mock(PropertyExample::class.java)
+```
+
+### mock泛型类
+
+```kotlin
+class A<T>(val t: T)
+```
+
+```kotlin
+val entity = Mocker.mock(object : TypeToken<A<Example>>() {})
+```
+
+### mock列表等集合
+
+List本质上也是泛型了，内部提供ArrayList实现
+
+```kotlin
+val entity = Mocker.mock(object : TypeToken<List<Int>>() {})
+```
+
+Set:
+
+```kotlin
+val entity = Mocker.mock(object : TypeToken<Set<A<Example>>>() {})
+```
+
+Map:
+
+```kotlin
+val entity = Mocker.mock(object : TypeToken<Map<DataExample, Example>>() {})
+```
+
+### mock Array
+
+和List等类似：
+
+```kotlin
+val entity = Mocker.mock(object : TypeToken<Array<Int>>() {})
+val entity2 = Mocker.mock(object : TypeToken<Array<Example>>() {})
+```
+
+**注意：尚未在内部支持Kotlin的IntArray、LongArray等**
+
+## 进阶1 - 使用上下文（MockContext) 实现定制
+
+### 约束取值范围
+
+虽然这一需求可以被 MockContext 部分支持 ，**但这样做并不是最佳的做法** ，_将在下一节展示最佳做法_
+
+```kotlin
+val context = MockContext()
+context.intRange = intArrayOf(-5, 5)
+context.stringValuePool.setEnumValues(
+    arrayListOf(
+        "道可道，非常道；名可名，非常名。",
+        "无名，天地之始，有名，万物之母。",
+        "故常无欲，以观其妙，常有欲，以观其徼。",
+        "此两者，同出而异名，同谓之玄，玄之又玄，众妙之门。"
+    )
+)
+val entity: Example = Mocker.mock(Example::class.java, context)
+```
+
+您会发现，Int范围已经生效，但String语料集并未生效
+
+
+### 特殊类的构造器
+
+### 还需要了解下文内容才能展开
 
 ## 一些有意思的内容
 
 **相比于使用语料集等，面向注解进行了mock限定**，可以使得Mock结果更加符合预期
 
-这个灵感从Android而来，Android中提出了一系列的注解（参考androidx-annotation），
-其中有一部分注解可以增强代码的可读性，并且已配合lint或者基于APT实现的JSR-380功能库。
+这个灵感从Android而来，Android中提出了一系列的注解（参考androidx-annotation）， 其中有一部分注解可以增强代码的可读性，并且已配合lint或者基于APT实现的JSR-380功能库。
 
-而在Mocker中，我们反向操作一波，利用这些注解限定mock的边界。但是Android不太提倡运行时反射（更加提倡编译时生成代码，APT技术或者编译器层面技术）
-这导致了androidx-annotation中的注解仅保留至Class，所以Mocker参考并添加了一系列注解：
+而在Mocker中，我们反向操作一波，利用这些注解限定mock的边界。但是Android不太提倡运行时反射（更加提倡编译时生成代码，APT技术或者编译器层面技术） 这导致了androidx-annotation中的注解仅保留至Class，所以Mocker参考并添加了一系列注解：
 
 * MockCharDef
 * MockCharRange
@@ -75,6 +215,7 @@ public @interface MockIntRange {
     long to() default Long.MAX_VALUE;
 }
 ```
+
 很显然，它表达了一个取值范围，可以用于Int和Long，MockFloatRange可以用于float和double。
 
 MockSize可以限定集合或者数组的长度，但是对于多维情况，并没有那么的"自由"😂
@@ -91,11 +232,13 @@ class Foo(val name: String)
 val foo: Foo = Mocker.mock(Foo::class.java)
 println(Gson().toJson(foo))
 ```
+
 因为没有使用注解限定，我们会使用默认语料
 
 ```
 {"name":"一切都是瞬息，一切都将会过去；"}
 ```
+
 又如：
 
 ```
@@ -170,8 +313,8 @@ println(Gson().toJson(bean))
 
 ```
 
-
 ### 泛型
+
 通过TypeToken
 
 ```
@@ -190,9 +333,11 @@ class BarFoo(val bar: Bar<Foo>)
 val bean: BarFoo = Mocker.mock(BarFoo::class.java)
 println(Gson().toJson(bean))
 ```
+
 这样是没有问题的.
 
 但是这样，目前是没啥用的：
+
 ```
 open class I
 class A(val a: Int) : I()
@@ -206,6 +351,7 @@ println(Gson().toJson(bean))
 ```
 
 ## 集合
+
 以list为例
 
 ```
@@ -213,9 +359,7 @@ val bean: List<BarFoo> = Mocker.mock(object :TypeToken<List<BarFoo>>(){})
 println(Gson().toJson(bean))
 ```
 
-更多内容先行略去。
-可以在单元测试中找到上述内容。
-
+更多内容先行略去。 可以在单元测试中找到上述内容。
 
 ## 也可以指定Mock时的上下文
 

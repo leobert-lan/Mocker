@@ -5,6 +5,7 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import osp.leobert.utils.mocker.jcase.JavaExample
 import osp.leobert.utils.mocker.notation.*
 import osp.leobert.utils.mocker.notation.group.Default
 
@@ -50,6 +51,7 @@ internal class MockerTest {
     class Bar<T>(val t: T? = null)
 
     class BarFoo(val bar: Bar<Foo>)
+
 
     @Test
     fun mock() {
