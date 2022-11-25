@@ -14,6 +14,12 @@ Mock是一个很长久的话题了，搞这个轮子的原因如下：
 * 常见的mock都难以解决 "取值范围定制性" 问题
 * 避免自己一直写业务写的脑子坏掉，适当的练练😀
 
+下文是基础用法和进阶用法的简要教程，内容较多，可结合导图：
+
+![](./Mocker.png)
+
+所有示例代码均可参见：[ReadmeExampleTest](https://github.com/leobert-lan/Mocker/tree/master/mocker/src/test/java/osp/leobert/utils/mocker/ReadmeExampleTest)
+
 ## 最简单的使用：
 
 您将从下文得到以下类型的使用示例：
@@ -156,6 +162,50 @@ _在初版开发时，我为他们都设计了默认取值范围配置，经过�
 请注意："默认取值范围配置" 的特性在后续版本中可能会发生改变，以期使用更方便的方式进行使用。
 
 #### 特殊类的构造器
+
+在设计时，我刻意规避了类构造器中大量可能存在的逻辑：
+
+> 如果有默认构造器则进行反射，否则使用 Unsafe。
+
+一般而言，POJO仅使用默认的无参构造器即可，如果存在有参构造器，则有可能存在 Mock 无法预测的业务！
+
+因此我将这部分内容交给业务方控制，这很合情。
+
+```kotlin
+class Cons2(t: LocalDateTime) {
+    var str: String? = null
+
+    init {
+        println(t.format(DateTimeFormatter.BASIC_ISO_DATE))
+        throw RuntimeException("amazing!")
+    }
+}
+
+val entity2 = Mocker.mock(Cons2::class.java)
+```
+
+会崩溃吗？？不会！！ 因为触发了使用 Unsafe 创建实例的情况。
+
+此时我们需要这样使用：
+
+```kotlin
+class Cons1(t: LocalDateTime) {
+    var str: String? = null
+
+    @field:MockIgnore
+    val time: String?
+
+    init {
+        time = t.format(DateTimeFormatter.BASIC_ISO_DATE)
+    }
+}
+
+val context = MockContext()
+context.constructorMap[Cons1::class.java] = InstanceCreator { Cons1(LocalDateTime.now()) }
+val entity = Mocker.mock(Cons1::class.java, context)
+```
+
+如果有特定的属性不希望被Mock干预，可以使用MockIgnore，参见进阶4
 
 #### 还需要了解下文内容才能展开
 
@@ -407,7 +457,7 @@ object StringDefAdapterV2 : FieldMockAdapterV2 {
 
 #### 了解mock取值池
 
-参见 `ValuePool` 和 `LimitValuePool` 
+参见 `ValuePool` 和 `LimitValuePool`
 
 主要API：
 

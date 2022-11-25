@@ -4,11 +4,14 @@ import com.google.gson.Gson
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import osp.leobert.utils.mocker.constructor.InstanceCreator
 import osp.leobert.utils.mocker.jcase.JavaExample
 import osp.leobert.utils.mocker.notation.MockIgnore
 import osp.leobert.utils.mocker.notation.MockIntRange
 import osp.leobert.utils.mocker.notation.MockStringDef
 import osp.leobert.utils.mocker.notation.group.Default
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Classname: ReadmeExampleTest </p>
@@ -131,6 +134,41 @@ internal class ReadmeExampleTest {
         }
     }
 
+    class Cons1(t: LocalDateTime) {
+        var str: String? = null
+
+        @field:MockIgnore
+        val time: String?
+
+        init {
+            time = t.format(DateTimeFormatter.BASIC_ISO_DATE)
+        }
+    }
+
+    class Cons2(t: LocalDateTime) {
+
+        var str: String? = null
+
+        init {
+            println(t.format(DateTimeFormatter.ISO_DATE_TIME))
+            throw RuntimeException("amazing!")
+        }
+    }
+
+    @Test
+    fun mockExample7() {
+        println("进阶1 - 特殊构造器")
+        val context = MockContext()
+        context.constructorMap[Cons1::class.java] = InstanceCreator { Cons1(LocalDateTime.now()) }
+        repeat(10) {
+            val entity = Mocker.mock(Cons1::class.java, context)
+            println(Gson().toJson(entity))
+
+            val entity2 = Mocker.mock(Cons2::class.java)
+            println(Gson().toJson(entity2))
+
+        }
+    }
 
     @Retention(AnnotationRetention.RUNTIME)
     @Target(AnnotationTarget.FIELD)
@@ -149,7 +187,7 @@ internal class ReadmeExampleTest {
     )
 
     @Test
-    fun mockExample7() {
+    fun mockExample8() {
         println("进阶2 - 使用注解限定Mock取值区间")
         repeat(10) {
             val entity: NotationDemo = Mocker.mock(NotationDemo::class.java)
@@ -175,7 +213,7 @@ internal class ReadmeExampleTest {
     )
 
     @Test
-    fun mockExample8() {
+    fun mockExample9() {
         println("### 进阶3-使用groups支持不同的策略")
         repeat(10) {
             val entity = Mocker.mockWithGroup(
@@ -193,7 +231,7 @@ internal class ReadmeExampleTest {
     )
 
     @Test
-    fun mockExample9() {
+    fun mockExample10() {
         println("### 进阶3-使用MockIgnore忽略")
         repeat(10) {
             val entity = Mocker.mock(MockIgnoreDemo::class.java)
