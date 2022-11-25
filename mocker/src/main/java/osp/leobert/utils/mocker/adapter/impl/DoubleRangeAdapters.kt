@@ -10,18 +10,6 @@ import java.lang.reflect.Field
  * Description: adapters for Double Range mock </p>
  * Created by leobert on 2022/10/20.
  */
-
-//@Deprecated("cannot support different configurations")
-//object DoubleRangeAdapter : FieldMockAdapter {
-//    override fun adapt(context: MockContext, field: Field) {
-//        if (field.isAnnotationPresent(MockFloatRange::class.java)) {
-//            field.getAnnotation(MockFloatRange::class.java).let {
-//                context.doubleValuePool.setRange(it.from.toDouble(), it.to.toDouble())
-//            }
-//        }
-//    }
-//}
-
 object DoubleRangeAdapterV2 : FieldMockAdapterV2 {
     override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
         field.findMockFloatRange(groups)?.let {

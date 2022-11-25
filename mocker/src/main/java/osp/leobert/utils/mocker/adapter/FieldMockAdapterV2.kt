@@ -9,11 +9,11 @@ import java.lang.reflect.Field
  * Description: consider different configurations when adapt </p>
  * Created by leobert on 2022/10/20.
  */
-interface FieldMockAdapterV2 : FieldMockAdapter {
+interface FieldMockAdapterV2  {
 
-    override fun adapt(context: MockContext, field: Field) {
-        adapt(context, field, Mocker.DEFAULT_GROUP)
-    }
+//    override fun adapt(context: MockContext, field: Field) {
+//        adapt(context, field, Mocker.DEFAULT_GROUP)
+//    }
 
     fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>)
 }

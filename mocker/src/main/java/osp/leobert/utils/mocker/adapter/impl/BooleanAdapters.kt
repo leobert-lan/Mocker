@@ -11,18 +11,6 @@ import java.lang.reflect.Field
  * Description: adapters for boolean mock </p>
  * Created by leobert on 2022/10/20.
  */
-//@Deprecated("cannot support different configurations")
-//object BooleanAdapter : FieldMockAdapter {
-//    override fun adapt(context: MockContext, field: Field) {
-//        if (field.isAnnotationPresent(MockTrue::class.java)) {
-//            context.boolValuePool.setEnumValues(arrayListOf(true))
-//        }
-//        if (field.isAnnotationPresent(MockFalse::class.java)) {
-//            context.boolValuePool.setEnumValues(arrayListOf(false))
-//        }
-//    }
-//}
-
 object BooleanAdapterV2 : FieldMockAdapterV2 {
     override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
         field.findMockTrue(groups)?.let {

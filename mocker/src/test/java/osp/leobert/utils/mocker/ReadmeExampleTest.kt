@@ -5,6 +5,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import osp.leobert.utils.mocker.jcase.JavaExample
+import osp.leobert.utils.mocker.notation.MockIgnore
+import osp.leobert.utils.mocker.notation.MockIntRange
+import osp.leobert.utils.mocker.notation.MockStringDef
+import osp.leobert.utils.mocker.notation.group.Default
 
 /**
  * Classname: ReadmeExampleTest </p>
@@ -128,24 +132,78 @@ internal class ReadmeExampleTest {
     }
 
 
+    @Retention(AnnotationRetention.RUNTIME)
+    @Target(AnnotationTarget.FIELD)
+    @MockStringDef(value = ["Leobert", "Tony"])
+    annotation class Name
+
+    @Retention(AnnotationRetention.RUNTIME)
+    @Target(AnnotationTarget.FIELD)
+    @MockIntRange(from = 1, to = 200)
+    annotation class Age
+
+    class NotationDemo(
+        @field:Name val name: String,
+        @field:MockIntRange(from = 1, to = 200) val age: Int?,
+        @field:Age val age2: Int?, //尚未支持
+    )
 
     @Test
     fun mockExample7() {
-        println("### 进阶2-使用MockContext约束取值范围")
-        val context = MockContext()
-        context.intRange = intArrayOf(-5, 5)
-        context.stringValuePool.setEnumValues(
-            arrayListOf(
-                "道可道，非常道；名可名，非常名。",
-                "无名，天地之始，有名，万物之母。",
-                "故常无欲，以观其妙，常有欲，以观其徼。",
-                "此两者，同出而异名，同谓之玄，玄之又玄，众妙之门。"
-            )
-        )
+        println("进阶2 - 使用注解限定Mock取值区间")
         repeat(10) {
-            val entity: Example = Mocker.mock(Example::class.java, context)
+            val entity: NotationDemo = Mocker.mock(NotationDemo::class.java)
             println(Gson().toJson(entity))
 
+        }
+    }
+
+
+    interface Group1
+    interface Group2
+    interface Group3
+
+    @Retention(AnnotationRetention.RUNTIME)
+    @Target(AnnotationTarget.FIELD)
+    @MockStringDef(value = ["Leobert", "Tony"], groups = [Group1::class, Default::class])
+    @MockStringDef(value = ["Leobert2"], groups = [Group2::class])
+    annotation class Name2
+
+    class NotationDemo2(
+        @field:Name2 val name: String,
+        @field:MockIntRange(from = 1, to = 200, groups = [Group3::class]) val age: Int?,
+    )
+
+    @Test
+    fun mockExample8() {
+        println("### 进阶3-使用groups支持不同的策略")
+        repeat(10) {
+            val entity = Mocker.mockWithGroup(
+                NotationDemo2::class.java,
+                Group1::class.java,
+                Group3::class.java
+            )
+            println(Gson().toJson(entity))
+        }
+    }
+
+    class MockIgnoreDemo(
+        @field:MockIgnore val key: String,
+        @field:MockIgnore(groups = [Group3::class]) @field:Name2 val name: String
+    )
+
+    @Test
+    fun mockExample9() {
+        println("### 进阶3-使用MockIgnore忽略")
+        repeat(10) {
+            val entity = Mocker.mock(MockIgnoreDemo::class.java)
+            println(Gson().toJson(entity))
+
+            val entity2 = Mocker.mockWithGroup(MockIgnoreDemo::class.java, Group2::class.java)
+            println(Gson().toJson(entity2))
+
+            val entity3 = Mocker.mockWithGroup(MockIgnoreDemo::class.java, Group3::class.java)
+            println(Gson().toJson(entity3))
         }
     }
 

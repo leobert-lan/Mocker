@@ -10,22 +10,6 @@ import java.lang.reflect.Field
  * Description: adapters for Char Def mock </p>
  * Created by leobert on 2022/10/21.
  */
-
-//@Deprecated("cannot support different configurations")
-//object CharDefAdapter : FieldMockAdapter {
-//    override fun adapt(context: MockContext, field: Field) {
-//        field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockCharDef::class.java) }
-//            ?.let {
-//                it.annotationClass.java.getAnnotation(MockCharDef::class.java).value
-//                    .toMutableList()
-//                    .let { values ->
-//                        context.charValuePool.setEnumValues(values)
-//                    }
-//
-//            }
-//    }
-//}
-
 object CharDefAdapterV2 : FieldMockAdapterV2 {
     override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
         field.findMockCharDefAboveNotation(groups)?.value

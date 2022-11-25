@@ -10,18 +10,6 @@ import java.lang.reflect.Field
  * Description: adapters for Short Range mock </p>
  * Created by leobert on 2022/10/20.
  */
-
-//@Deprecated("cannot support different configurations")
-//object ShortRangeAdapter : FieldMockAdapter {
-//    override fun adapt(context: MockContext, field: Field) {
-//        if (field.isAnnotationPresent(MockIntRange::class.java)) {
-//            field.getAnnotation(MockIntRange::class.java).let {
-//                context.shortValuePool.setRange(it.from.toShort(), it.to.toShort())
-//            }
-//        }
-//    }
-//}
-
 object ShortRangeAdapterV2 : FieldMockAdapterV2 {
     override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
         field.findMockIntRange(groups)?.let {

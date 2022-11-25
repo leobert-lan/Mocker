@@ -122,9 +122,11 @@ val entity2 = Mocker.mock(object : TypeToken<Array<Example>>() {})
 
 **注意：尚未在内部支持Kotlin的IntArray、LongArray等**
 
-## 进阶1 - 使用上下文（MockContext) 实现定制
+## 进阶
 
-### 约束取值范围
+### 进阶1 - 使用上下文（MockContext) 实现定制
+
+#### 约束默认取值范围
 
 虽然这一需求可以被 MockContext 部分支持 ，**但这样做并不是最佳的做法** ，_将在下一节展示最佳做法_
 
@@ -142,20 +144,26 @@ context.stringValuePool.setEnumValues(
 val entity: Example = Mocker.mock(Example::class.java, context)
 ```
 
-您会发现，Int范围已经生效，但String语料集并未生效
+您会发现，Int范围已经生效，但String语料集并未生效！！！
 
+_在初版开发时，我为他们都设计了默认取值范围配置，经过反复思考，我对String移除了该功能，我期望您通过 `MockStringDef` 方式实现需求_
 
-### 特殊类的构造器
+* context.intRange 实际上为 `设置默认取值范围`
+* context.stringValuePool.setEnumValues 实际上为设置 `mock取值池` ，在进阶5进行自定义扩展开发时，您会用到它。
 
-### 还需要了解下文内容才能展开
+注意流程上： "确定取值范围" -> "设置到 mock 取值池" -> "mock"。
 
-## 一些有意思的内容
+请注意："默认取值范围配置" 的特性在后续版本中可能会发生改变，以期使用更方便的方式进行使用。
 
-**相比于使用语料集等，面向注解进行了mock限定**，可以使得Mock结果更加符合预期
+#### 特殊类的构造器
 
-这个灵感从Android而来，Android中提出了一系列的注解（参考androidx-annotation）， 其中有一部分注解可以增强代码的可读性，并且已配合lint或者基于APT实现的JSR-380功能库。
+#### 还需要了解下文内容才能展开
 
-而在Mocker中，我们反向操作一波，利用这些注解限定mock的边界。但是Android不太提倡运行时反射（更加提倡编译时生成代码，APT技术或者编译器层面技术） 这导致了androidx-annotation中的注解仅保留至Class，所以Mocker参考并添加了一系列注解：
+### 进阶2 - 使用注解限定Mock取值区间
+
+灵感来自于Android的 `androidx-annotation`，需要注意的是，Mocker中使用了反射，而androidx的annotation库是Source级别，无法直接使用。
+
+所以定义了以下注解：
 
 * MockCharDef
 * MockCharRange
@@ -167,27 +175,11 @@ val entity: Example = Mocker.mock(Example::class.java, context)
 * MockSize
 * MockStringDef
 
+#### 参考示例
+
 对于MockXXXDef，以MockStringDef为例：
 
-```
-@Retention(RUNTIME)
-@Target({ANNOTATION_TYPE})
-public @interface MockStringDef {
-    /** Defines the allowed constants for this element */
-    String[] value() default {};
-
-    /**
-     * Whether any other values are allowed. Normally this is
-     * not the case, but this allows you to specify a set of
-     * expected constants, which helps code completion in the IDE
-     * and documentation generation and so on, but without
-     * flagging compilation warnings if other values are specified.
-     */
-    boolean open() default false;
-}
-```
-
-其用于注解一个注解，e.g.
+定义一个 `@Retention(AnnotationRetention.RUNTIME)` 的注解 `Name`, 并用 `MockStringDef` 指定其全部可能取值：
 
 ```
 @Retention(AnnotationRetention.RUNTIME)
@@ -196,267 +188,242 @@ public @interface MockStringDef {
 annotation class Name
 ```
 
-这代表了一个"取值范围"，这样对被注解的field进行Mock限定。
+而对应MockXXXRange，它是一个取值范围，以MockIntRange为例：
 
-而MockXXXRange， 以MockIntRange为例：
+_截至1.0.1-alpha版本，MockXXXRange 仅被部分支持，当其直接注解于属性时有效，但注解于注解并使用新注解时尚未支持_
 
-```
-@Retention(RUNTIME)
-@Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE})
-public @interface MockIntRange {
-    /**
-     * Smallest value, inclusive
-     */
-    long from() default Long.MIN_VALUE;
+一个有效的设置如下：
 
-    /**
-     * Largest value, inclusive
-     */
-    long to() default Long.MAX_VALUE;
-}
+```kotlin
+class NotationDemo(
+    @field:Name val name: String,
+    @field:MockIntRange(from = 1, to = 200) val age: Int?
+)
+
+val entity: NotationDemo = Mocker.mock(NotationDemo::class.java)
 ```
 
-很显然，它表达了一个取值范围，可以用于Int和Long，MockFloatRange可以用于float和double。
-
-MockSize可以限定集合或者数组的长度，但是对于多维情况，并没有那么的"自由"😂
+MockSize可以限定集合或者数组的长度，但是对于多维情况，尚不能自由的指定每一层的size😂
 
 MockTrue/MockFalse 直接指定Boolean的值。
 
-## 使用介绍
+### 进阶3 - 使用group区分mock策略
 
-### 普通类
+start from: `1.0.1-alpha`
 
-```
-class Foo(val name: String)
+* 日常开发中，POJO类在不同业务场景下进行复用的现象不可避免，但在不同的业务场景下，其属性值势必存在不同的限制；
+* 从测试覆盖角度看，我们也需要获取不同方案的数据支撑用例
 
-val foo: Foo = Mocker.mock(Foo::class.java)
-println(Gson().toJson(foo))
-```
+**灵感来自于 spring-boot中的jsr380实现**
 
-因为没有使用注解限定，我们会使用默认语料
+从 1.0.1-alpha 开始，为进阶2中的注解追加了：
 
-```
-{"name":"一切都是瞬息，一切都将会过去；"}
-```
+* Repeatable 支持
+* Class<?>[] groups() default {}; 参数配置
 
-又如：
+对于未设置 `groups` 参数的情况，内建默认其等价于 `groups = [Default.class]`, _这样可以对原业务方实现无缝兼容_
 
-```
-val i:Int = Mocker.mock(Int::class.java)
-println(i)
-```
+一个有效的示例如下：
 
-演示注解限定：
-
-```
+```kotlin
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FIELD)
-@MockIntDef(value = [3, 4, 6])
-annotation class Type
+@MockStringDef(value = ["Leobert", "Tony"], groups = [Group1::class, Default::class])
+@MockStringDef(value = ["Leobert2"], groups = [Group2::class])
+annotation class Name2
+```
 
-@Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.FIELD)
-@MockCharDef(value = ['M'])
-annotation class CharTest
+几点必要的说明：
 
-class Sample {
-    @field:MockIntRange(from = -5, to = -1)
-    var intRange: Int? = null
+* `@MockStringDef(value = ["Leobert2"], groups = [Group2::class])` 表示仅可匹配
+  Group2，不可匹配 `Default::class.java`
+* `groups = [Group1::class, Default::class]` 可匹配 `Group1` 或 `Default` 无顺序差别，但不可匹配 `Group2`
+* 可以按照习惯使用 Repeat形式的注解，或者直接使用其组合注解，如 `MockStringDefs`
 
-    @field:Type
-    var intDef: Int? = null
+使用示例如下：
 
+```kotlin
+class NotationDemo2(
+    @field:Name2 val name: String,
+    @field:MockIntRange(from = 1, to = 200, groups = [Group3::class]) val age: Int?,
+)
 
-    @field:MockIntRange(from = -5, to = -1)
-    var longRange: Long? = null
+val entity = Mocker.mockWithGroup(
+    NotationDemo2::class.java,
+    Group1::class.java,
+    Group3::class.java
+)
+```
 
-    @field:Type
-    var longDef: Long? = null
+几点必要的说明：
 
-    @field:MockIntRange(from = 1, to = 5)
-    var shortRange: Short? = null
+* API有所变化，可选用：
+    * `inline fun <reified T> mockWithGroupInline(vararg groups: Class<*>): T`
+    * `inline fun <reified T> mockWithGroupInline(context: MockContext, vararg groups: Class<*>): T`
+    * `fun mockWithGroup(clazz: Class<T>, vararg groups: Class<*>): T`
+    * `fun <T> mockWithGroup(clazz: Class<T>, context: MockContext, vararg groups: Class<*>): T`
+    * `fun <T> mockWithGroup(typeToken: TypeToken<T>, vararg groups: Class<*>): T`
+    * `fun <T> mockWithGroup(typeToken: TypeToken<T>, context: MockContext, vararg groups: Class<*>): T`
+* Mock时指定分组的groups参数：对于任意字段，按照该groups顺序，当任意限定注解的groups被匹配时，则选用该规则
 
-    @field:Type
-    var shortDef: Short? = null
+举一些例子：
 
-    @field:MockIntRange(from = 1, to = 5)
-    var byteRange: Byte? = null
+> 一个冗余规则示例：
 
-    @field:Type
-    var byteDef: Byte? = null
+```kotlin
+@MockStringDef(value = ["Leobert", "Tony"], groups = [A::class, B::class, Default::class]) // 规则1
+@MockStringDef(value = ["Leobert2"], groups = [C::class, B::class]) //规则2
+annotation class Name2
 
-    @field:MockFloatRange(from = -1000f, to = 1000f)
-    var floatRange: Float? = null
+@field:Name2
+val name: String
+```
 
-    @field:MockFloatRange(from = -1000f, to = 1000f)
-    var doubleRange: Byte? = null
+规则1和规则2中均包含分组情况： `B::class` , 当尝试匹配分组 `B::class.java` 时，即：
 
-    @field:MockTrue
-    var trueTest: Boolean? = null
+```kotlin
+Mocker.mockWithGroup(NotationDemo2::class.java, B::class.java)
+```
 
-    @field:MockFalse
-    var falseTest: Boolean? = null
+规则1先于规则2被匹配，所以规则2中的 `B::class` 冗余
 
-    @field:MockCharRange(from = 'a', to = 'z')
-    var charRange: Char? = null
+正确示例如下：
 
-    @field:CharTest
-    var charDef: Char? = null
+```kotlin
+@MockStringDef(value = ["Leobert", "Tony"], groups = [A::class, B::class, Default::class]) // 规则1
+@MockStringDef(value = ["Leobert2"], groups = [C::class]) //规则2
+annotation class Name2
 
-    @field:Name
-    var stringDef: String? = null
+@field:Name2
+val name: String
+```
 
+> mock groups 参数含义示例
+
+有些情况下，未必能依靠一个Group界定所需的POJO规则限定。 _注意，我们仍然需要努力对分组进行合理规划_
+
+```kotlin
+@MockStringDef(value = ["Leobert", "Tony"], groups = [A::class, B::class, Default::class]) // 规则1
+@MockStringDef(value = ["Leobert2"], groups = [C::class]) //规则2
+annotation class Name2
+
+@MockStringDef(value = ["aaa@qq.com", "bbb@163.com"], groups = [D::class]) //规则1
+annotation class Email
+
+data class NotationDemo2(@field:Name2 val name: String, @field:Email val email: String)
+```
+
+很显然，可能在多个业务下都会使用到Email，给Email配置大量的 `groups参数值` 是反人类的，例如：
+
+```kotlin
+//反人类的反例
+@MockStringDef(
+    value = ["aaa@qq.com", "bbb@163.com"],
+    groups = [A::class, B::class, C::class, D::class, E::class,/*...*/]
+)
+annotation class Email
+```
+
+可以按如下方式mock：
+
+```kotlin
+Mocker.mockWithGroup(NotationDemo2::class.java, D::class.java, B::class.java)
+```
+
+对于 `name: String` 很显然 `D::class.java` 无法命中，按序尝试 `B::class.java` 命中 规则1 对于 `email: String`
+, `D::class.java` 命中，使用规则1
+
+### 进阶4 - 使用 MockIgnore 屏蔽属性
+
+很显然，在某些情况下，我们并不希望 Mock 干预到部分属性，注意：并不是说我们期望它们一定为 `null` ， 例如在构造器中对某些属性进行了赋值操作，又需要在 Mock 中避免被修改
+
+```kotlin
+class MockIgnoreDemo(
+    @field:MockIgnore val key: String,
+    @field:MockIgnore(groups = [Group3::class]) @field:Name2 val name: String
+)
+```
+
+例如：
+
+* 在所有情况下均不需要干扰到属性 `key` 时，可以将 group 设为Default
+* 而 `name` 属性，在Group3 情况下，则不会干涉
+
+### 进阶5 - 自定义注解&扩展处理器
+
+#### 了解Adapter
+
+在 Mocker 的设计中，对于类的 Field 的处理，均存在 Adapter 机制，您可以自由的扩展他们：
+
+```kotlin
+class MockContext {
+    var intMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(IntRangeAdapterV2, IntDefAdapterV2))
+
+    var longMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(LongRangeAdapterV2, LongDefAdapterV2))
+
+    var shortMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(ShortRangeAdapterV2, ShortDefAdapterV2))
+
+    var byteMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(ByteRangeAdapterV2, ByteDefAdapterV2))
+
+    var floatMockAdapter: FieldMockAdapterV2 = FloatRangeAdapterV2
+
+    var doubleMockAdapter: FieldMockAdapterV2 = DoubleRangeAdapterV2
+
+    var booleanMockAdapter: FieldMockAdapterV2 = BooleanAdapterV2
+
+    var charMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(CharRangeAdapterV2, CharDefAdapterV2))
+
+    var stringMockAdapter: FieldMockAdapterV2 = StringDefAdapterV2
+
+    var enumMockAdapter: FieldMockAdapterV2 =
+        ComposeFieldMockAdapterV2(arrayListOf(IntRangeAdapterV2, IntDefAdapterV2))
+
+    var collectionMockAdapter: FieldMockAdapterV2 = SizeAdapterV2
 }
-
-val bean: Sample = Mocker.mock(Sample::class.java)
-println(Gson().toJson(bean))
-
 ```
 
-### 泛型
+以StringDefAdapterV2为例：
 
-通过TypeToken
-
-```
-class Foo(val name: String)
-class Bar<T>(val t: T? = null)
-
-val bar: Bar<Foo> = Mocker.mock(object : TypeToken<Bar<Foo>>() {})
-println(Gson().toJson(bar))
-```
-
-如果是已经明确指定
-
-```
-class BarFoo(val bar: Bar<Foo>)
-
-val bean: BarFoo = Mocker.mock(BarFoo::class.java)
-println(Gson().toJson(bean))
-```
-
-这样是没有问题的.
-
-但是这样，目前是没啥用的：
-
-```
-open class I
-class A(val a: Int) : I()
-
-class B(val b: Boolean) : I()
-
-val bean: List<out I> = Mocker.mock(object : TypeToken<List<out I>>() {})
-println(Gson().toJson(bean))
-
-//目前对这种情况有点不成熟的小想法，还未实测
-```
-
-## 集合
-
-以list为例
-
-```
-val bean: List<BarFoo> = Mocker.mock(object :TypeToken<List<BarFoo>>(){})
-println(Gson().toJson(bean))
-```
-
-更多内容先行略去。 可以在单元测试中找到上述内容。
-
-## 也可以指定Mock时的上下文
-
-```
-inline fun <reified T> mock(): T {
-    return mock(MockContext())
-}
-
-inline fun <reified T> mock(context: MockContext): T {
-    return mock(T::class.java, context)
-}
-
-fun <T> mock(clazz: Class<T>): T {
-    return mock(clazz, MockContext())
-}
-
-fun <T> mock(clazz: Class<T>, context: MockContext): T {
-    return BaseMockHandler<T>(clazz).mock(context)
-}
-
-fun <T> mock(typeToken: TypeToken<T>): T {
-    return mock(typeToken,MockContext())
-}
-
-fun <T> mock(typeToken: TypeToken<T>, context: MockContext): T {
-    return BaseMockHandler<T>(typeToken.type).mock(context.apply { this.parseParameterizedType(typeToken.type) })
+```kotlin
+object StringDefAdapterV2 : FieldMockAdapterV2 {
+    override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
+        field.findMockStringDefAboveNotation(groups)?.value
+            ?.toMutableList()
+            ?.let { values ->
+                context.stringValuePool.setEnumValues(values)
+            }
+    }
 }
 ```
 
-我们可以指定对象依赖成环的处理策略，以及不使用注解限定时的默认限定。修改以下配置：
+通过反射得到内建注解约束 -> 按照 Mock 时传入的 group 策略获得可用配置 -> 设置mock取值池
 
-```
- /**
- * If true, will use the same beans that have been created ever when mock the same type.
- *
- * */
-var skipSameType = false
+后续的随机取值、赋值等流程不需要侵入。
 
-///////////////////////////////////////////////////////////////////////////
-// default configs
-///////////////////////////////////////////////////////////////////////////
-var byteRange = byteArrayOf(0, 127)
-var shortRange = shortArrayOf(0, 1000)
-var intRange = intArrayOf(0, 10000)
-var floatRange = floatArrayOf(0.0f, 10000.00f)
-var doubleRange = doubleArrayOf(0.0, 10000.00)
-var longRange = longArrayOf(0L, 10000L)
-var dateRange = arrayOf("1970-01-01", "2100-12-31")
+#### 了解mock取值池
 
-//存在嵌套使用时的风险，需深度优先，创建完目标size后立即使用，再对item进行mock
-var sizeRange = intArrayOf(2, 3)
-```
+参见 `ValuePool` 和 `LimitValuePool` 
 
-当然，我们也可以扩展注解限定
+主要API：
 
-注解限定的处理中，存在Adapter机制，可以影响Mock时的取值池
+* `fun setRange(from: T?, to: T?)` 设置范围值
+* `fun setEnumValues(value: MutableList<T>)` 设置有限的值
 
-对于需要扩展的情况，如：
+#### 对特定类指定处理器
 
-```
-var intMockAdapter: FieldMockAdapter =
-        ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
+通过向：`MockContext#fieldMockStrategy : MutableMap<Class<*>, MockHandlerV2<*>>` 注册类和处理器的方式，可以指定Mock处理器。
 
-var longMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(LongRangeAdapter, LongDefAdapter))
+例如和时间相关的类特别繁杂，内建中没有处理
 
-var shortMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(ShortRangeAdapter, ShortDefAdapter))
+您可以对 LocalDateTime 定制一套Mock处理逻辑并进行注册。
 
-var byteMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(ByteRangeAdapter, ByteDefAdapter))
 
-var floatMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(FloatRangeAdapter))
 
-var doubleMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(DoubleRangeAdapter))
 
-var booleanMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(BooleanAdapter))
 
-var charMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(CharRangeAdapter, CharDefAdapter))
-
-var stringMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(StringDefAdapter))
-
-var enumMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(IntRangeAdapter, IntDefAdapter))
-
-var collectionMockAdapter: FieldMockAdapter =
-    ComposeFieldMockAdapter(arrayListOf(SizeAdapter))
-```
-
-对应增加Adapter即可。
-
-更多内容还请探究源码吧，*我实在是一个不太喜欢写这类文档的人*😂😂
-
-喜欢的话，点个星？
 

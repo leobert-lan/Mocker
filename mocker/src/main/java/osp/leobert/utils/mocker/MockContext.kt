@@ -82,25 +82,20 @@ class MockContext {
         ComposeFieldMockAdapterV2(arrayListOf(ByteRangeAdapterV2, ByteDefAdapterV2))
 
     var floatMockAdapter: FieldMockAdapterV2 = FloatRangeAdapterV2
-//        ComposeFieldMockAdapter(arrayListOf(FloatRangeAdapter))
 
     var doubleMockAdapter: FieldMockAdapterV2 = DoubleRangeAdapterV2
-//        ComposeFieldMockAdapter(arrayListOf(DoubleRangeAdapter))
 
     var booleanMockAdapter: FieldMockAdapterV2 = BooleanAdapterV2
-//        ComposeFieldMockAdapter(arrayListOf(BooleanAdapter))
 
     var charMockAdapter: FieldMockAdapterV2 =
         ComposeFieldMockAdapterV2(arrayListOf(CharRangeAdapterV2, CharDefAdapterV2))
 
     var stringMockAdapter: FieldMockAdapterV2 = StringDefAdapterV2
-//        ComposeFieldMockAdapterV2(arrayListOf(StringDefAdapter))
 
     var enumMockAdapter: FieldMockAdapterV2 =
         ComposeFieldMockAdapterV2(arrayListOf(IntRangeAdapterV2, IntDefAdapterV2))
 
     var collectionMockAdapter: FieldMockAdapterV2 = SizeAdapterV2
-//        ComposeFieldMockAdapter(arrayListOf(SizeAdapter))
 
     ///////////////////////////////////////////////////////////////////////////
     // strategy

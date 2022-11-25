@@ -10,26 +10,6 @@ import java.lang.reflect.Field
  * Description: adapters for Size mock </p>
  * Created by leobert on 2022/10/20.
  */
-//@Deprecated("cannot support different configurations")
-//object SizeAdapter : FieldMockAdapter {
-//    private val list by lazy { arrayListOf<Int>() }
-//    override fun adapt(context: MockContext, field: Field) {
-//        if (field.isAnnotationPresent(MockSize::class.java)) {
-//            field.getAnnotation(MockSize::class.java).let {
-//
-//                if (it.value < 0) {
-//                    context.sizeValuePool.setRange(it.min, it.max)
-//                } else {
-//                    list.clear()
-//                    list.add(it.value)
-//                    context.sizeValuePool.setEnumValues(list)
-//                }
-//
-//            }
-//        }
-//    }
-//}
-
 object SizeAdapterV2 : FieldMockAdapterV2 {
     private val list by lazy { arrayListOf<Int>() }
 

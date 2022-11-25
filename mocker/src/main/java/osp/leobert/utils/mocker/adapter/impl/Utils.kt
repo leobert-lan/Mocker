@@ -210,7 +210,7 @@ internal object Utils {
         }
     }
 
-      fun Field.shouldIgnoreMock(groups: Array<out Class<*>>, logger: Logger): Boolean {
+    fun Field.shouldIgnoreMock(groups: Array<out Class<*>>, logger: Logger): Boolean {
 
         val mockIgnore = getAnnotation(MockIgnore::class.java) ?: return false
         val groupsConfig = mockIgnore.groups.map { it.java }.toMutableSet()

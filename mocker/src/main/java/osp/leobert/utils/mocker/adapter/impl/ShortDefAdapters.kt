@@ -10,23 +10,6 @@ import java.lang.reflect.Field
  * Description: adapters for Short Range mock </p>
  * Created by leobert on 2022/10/21.
  */
-
-//@Deprecated("cannot support different configurations")
-//object ShortDefAdapter : FieldMockAdapter {
-//    override fun adapt(context: MockContext, field: Field) {
-//        field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockIntDef::class.java) }
-//            ?.let {
-//                it.annotationClass.java.getAnnotation(MockIntDef::class.java).value
-//                    .map { l -> l.toShort() }
-//                    .toMutableList()
-//                    .let { values ->
-//                        context.shortValuePool.setEnumValues(values)
-//                    }
-//
-//            }
-//    }
-//}
-
 object ShortDefAdapterV2 : FieldMockAdapterV2 {
     override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
         field.findMockIntDefAboveNotation(groups)?.value

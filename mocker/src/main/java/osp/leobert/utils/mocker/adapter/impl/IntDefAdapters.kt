@@ -10,22 +10,6 @@ import java.lang.reflect.Field
  * Description: adapters for Int Def mock </p>
  * Created by leobert on 2022/10/21.
  */
-//@Deprecated("cannot support different configurations")
-//object IntDefAdapter : FieldMockAdapter {
-//    override fun adapt(context: MockContext, field: Field) {
-//        field.annotations?.lastOrNull { it.annotationClass.java.isAnnotationPresent(MockIntDef::class.java) }
-//            ?.let {
-//                it.annotationClass.java.getAnnotation(MockIntDef::class.java).value
-//                    .map { l -> l.toInt() }
-//                    .toMutableList()
-//                    .let { values ->
-//                        context.intValuePool.setEnumValues(values)
-//                    }
-//
-//            }
-//    }
-//}
-
 object IntDefAdapterV2 : FieldMockAdapterV2 {
     override fun adapt(context: MockContext, field: Field, groups: Array<out Class<*>>) {
         field.findMockIntDefAboveNotation(groups)?.value
