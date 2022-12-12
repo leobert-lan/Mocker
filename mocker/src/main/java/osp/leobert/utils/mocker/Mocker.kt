@@ -2,6 +2,7 @@ package osp.leobert.utils.mocker
 
 import osp.leobert.utils.mocker.handler.BaseMockHandler
 import osp.leobert.utils.mocker.notation.group.Default
+import java.lang.reflect.Type
 
 object Mocker {
 
@@ -32,6 +33,13 @@ object Mocker {
         return mockWithGroup(typeToken, context, Default::class.java)
     }
 
+    fun <T> mock(type: Type): T {
+        return mockWithGroup(type, MockContext(), Default::class.java)
+    }
+
+    fun <T> mock(type: Type, context: MockContext): T {
+        return mockWithGroup(type, context, Default::class.java)
+    }
 
     inline fun <reified T> mockWithGroupInline(vararg groups: Class<*>): T {
         return mockWithGroupInline(context = MockContext(), groups = groups)
@@ -60,6 +68,17 @@ object Mocker {
     ): T {
         return BaseMockHandler<T>(typeToken.type).mock(
             context = context.apply { this.parseParameterizedType(typeToken.type) },
+            groups = groups
+        )
+    }
+
+    fun <T> mockWithGroup(
+        type: Type,
+        context: MockContext,
+        vararg groups: Class<*>
+    ): T {
+        return BaseMockHandler<T>(type).mock(
+            context = context.apply { this.parseParameterizedType(type) },
             groups = groups
         )
     }
